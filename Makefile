@@ -30,4 +30,5 @@ furiosa-smi-go-boilerplate:
 	./clean_cgo -source=pkg/smi/binding/binding.go -output=pkg/smi/binding/zz_binding.go
 	rm -rf pkg/smi/binding/types.go
 	rm -rf pkg/smi/binding/binding.go
+	rm -rf pkg/smi/binding/cgo_helpers.go
 	rm clean_cgo
