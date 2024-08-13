@@ -1,0 +1,42 @@
+name: Golang Build & Test
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - main
+
+jobs:
+  builds:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout `furiosa-smi`
+        uses: actions/checkout@v4
+        with:
+          repository: furiosa-ai/furiosa-smi
+          ssh-key: ${{ secrets.FURIOSA_SMI_REPO_DEPLOY_KEY_RDONLY }}
+          path: furiosa-smi
+      - name: Install `furiosa-smi`
+        run: |
+          cd furiosa-smi
+          rustup component add clippy rustfmt
+          cargo build
+          make install
+      - name: Checkout `furiosa-smi-go`
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Display Go version
+        run: |
+          go version
+      - name: Run `golangci-lint`
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.59.1
+      - name: Run `make example`
+        run: |
+          make example
