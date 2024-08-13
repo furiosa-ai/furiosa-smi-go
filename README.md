@@ -1,5 +1,13 @@
 # Furiosa SMI Golang Binding
 
+## How to build example codes?
+
+Just run below command.
+
+```shell
+$ make example
+```
+
 ## (In case of accident) How to generate `binding` source files?
 
 To generate binding codes, you need [`c-for-go`](https://github.com/xlab/c-for-go).
