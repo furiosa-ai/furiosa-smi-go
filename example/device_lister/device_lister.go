@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
 	"os"
+
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
 )
 
 func main() {

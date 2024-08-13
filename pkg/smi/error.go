@@ -2,6 +2,7 @@ package smi
 
 import (
 	"errors"
+
 	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 )
 

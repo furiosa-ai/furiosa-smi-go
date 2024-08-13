@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
-	"github.com/jedib0t/go-pretty/v6/table"
 	"os"
 	"path/filepath"
+
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
+	"github.com/jedib0t/go-pretty/v6/table"
 )
 
 func main() {
