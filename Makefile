@@ -9,6 +9,19 @@ ifeq ($(shell uname), Linux)
 export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):/usr/local/lib
 endif
 
+define build_examples_function
+    @for dir in $(1)/*; do \
+        if [ -d "$$dir" ] && [ -f "$$dir/$$(basename $$dir).go" ]; then \
+            CGO_CFLAGS=$(CGO_CFLAGS) CGO_LDFLAGS=$(CGO_LDFLAGS) go build -o "$$(basename $$dir)" $$dir/$$(basename $$dir).go; \
+            echo "Built $$dir"; \
+        fi \
+    done
+endef
+
+.PHONY: example
+example:
+	$(call build_examples_function,./example)
+
 .PHONY: furiosa-smi-go-boilerplate
 furiosa-smi-go-boilerplate:
 	c-for-go -debug -nostamp -out pkg/smi pkg/smi/furiosa-smi.yml
