@@ -65,7 +65,6 @@ func (d *deviceInfo) Minor() uint16 {
 }
 
 func (d *deviceInfo) FirmwareVersion() VersionInfo {
-	// TODO: 기존 `device_info.go` 에는 DriverVersion 으로 명시되어 있음. 의도된 것인지 확인 필요.
 	return newVersionInfo(d.raw.FirmwareVersion)
 }
 
