@@ -18,6 +18,16 @@ jobs:
           repository: furiosa-ai/furiosa-smi
           ssh-key: ${{ secrets.FURIOSA_SMI_REPO_DEPLOY_KEY_RDONLY }}
           path: furiosa-smi
+      - name: Cache Rust Cargo # https://github.com/actions/cache/blob/main/examples.md#rust---cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-furiosa-smi-go-cargo
       - name: Install `furiosa-smi`
         run: |
           cd furiosa-smi
