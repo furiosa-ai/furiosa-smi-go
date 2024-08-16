@@ -99,39 +99,39 @@ type staticMockDeviceErrorInfo struct{}
 var _ DeviceErrorInfo = new(staticMockDeviceErrorInfo)
 
 func (m *staticMockDeviceErrorInfo) AxiPostErrorCount() uint32 {
-	return 0
+	return 1
 }
 
 func (m *staticMockDeviceErrorInfo) AxiFetchErrorCount() uint32 {
-	return 0
+	return 2
 }
 
 func (m *staticMockDeviceErrorInfo) AxiDiscardErrorCount() uint32 {
-	return 0
+	return 3
 }
 
 func (m *staticMockDeviceErrorInfo) AxiDoorbellErrorCount() uint32 {
-	return 0
+	return 4
 }
 
 func (m *staticMockDeviceErrorInfo) PciePostErrorCount() uint32 {
-	return 0
+	return 5
 }
 
 func (m *staticMockDeviceErrorInfo) PcieFetchErrorCount() uint32 {
-	return 0
+	return 6
 }
 
 func (m *staticMockDeviceErrorInfo) PcieDiscardErrorCount() uint32 {
-	return 0
+	return 7
 }
 
 func (m *staticMockDeviceErrorInfo) PcieDoorbellErrorCount() uint32 {
-	return 0
+	return 8
 }
 
 func (m *staticMockDeviceErrorInfo) DeviceErrorCount() uint32 {
-	return 0
+	return 9
 }
 
 type staticMockPeUtilization struct {
@@ -186,11 +186,11 @@ type staticMockDeviceTemperature struct{}
 var _ DeviceTemperature = new(staticMockDeviceTemperature)
 
 func (m *staticMockDeviceTemperature) SocPeak() float64 {
-	return 0
+	return 20
 }
 
 func (m *staticMockDeviceTemperature) Ambient() float64 {
-	return 0
+	return 10
 }
 
 func newStaticMockVersionInfo(arch Arch, major, minor, patch uint32, metadata string) VersionInfo {

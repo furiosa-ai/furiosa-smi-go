@@ -18,6 +18,33 @@ define build_examples_function
     done
 endef
 
+.PHONY: check
+check: fmt lint vet test tidy vendor
+
+.PHONY: fmt
+fmt:
+	go fmt ./...
+
+.PHONY: lint
+lint:
+	CGO_CFLAGS=$(CGO_CFLAGS) CGO_LDFLAGS=$(CGO_LDFLAGS) golangci-lint run
+
+.PHONY: vet
+vet:
+	CGO_CFLAGS=$(CGO_CFLAGS) CGO_LDFLAGS=$(CGO_LDFLAGS) go vet -v ./...
+
+.PHONY: test
+test:
+	CGO_CFLAGS=$(CGO_CFLAGS) CGO_LDFLAGS=$(CGO_LDFLAGS) go test ./...
+
+.PHONY: tidy
+tidy:
+	go mod tidy
+
+.PHONY: vendor
+vendor:
+	go mod vendor
+
 .PHONY: example
 example:
 	$(call build_examples_function,./example)
