@@ -38,4 +38,4 @@ jobs:
         with:
           version: v1.55.0
       - name: build and test
-        run: make check
+        run: make all

@@ -18,8 +18,12 @@ define build_examples_function
     done
 endef
 
-.PHONY: check
-check: fmt lint vet test tidy vendor
+.PHONY: all
+all: build fmt lint vet test tidy vendor test
+
+.PHONY: build
+build:
+	CGO_CFLAGS=$(CGO_CFLAGS) CGO_LDFLAGS=$(CGO_LDFLAGS) go build ./...
 
 .PHONY: fmt
 fmt:
