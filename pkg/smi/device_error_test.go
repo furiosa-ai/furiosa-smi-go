@@ -8,7 +8,7 @@ import (
 )
 
 func testDeviceErrorInfo(arch Arch, t *testing.T, expected DeviceErrorInfo) {
-	device := GetStaticMockDevice(arch, 0)
+	device := getStaticMockDevice(arch, 0)
 
 	device_error_info, err := device.DeviceErrorInfo()
 

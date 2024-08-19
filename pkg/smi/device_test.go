@@ -6,7 +6,7 @@ import (
 )
 
 func testCoreStatus(arch Arch, t *testing.T, expected map[uint32]CoreStatus) {
-	device := GetStaticMockDevice(arch, 0)
+	device := getStaticMockDevice(arch, 0)
 
 	core_status, err := device.CoreStatus()
 
@@ -40,7 +40,7 @@ func TestRngdCoreStatus(t *testing.T) {
 }
 
 func testLiveness(arch Arch, t *testing.T, expected bool) {
-	device := GetStaticMockDevice(arch, 0)
+	device := getStaticMockDevice(arch, 0)
 
 	liveness, err := device.Liveness()
 
@@ -65,85 +65,32 @@ func TestRngdLiveness(t *testing.T) {
 	testLiveness(ArchRngd, t, expected)
 }
 
-func testGetDeviceToDeviceLinkType(device0 Device, device1 Device, t *testing.T, expected LinkType) {
+func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T) {
 
-	linktype, err := device0.GetDeviceToDeviceLinkType(device1)
+	for i, device0 := range devices {
+		for j, device1 := range devices {
+			linktype, err := device0.GetDeviceToDeviceLinkType(device1)
 
-	if err != nil {
-		t.Errorf("Failed to get linktype")
+			if err != nil {
+				t.Errorf("Failed to get linktype")
+			}
+
+			expected := linkTypeHintMap[i][j]
+			if !reflect.DeepEqual(expected, linktype) {
+				t.Errorf("expected linktype between npu%d, npu%d is %v but got %v", i, j, expected, linktype)
+			}
+		}
 	}
-
-	if !reflect.DeepEqual(expected, linktype) {
-		t.Errorf("expected linktype %v but got %v", expected, linktype)
-	}
 }
 
-func TestWarboyGetDeviceToDeviceLinkTypeNoc(t *testing.T) {
-	expected := LinkTypeNoc
+func TestWarboyGetDeviceToDeviceLinkType(t *testing.T) {
+	devices := getStaticMockDevices(ArchRngd)
 
-	device0 := GetStaticMockDevice(ArchWarboy, 0)
-
-	testGetDeviceToDeviceLinkType(device0, device0, t, expected)
+	testGetDeviceToDeviceLinkType(devices, t)
 }
 
-func TestRngdGetDeviceToDeviceLinkTypeNoc(t *testing.T) {
-	expected := LinkTypeNoc
+func TestRngdGetDeviceToDeviceLinkType(t *testing.T) {
+	devices := getStaticMockDevices(ArchRngd)
 
-	device0 := GetStaticMockDevice(ArchRngd, 0)
-
-	testGetDeviceToDeviceLinkType(device0, device0, t, expected)
-}
-
-func TestWarboyGetDeviceToDeviceLinkTypeHostBridge(t *testing.T) {
-	expected := LinkTypeHostBridge
-
-	device0 := GetStaticMockDevice(ArchWarboy, 0)
-	device1 := GetStaticMockDevice(ArchWarboy, 1)
-
-	testGetDeviceToDeviceLinkType(device0, device1, t, expected)
-}
-
-func TestRngdGetDeviceToDeviceLinkTypeHostBridge(t *testing.T) {
-	expected := LinkTypeHostBridge
-
-	device0 := GetStaticMockDevice(ArchRngd, 0)
-	device1 := GetStaticMockDevice(ArchRngd, 1)
-
-	testGetDeviceToDeviceLinkType(device0, device1, t, expected)
-}
-
-func TestWarboyGetDeviceToDeviceLinkTypeCpu(t *testing.T) {
-	expected := LinkTypeCpu
-
-	device0 := GetStaticMockDevice(ArchWarboy, 0)
-	device1 := GetStaticMockDevice(ArchWarboy, 2)
-
-	testGetDeviceToDeviceLinkType(device0, device1, t, expected)
-}
-
-func TestRngdGetDeviceToDeviceLinkTypeCpu(t *testing.T) {
-	expected := LinkTypeCpu
-
-	device0 := GetStaticMockDevice(ArchRngd, 0)
-	device1 := GetStaticMockDevice(ArchRngd, 2)
-
-	testGetDeviceToDeviceLinkType(device0, device1, t, expected)
-}
-
-func TestWarboyGetDeviceToDeviceLinkTypeInterconnect(t *testing.T) {
-	expected := LinkTypeInterconnect
-
-	device0 := GetStaticMockDevice(ArchWarboy, 0)
-	device1 := GetStaticMockDevice(ArchWarboy, 4)
-
-	testGetDeviceToDeviceLinkType(device0, device1, t, expected)
-}
-
-func TestRngdGetDeviceToDeviceLinkTypeInterconnect(t *testing.T) {
-	expected := LinkTypeInterconnect
-
-	device0 := GetStaticMockDevice(ArchRngd, 0)
-	device1 := GetStaticMockDevice(ArchRngd, 4)
-
-	testGetDeviceToDeviceLinkType(device0, device1, t, expected)
+	testGetDeviceToDeviceLinkType(devices, t)
 }
