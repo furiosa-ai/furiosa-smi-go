@@ -28,7 +28,7 @@ jobs:
           make install
       - uses: actions/checkout@v4
       - name: Setup Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
       - name: Display Go version
@@ -36,6 +36,6 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.55.0
+          version: v1.59.1
       - name: build and test
         run: make all
