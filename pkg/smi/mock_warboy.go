@@ -21,10 +21,6 @@ func (m *staticWarboyMockDevice) DeviceFiles() ([]DeviceFile, error) {
 	return []DeviceFile{
 		&staticMockDeviceFile{
 			cores: []uint32{0},
-			path:  fmt.Sprintf("/dev/npu%d", m.nodeIdx),
-		},
-		&staticMockDeviceFile{
-			cores: []uint32{0},
 			path:  fmt.Sprintf("/dev/npu%dpe0", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
@@ -32,7 +28,7 @@ func (m *staticWarboyMockDevice) DeviceFiles() ([]DeviceFile, error) {
 			path:  fmt.Sprintf("/dev/npu%dpe1", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{0, 1},
 			path:  fmt.Sprintf("/dev/npu%dpe0-1", m.nodeIdx),
 		},
 	}, nil

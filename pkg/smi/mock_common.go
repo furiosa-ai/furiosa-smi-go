@@ -186,11 +186,11 @@ type staticMockDeviceTemperature struct{}
 var _ DeviceTemperature = new(staticMockDeviceTemperature)
 
 func (m *staticMockDeviceTemperature) SocPeak() float64 {
-	return 0
+	return 20
 }
 
 func (m *staticMockDeviceTemperature) Ambient() float64 {
-	return 0
+	return 10
 }
 
 func newStaticMockVersionInfo(arch Arch, major, minor, patch uint32, metadata string) VersionInfo {

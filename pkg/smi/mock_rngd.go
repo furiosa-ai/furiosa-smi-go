@@ -26,51 +26,51 @@ func (m *staticRngdMockDevice) DeviceFiles() ([]DeviceFile, error) {
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe1", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{0, 1},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe0-1", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{0},
+			cores: []uint32{2},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe2", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{3},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe3", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{2, 3},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe2-3", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{0, 1, 2, 3},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe0-3", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{0},
+			cores: []uint32{4},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe4", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{5},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe5", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{4, 5},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe4-5", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{0},
+			cores: []uint32{6},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe6", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{7},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe7", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{6, 7},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe6-7", m.nodeIdx),
 		},
 		&staticMockDeviceFile{
-			cores: []uint32{1},
+			cores: []uint32{4, 5, 6, 7},
 			path:  fmt.Sprintf("/dev/rngd/npu%dpe4-7", m.nodeIdx),
 		},
 	}, nil
