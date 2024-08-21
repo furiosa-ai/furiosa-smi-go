@@ -33,9 +33,13 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Display Go version
         run: go version
+      - name: build
+        run: make build
+      - name: test
+        run: make test
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.59.1
-      - name: build and test
-        run: make all
+      - name: lint
+        run: make lint
