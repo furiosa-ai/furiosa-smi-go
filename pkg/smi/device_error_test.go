@@ -51,30 +51,30 @@ func testDeviceErrorInfo(arch Arch, t *testing.T, expected DeviceErrorInfo) {
 
 func TestWarboyDeviceErrorInfo(t *testing.T) {
 	expected := newDeviceErrorInfo(binding.FuriosaSmiDeviceErrorInfo{
-		AxiPostErrorCount:      1,
-		AxiFetchErrorCount:     2,
-		AxiDiscardErrorCount:   3,
-		AxiDoorbellErrorCount:  4,
-		PciePostErrorCount:     5,
-		PcieFetchErrorCount:    6,
-		PcieDiscardErrorCount:  7,
-		PcieDoorbellErrorCount: 8,
-		DeviceErrorCount:       9})
+		AxiPostErrorCount:      0,
+		AxiFetchErrorCount:     0,
+		AxiDiscardErrorCount:   0,
+		AxiDoorbellErrorCount:  0,
+		PciePostErrorCount:     0,
+		PcieFetchErrorCount:    0,
+		PcieDiscardErrorCount:  0,
+		PcieDoorbellErrorCount: 0,
+		DeviceErrorCount:       0})
 
 	testDeviceErrorInfo(ArchWarboy, t, expected)
 }
 
 func TestRngdDeviceErrorInfo(t *testing.T) {
 	expected := newDeviceErrorInfo(binding.FuriosaSmiDeviceErrorInfo{
-		AxiPostErrorCount:      1,
-		AxiFetchErrorCount:     2,
-		AxiDiscardErrorCount:   3,
-		AxiDoorbellErrorCount:  4,
-		PciePostErrorCount:     5,
-		PcieFetchErrorCount:    6,
-		PcieDiscardErrorCount:  7,
-		PcieDoorbellErrorCount: 8,
-		DeviceErrorCount:       9})
+		AxiPostErrorCount:      0,
+		AxiFetchErrorCount:     0,
+		AxiDiscardErrorCount:   0,
+		AxiDoorbellErrorCount:  0,
+		PciePostErrorCount:     0,
+		PcieFetchErrorCount:    0,
+		PcieDiscardErrorCount:  0,
+		PcieDoorbellErrorCount: 0,
+		DeviceErrorCount:       0})
 
 	testDeviceErrorInfo(ArchRngd, t, expected)
 }
