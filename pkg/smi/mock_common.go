@@ -54,15 +54,15 @@ var linkTypeHintMap = map[int]map[int]LinkType{
 	7: {0: LinkTypeInterconnect, 1: LinkTypeInterconnect, 2: LinkTypeInterconnect, 3: LinkTypeInterconnect, 4: LinkTypeCpu, 5: LinkTypeCpu, 6: LinkTypeHostBridge, 7: LinkTypeNoc},
 }
 
-func getStaticMockDevices(arch Arch) (mockDevices []Device) {
+func GetStaticMockDevices(arch Arch) (mockDevices []Device) {
 	for i := range iter.N(8) {
-		mockDevices = append(mockDevices, getStaticMockDevice(arch, i))
+		mockDevices = append(mockDevices, GetStaticMockDevice(arch, i))
 	}
 
 	return
 }
 
-func getStaticMockDevice(arch Arch, nodeIdx int) Device {
+func GetStaticMockDevice(arch Arch, nodeIdx int) Device {
 	switch arch {
 	case ArchWarboy:
 		return &staticWarboyMockDevice{

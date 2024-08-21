@@ -8,7 +8,7 @@ import (
 )
 
 func testDeviceFiles(arch Arch, t *testing.T, expected []DeviceFile) {
-	mockdevice := getStaticMockDevice(arch, 0)
+	mockdevice := GetStaticMockDevice(arch, 0)
 
 	device_files, err := mockdevice.DeviceFiles()
 

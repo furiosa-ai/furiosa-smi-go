@@ -6,7 +6,7 @@ import (
 )
 
 func testCoreStatus(arch Arch, t *testing.T, expected map[uint32]CoreStatus) {
-	mockdevice := getStaticMockDevice(arch, 0)
+	mockdevice := GetStaticMockDevice(arch, 0)
 
 	core_status, err := mockdevice.CoreStatus()
 
@@ -40,7 +40,7 @@ func TestRngdCoreStatus(t *testing.T) {
 }
 
 func testLiveness(arch Arch, t *testing.T, expected bool) {
-	mockdevice := getStaticMockDevice(arch, 0)
+	mockdevice := GetStaticMockDevice(arch, 0)
 
 	liveness, err := mockdevice.Liveness()
 
@@ -84,13 +84,13 @@ func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T) {
 }
 
 func TestWarboyGetDeviceToDeviceLinkType(t *testing.T) {
-	devices := getStaticMockDevices(ArchRngd)
+	devices := GetStaticMockDevices(ArchRngd)
 
 	testGetDeviceToDeviceLinkType(devices, t)
 }
 
 func TestRngdGetDeviceToDeviceLinkType(t *testing.T) {
-	devices := getStaticMockDevices(ArchRngd)
+	devices := GetStaticMockDevices(ArchRngd)
 
 	testGetDeviceToDeviceLinkType(devices, t)
 }
