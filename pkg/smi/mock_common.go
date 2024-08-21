@@ -45,13 +45,13 @@ var staticMockHintMap = map[int]mockHint{
 //	        └── NPU7
 var linkTypeHintMap = map[int]map[int]LinkType{
 	0: {0: LinkTypeNoc, 1: LinkTypeHostBridge, 2: LinkTypeCpu, 3: LinkTypeCpu, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	1: {0: LinkTypeHostBridge, 1: LinkTypeNoc, 2: LinkTypeCpu, 3: LinkTypeCpu, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	2: {0: LinkTypeCpu, 1: LinkTypeCpu, 2: LinkTypeNoc, 3: LinkTypeHostBridge, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	3: {0: LinkTypeCpu, 1: LinkTypeCpu, 2: LinkTypeHostBridge, 3: LinkTypeNoc, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	4: {0: LinkTypeInterconnect, 1: LinkTypeInterconnect, 2: LinkTypeInterconnect, 3: LinkTypeInterconnect, 4: LinkTypeNoc, 5: LinkTypeHostBridge, 6: LinkTypeCpu, 7: LinkTypeCpu},
-	5: {0: LinkTypeInterconnect, 1: LinkTypeInterconnect, 2: LinkTypeInterconnect, 3: LinkTypeInterconnect, 4: LinkTypeHostBridge, 5: LinkTypeNoc, 6: LinkTypeCpu, 7: LinkTypeCpu},
-	6: {0: LinkTypeInterconnect, 1: LinkTypeInterconnect, 2: LinkTypeInterconnect, 3: LinkTypeInterconnect, 4: LinkTypeCpu, 5: LinkTypeCpu, 6: LinkTypeNoc, 7: LinkTypeHostBridge},
-	7: {0: LinkTypeInterconnect, 1: LinkTypeInterconnect, 2: LinkTypeInterconnect, 3: LinkTypeInterconnect, 4: LinkTypeCpu, 5: LinkTypeCpu, 6: LinkTypeHostBridge, 7: LinkTypeNoc},
+	1: {1: LinkTypeNoc, 2: LinkTypeCpu, 3: LinkTypeCpu, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
+	2: {2: LinkTypeNoc, 3: LinkTypeHostBridge, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
+	3: {3: LinkTypeNoc, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
+	4: {4: LinkTypeNoc, 5: LinkTypeHostBridge, 6: LinkTypeCpu, 7: LinkTypeCpu},
+	5: {5: LinkTypeNoc, 6: LinkTypeCpu, 7: LinkTypeCpu},
+	6: {6: LinkTypeNoc, 7: LinkTypeHostBridge},
+	7: {7: LinkTypeNoc},
 }
 
 func GetStaticMockDevices(arch Arch) (mockDevices []Device) {

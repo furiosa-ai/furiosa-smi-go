@@ -65,7 +65,7 @@ func TestRngdLiveness(t *testing.T) {
 	testLiveness(ArchRngd, t, expected)
 }
 
-func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T) {
+func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T, expectedMap map[int]map[int]LinkType) {
 
 	for i, device0 := range devices {
 		for j, device1 := range devices {
@@ -75,7 +75,12 @@ func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T) {
 				t.Errorf("Failed to get linktype")
 			}
 
-			expected := linkTypeHintMap[i][j]
+			idx0, idx1 := i, j
+			if i > j {
+				idx0, idx1 = j, i
+			}
+
+			expected := expectedMap[idx0][idx1]
 			if !reflect.DeepEqual(expected, linktype) {
 				t.Errorf("expected linktype between npu%d, npu%d is %v but got %v", i, j, expected, linktype)
 			}
@@ -86,11 +91,11 @@ func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T) {
 func TestWarboyGetDeviceToDeviceLinkType(t *testing.T) {
 	devices := GetStaticMockDevices(ArchRngd)
 
-	testGetDeviceToDeviceLinkType(devices, t)
+	testGetDeviceToDeviceLinkType(devices, t, linkTypeHintMap)
 }
 
 func TestRngdGetDeviceToDeviceLinkType(t *testing.T) {
 	devices := GetStaticMockDevices(ArchRngd)
 
-	testGetDeviceToDeviceLinkType(devices, t)
+	testGetDeviceToDeviceLinkType(devices, t, linkTypeHintMap)
 }
