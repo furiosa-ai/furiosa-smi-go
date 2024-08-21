@@ -8,9 +8,9 @@ import (
 )
 
 func testDeviceTemperature(arch Arch, t *testing.T, expected deviceTemperature) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	temperature, err := device.DeviceTemperature()
+	temperature, err := mockdevice.DeviceTemperature()
 	if err != nil {
 		t.Errorf("Failed to get Device Temperature")
 	}
@@ -36,9 +36,9 @@ func TestRngdDeviceTemperature(t *testing.T) {
 }
 
 func testPowerConsumption(arch Arch, t *testing.T, expected float64) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	power, err := device.PowerConsumption()
+	power, err := mockdevice.PowerConsumption()
 	if err != nil {
 		t.Errorf("Failed to get Power Consumption")
 	}
@@ -61,9 +61,9 @@ func TestRngdPowerConsumption(t *testing.T) {
 }
 
 func testDeviceUtilization(arch Arch, t *testing.T) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	_, err := device.DeviceUtilization() // Currenlty, not to check the value.
+	_, err := mockdevice.DeviceUtilization() // Currenlty, not to check the value.
 
 	if err != nil {
 		t.Errorf("Failed to get Device Utilization")

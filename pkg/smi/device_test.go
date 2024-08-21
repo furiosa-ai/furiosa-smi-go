@@ -6,9 +6,9 @@ import (
 )
 
 func testCoreStatus(arch Arch, t *testing.T, expected map[uint32]CoreStatus) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	core_status, err := device.CoreStatus()
+	core_status, err := mockdevice.CoreStatus()
 
 	if err != nil {
 		t.Errorf("Failed to get core status")
@@ -40,9 +40,9 @@ func TestRngdCoreStatus(t *testing.T) {
 }
 
 func testLiveness(arch Arch, t *testing.T, expected bool) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	liveness, err := device.Liveness()
+	liveness, err := mockdevice.Liveness()
 
 	if err != nil {
 		t.Errorf("Failed to get liveness")

@@ -8,9 +8,9 @@ import (
 )
 
 func testDeviceErrorInfo(arch Arch, t *testing.T, expected DeviceErrorInfo) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	device_error_info, err := device.DeviceErrorInfo()
+	device_error_info, err := mockdevice.DeviceErrorInfo()
 
 	if err != nil {
 		t.Errorf("Failed to get Device Error Info")

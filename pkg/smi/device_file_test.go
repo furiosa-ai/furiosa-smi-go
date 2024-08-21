@@ -8,9 +8,9 @@ import (
 )
 
 func testDeviceFiles(arch Arch, t *testing.T, expected []DeviceFile) {
-	device := getStaticMockDevice(arch, 0)
+	mockdevice := getStaticMockDevice(arch, 0)
 
-	device_files, err := device.DeviceFiles()
+	device_files, err := mockdevice.DeviceFiles()
 
 	if err != nil {
 		t.Errorf("Failed to get Device Files")
