@@ -52,10 +52,6 @@ func testDeviceInfo(arch Arch, t *testing.T, expected DeviceInfo) {
 		t.Errorf("expected minor %d but got %d", expected.Minor(), device_info.Minor())
 	}
 
-	if !reflect.DeepEqual(expected.FirmwareVersion().Arch(), device_info.FirmwareVersion().Arch()) {
-		t.Errorf("expected firmware arch %s but got %s", expected.FirmwareVersion().Arch().ToString(), device_info.FirmwareVersion().Arch().ToString())
-	}
-
 	if !reflect.DeepEqual(expected.FirmwareVersion().Major(), device_info.FirmwareVersion().Major()) {
 		t.Errorf("expected firmware major %d but got %d", expected.FirmwareVersion().Major(), device_info.FirmwareVersion().Major())
 	}
@@ -72,24 +68,20 @@ func testDeviceInfo(arch Arch, t *testing.T, expected DeviceInfo) {
 		t.Errorf("expected firmware metadata %s but got %s", expected.FirmwareVersion().Metadata(), device_info.FirmwareVersion().Metadata())
 	}
 
-	if !reflect.DeepEqual(expected.DriverVersion().Arch(), device_info.DriverVersion().Arch()) {
-		t.Errorf("expected driver arch %s but got %s", expected.DriverVersion().Arch().ToString(), device_info.DriverVersion().Arch().ToString())
+	if !reflect.DeepEqual(expected.PertVersion().Major(), device_info.PertVersion().Major()) {
+		t.Errorf("expected driver major %d but got %d", expected.PertVersion().Major(), device_info.PertVersion().Major())
 	}
 
-	if !reflect.DeepEqual(expected.DriverVersion().Major(), device_info.DriverVersion().Major()) {
-		t.Errorf("expected driver major %d but got %d", expected.DriverVersion().Major(), device_info.DriverVersion().Major())
+	if !reflect.DeepEqual(expected.PertVersion().Minor(), device_info.PertVersion().Minor()) {
+		t.Errorf("expected driver minor %d but got %d", expected.PertVersion().Minor(), device_info.PertVersion().Minor())
 	}
 
-	if !reflect.DeepEqual(expected.DriverVersion().Minor(), device_info.DriverVersion().Minor()) {
-		t.Errorf("expected driver minor %d but got %d", expected.DriverVersion().Minor(), device_info.DriverVersion().Minor())
+	if !reflect.DeepEqual(expected.PertVersion().Patch(), device_info.PertVersion().Patch()) {
+		t.Errorf("expected driver patch %d but got %d", expected.PertVersion().Patch(), device_info.PertVersion().Patch())
 	}
 
-	if !reflect.DeepEqual(expected.DriverVersion().Patch(), device_info.DriverVersion().Patch()) {
-		t.Errorf("expected driver patch %d but got %d", expected.DriverVersion().Patch(), device_info.DriverVersion().Patch())
-	}
-
-	if !reflect.DeepEqual(expected.DriverVersion().Metadata(), device_info.DriverVersion().Metadata()) {
-		t.Errorf("expected driver metadata %s but got %s", expected.DriverVersion().Metadata(), device_info.DriverVersion().Metadata())
+	if !reflect.DeepEqual(expected.PertVersion().Metadata(), device_info.PertVersion().Metadata()) {
+		t.Errorf("expected driver metadata %s but got %s", expected.PertVersion().Metadata(), device_info.PertVersion().Metadata())
 	}
 }
 
@@ -101,6 +93,7 @@ func stringTo96ByteArray(str string) [96]byte {
 
 func TestWarboyDeviceInfo(t *testing.T) {
 	expected := newDeviceInfo(binding.FuriosaSmiDeviceInfo{
+		Index:    0,
 		Arch:     binding.FuriosaSmiArchWarboy,
 		CoreNum:  2,
 		NumaNode: 0,
@@ -111,17 +104,15 @@ func TestWarboyDeviceInfo(t *testing.T) {
 		Major:    234,
 		Minor:    0,
 		FirmwareVersion: binding.FuriosaSmiVersion{
-			Arch:     binding.FuriosaSmiArchWarboy,
 			Major:    1,
 			Minor:    6,
 			Patch:    0,
 			Metadata: stringTo96ByteArray("c1bebfd")},
-		DriverVersion: binding.FuriosaSmiVersion{
-			Arch:     binding.FuriosaSmiArchWarboy,
-			Major:    1,
-			Minor:    9,
-			Patch:    2,
-			Metadata: stringTo96ByteArray("3def9c2")}})
+		PertVersion: binding.FuriosaSmiVersion{
+			Major:    0,
+			Minor:    0,
+			Patch:    0,
+			Metadata: stringTo96ByteArray("")}})
 	testDeviceInfo(ArchWarboy, t, expected)
 }
 
@@ -137,16 +128,14 @@ func TestRngdDeviceInfo(t *testing.T) {
 		Major:    234,
 		Minor:    0,
 		FirmwareVersion: binding.FuriosaSmiVersion{
-			Arch:     binding.FuriosaSmiArchRngd,
 			Major:    1,
 			Minor:    6,
 			Patch:    0,
 			Metadata: stringTo96ByteArray("c1bebfd")},
-		DriverVersion: binding.FuriosaSmiVersion{
-			Arch:     binding.FuriosaSmiArchRngd,
-			Major:    1,
-			Minor:    9,
-			Patch:    2,
-			Metadata: stringTo96ByteArray("3def9c2")}})
+		PertVersion: binding.FuriosaSmiVersion{
+			Major:    0,
+			Minor:    0,
+			Patch:    0,
+			Metadata: stringTo96ByteArray("")}})
 	testDeviceInfo(ArchRngd, t, expected)
 }

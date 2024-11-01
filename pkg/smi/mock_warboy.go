@@ -46,13 +46,16 @@ func (m *staticWarboyMockDevice) Liveness() (bool, error) {
 	return true, nil
 }
 
-func (m *staticWarboyMockDevice) DeviceUtilization() (DeviceUtilization, error) {
-	return &staticMockDeviceUtilization{
+func (m *staticWarboyMockDevice) CoreUtilization() (CoreUtilization, error) {
+	return &staticMockCoreUtilization{
 		pe: []PeUtilization{
 			&staticMockPeUtilization{core: 0, timeWindow: 1000, usage: 50},
 		},
-		mem: &staticMockMemoryUtilization{},
 	}, nil
+}
+
+func (m *staticWarboyMockDevice) MemoryUtilization() (MemoryUtilization, error) {
+	return &staticMockMemoryUtilization{}, nil
 }
 
 func (m *staticWarboyMockDevice) PowerConsumption() (float64, error) {
@@ -77,6 +80,10 @@ func (m *staticWarboyMockDevice) GetDeviceToDeviceLinkType(target Device) (LinkT
 
 type staticWarboyMockDeviceInfo struct {
 	nodeIdx int
+}
+
+func (m *staticWarboyMockDeviceInfo) Index() uint32 {
+	return uint32(m.nodeIdx)
 }
 
 var _ DeviceInfo = new(staticWarboyMockDeviceInfo)
@@ -119,10 +126,9 @@ func (m *staticWarboyMockDeviceInfo) Minor() uint16 {
 
 // FirmwareVersion e.g. version: 1.6.0, c1bebfd
 func (m *staticWarboyMockDeviceInfo) FirmwareVersion() VersionInfo {
-	return newStaticMockVersionInfo(ArchWarboy, 1, 6, 0, "c1bebfd")
+	return newStaticMockVersionInfo(1, 6, 0, "c1bebfd")
 }
 
-// DriverVersion e.g. version: 1.9.2, 3def9c2
-func (m *staticWarboyMockDeviceInfo) DriverVersion() VersionInfo {
-	return newStaticMockVersionInfo(ArchWarboy, 1, 9, 2, "3def9c2")
+func (m *staticWarboyMockDeviceInfo) PertVersion() VersionInfo {
+	return newStaticMockVersionInfo(0, 0, 0, "")
 }
