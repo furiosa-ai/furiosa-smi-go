@@ -128,6 +128,11 @@ func (m *staticRngdMockDevice) GetDeviceToDeviceLinkType(target Device) (LinkTyp
 	return getDeviceToDeviceLinkType(m, target)
 }
 
+func (m *staticRngdMockDevice) GetP2PAccessible(_ Device) (bool, error) {
+	return true, nil
+
+}
+
 type staticRngdMockDeviceInfo struct {
 	nodeIdx int
 }

@@ -42,6 +42,7 @@ type Device interface {
 	PowerConsumption() (float64, error)
 	DeviceTemperature() (DeviceTemperature, error)
 	GetDeviceToDeviceLinkType(target Device) (LinkType, error)
+	GetP2PAccessible(target Device) (bool, error)
 }
 
 var _ Device = new(device)
@@ -170,4 +171,14 @@ func (d *device) GetDeviceToDeviceLinkType(target Device) (LinkType, error) {
 	}
 
 	return LinkType(linkType), nil
+}
+
+func (d *device) GetP2PAccessible(target Device) (bool, error) {
+	var out bool
+
+	if ret := binding.FuriosaSmiGetP2pAccessible(d.handle, target.(*device).handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
+		return false, ToError(ret)
+	}
+
+	return out, nil
 }

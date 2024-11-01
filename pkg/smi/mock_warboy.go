@@ -78,6 +78,10 @@ func (m *staticWarboyMockDevice) GetDeviceToDeviceLinkType(target Device) (LinkT
 	return ret, nil
 }
 
+func (m *staticWarboyMockDevice) GetP2PAccessible(_ Device) (bool, error) {
+	return true, nil
+}
+
 type staticWarboyMockDeviceInfo struct {
 	nodeIdx int
 }
