@@ -106,11 +106,11 @@ func main() {
 			fmt.Println(err.Error())
 			// skit this error, Memory Utilization is not supported for now.
 			//os.Exit(1)
+		} else {
+			fmt.Printf("  Memory Utilization:\n")
+			fmt.Printf("    Total Bytes: %d\n", memoryUtilization.TotalBytes())
+			fmt.Printf("    In Use Bytes: %d\n", memoryUtilization.InUseBytes())
 		}
-
-		fmt.Printf("  Memory Utilization:\n")
-		fmt.Printf("    Total Bytes: %d\n", memoryUtilization.TotalBytes())
-		fmt.Printf("    In Use Bytes: %d\n", memoryUtilization.InUseBytes())
 
 		temperature, err := device.DeviceTemperature()
 		if err != nil {
