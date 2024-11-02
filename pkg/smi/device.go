@@ -118,11 +118,6 @@ func (d *device) Liveness() (bool, error) {
 	return out, nil
 }
 
-/*
-CoreUtilization() (CoreUtilization, error)
-MemoryUtilization() (MemoryUtilization, error)
-*/
-
 func (d *device) CoreUtilization() (CoreUtilization, error) {
 	var out binding.FuriosaSmiCoreUtilization
 
