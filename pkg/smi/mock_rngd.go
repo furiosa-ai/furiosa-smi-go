@@ -124,11 +124,11 @@ func (m *staticRngdMockDevice) DeviceTemperature() (DeviceTemperature, error) {
 	return &staticMockDeviceTemperature{}, nil
 }
 
-func (m *staticRngdMockDevice) GetDeviceToDeviceLinkType(target Device) (LinkType, error) {
+func (m *staticRngdMockDevice) DeviceToDeviceLinkType(target Device) (LinkType, error) {
 	return getDeviceToDeviceLinkType(m, target)
 }
 
-func (m *staticRngdMockDevice) GetP2PAccessible(_ Device) (bool, error) {
+func (m *staticRngdMockDevice) P2PAccessible(_ Device) (bool, error) {
 	return true, nil
 
 }

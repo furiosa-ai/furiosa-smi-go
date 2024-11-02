@@ -41,8 +41,8 @@ type Device interface {
 	MemoryUtilization() (MemoryUtilization, error)
 	PowerConsumption() (float64, error)
 	DeviceTemperature() (DeviceTemperature, error)
-	GetDeviceToDeviceLinkType(target Device) (LinkType, error)
-	GetP2PAccessible(target Device) (bool, error)
+	DeviceToDeviceLinkType(target Device) (LinkType, error)
+	P2PAccessible(target Device) (bool, error)
 }
 
 var _ Device = new(device)
@@ -158,7 +158,7 @@ func (d *device) DeviceTemperature() (DeviceTemperature, error) {
 	return newDeviceTemperature(out), nil
 }
 
-func (d *device) GetDeviceToDeviceLinkType(target Device) (LinkType, error) {
+func (d *device) DeviceToDeviceLinkType(target Device) (LinkType, error) {
 	var linkType binding.FuriosaSmiDeviceToDeviceLinkType
 
 	if ret := binding.FuriosaSmiGetDeviceToDeviceLinkType(d.handle, target.(*device).handle, &linkType); ret != binding.FuriosaSmiReturnCodeOk {
@@ -168,7 +168,7 @@ func (d *device) GetDeviceToDeviceLinkType(target Device) (LinkType, error) {
 	return LinkType(linkType), nil
 }
 
-func (d *device) GetP2PAccessible(target Device) (bool, error) {
+func (d *device) P2PAccessible(target Device) (bool, error) {
 	var out bool
 
 	if ret := binding.FuriosaSmiGetP2pAccessible(d.handle, target.(*device).handle, &out); ret != binding.FuriosaSmiReturnCodeOk {

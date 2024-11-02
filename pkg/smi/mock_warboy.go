@@ -66,7 +66,7 @@ func (m *staticWarboyMockDevice) DeviceTemperature() (DeviceTemperature, error) 
 	return &staticMockDeviceTemperature{}, nil
 }
 
-func (m *staticWarboyMockDevice) GetDeviceToDeviceLinkType(target Device) (LinkType, error) {
+func (m *staticWarboyMockDevice) DeviceToDeviceLinkType(target Device) (LinkType, error) {
 	selfNodeIdx := m.nodeIdx
 	targetNodeIdx := target.(*staticWarboyMockDevice).nodeIdx
 
@@ -78,7 +78,7 @@ func (m *staticWarboyMockDevice) GetDeviceToDeviceLinkType(target Device) (LinkT
 	return ret, nil
 }
 
-func (m *staticWarboyMockDevice) GetP2PAccessible(_ Device) (bool, error) {
+func (m *staticWarboyMockDevice) P2PAccessible(_ Device) (bool, error) {
 	return true, nil
 }
 

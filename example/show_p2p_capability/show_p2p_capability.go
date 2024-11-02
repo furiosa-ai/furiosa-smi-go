@@ -39,7 +39,7 @@ func main() {
 
 		row := table.Row{filepath.Base(info1.Name())}
 		for _, device2 := range devices {
-			p2pAccessible, err := device1.GetP2PAccessible(device2)
+			p2pAccessible, err := device1.P2PAccessible(device2)
 			if err != nil {
 				fmt.Printf("%s\n", err.Error())
 				os.Exit(1)
