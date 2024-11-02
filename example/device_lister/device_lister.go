@@ -104,7 +104,8 @@ func main() {
 		memoryUtilization, err := device.MemoryUtilization()
 		if err != nil {
 			fmt.Println(err.Error())
-			os.Exit(1)
+			// skit this error, Memory Utilization is not supported for now.
+			//os.Exit(1)
 		}
 
 		fmt.Printf("  Memory Utilization:\n")
