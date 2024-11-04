@@ -79,7 +79,7 @@ func (m *staticWarboyMockDevice) DeviceToDeviceLinkType(target Device) (LinkType
 }
 
 func (m *staticWarboyMockDevice) P2PAccessible(_ Device) (bool, error) {
-	return true, nil
+	return false, nil
 }
 
 func (m *staticWarboyMockDevice) DevicePerformanceCounter() (DevicePerformanceCounter, error) {
