@@ -82,6 +82,10 @@ func (m *staticWarboyMockDevice) P2PAccessible(_ Device) (bool, error) {
 	return true, nil
 }
 
+func (m *staticWarboyMockDevice) DevicePerformanceCounter() (DevicePerformanceCounter, error) {
+	return &staticMockDevicePerformanceCounter{}, nil
+}
+
 type staticWarboyMockDeviceInfo struct {
 	nodeIdx int
 }
