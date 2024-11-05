@@ -69,7 +69,7 @@ func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T, expectedMap m
 
 	for i, device0 := range devices {
 		for j, device1 := range devices {
-			linktype, err := device0.GetDeviceToDeviceLinkType(device1)
+			linktype, err := device0.DeviceToDeviceLinkType(device1)
 
 			if err != nil {
 				t.Errorf("Failed to get linktype")

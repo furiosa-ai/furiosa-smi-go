@@ -33,17 +33,10 @@ func main() {
 		fmt.Printf("Device Major: %d\n", deviceInfo.Major())
 		fmt.Printf("Device Minor: %d\n", deviceInfo.Minor())
 		fmt.Printf("Device FirmwareVersion")
-		fmt.Printf("  Arch: %v\n", deviceInfo.FirmwareVersion().Arch())
 		fmt.Printf("  Major: %d\n", deviceInfo.FirmwareVersion().Major())
 		fmt.Printf("  Minor: %d\n", deviceInfo.FirmwareVersion().Minor())
 		fmt.Printf("  Patch: %d\n", deviceInfo.FirmwareVersion().Patch())
 		fmt.Printf("  Meta: %s\n", deviceInfo.FirmwareVersion().Metadata())
-		fmt.Printf("Device DriverVersion")
-		fmt.Printf("  Arch: %v\n", deviceInfo.DriverVersion().Arch())
-		fmt.Printf("  Major: %d\n", deviceInfo.DriverVersion().Major())
-		fmt.Printf("  Minor: %d\n", deviceInfo.DriverVersion().Minor())
-		fmt.Printf("  Patch: %d\n", deviceInfo.DriverVersion().Patch())
-		fmt.Printf("  Meta: %s\n", deviceInfo.DriverVersion().Metadata())
 
 		liveness, err := device.Liveness()
 		if err != nil {
@@ -94,23 +87,44 @@ func main() {
 		fmt.Printf("  PcieDoorbellErrorCount: %d\n", deviceErrorInfo.PcieDoorbellErrorCount())
 		fmt.Printf("  DeviceErrorCount: %d\n", deviceErrorInfo.DeviceErrorCount())
 
-		//printDeviceUtilization
-		utilization, err := device.DeviceUtilization()
+		coreUtilization, err := device.CoreUtilization()
 		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
 
-		fmt.Printf("Device Utilization:\n")
-		for _, peUtilization := range utilization.PeUtilization() {
+		fmt.Printf("Core Utilization:\n")
+		for _, peUtilization := range coreUtilization.PeUtilization() {
 			fmt.Printf("  PE Utilization:\n")
 			fmt.Printf("    Core: %v\n", peUtilization.Core())
 			fmt.Printf("    Time Window Mill: %d\n", peUtilization.TimeWindowMill())
 			fmt.Printf("    PE Usage Percentage: %f\n", peUtilization.PeUsagePercentage())
 		}
-		fmt.Printf("  Memory Utilization:\n")
-		fmt.Printf("    Total Bytes: %d\n", utilization.MemoryUtilization().TotalBytes())
-		fmt.Printf("    In Use Bytes: %d\n", utilization.MemoryUtilization().InUseBytes())
+
+		memoryUtilization, err := device.MemoryUtilization()
+		if err != nil {
+			fmt.Println(err.Error())
+			// skit this error, Memory Utilization is not supported for now.
+			//os.Exit(1)
+		} else {
+			fmt.Printf("  Memory Utilization:\n")
+			fmt.Printf("    Total Bytes: %d\n", memoryUtilization.TotalBytes())
+			fmt.Printf("    In Use Bytes: %d\n", memoryUtilization.InUseBytes())
+		}
+
+		performanceCounter, err := device.DevicePerformanceCounter()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Device Performance Counter:\n")
+		for coreIdx, counter := range performanceCounter.PerformanceCounter() {
+			fmt.Printf("  Core %d Performance Counter:\n", coreIdx)
+			fmt.Printf("    Timestamp: %v\n", counter.Timestamp())
+			fmt.Printf("    Cycle Count: %d\n", counter.CycleCount())
+			fmt.Printf("    Task Execution Cycle: %d\n", counter.TaskExecutionCycle())
+		}
 
 		temperature, err := device.DeviceTemperature()
 		if err != nil {
@@ -129,6 +143,5 @@ func main() {
 		}
 
 		fmt.Printf("Power Consumption: %f\n", powerConsumption)
-
 	}
 }
