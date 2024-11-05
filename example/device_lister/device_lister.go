@@ -112,6 +112,20 @@ func main() {
 			fmt.Printf("    In Use Bytes: %d\n", memoryUtilization.InUseBytes())
 		}
 
+		performanceCounter, err := device.DevicePerformanceCounter()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Device Performance Counter:\n")
+		for coreIdx, counter := range performanceCounter.PerformanceCounter() {
+			fmt.Printf("  Core %d Performance Counter:\n", coreIdx)
+			fmt.Printf("    Timestamp: %d\n", counter.Timestamp())
+			fmt.Printf("    Cycle Count: %d\n", counter.CycleCount())
+			fmt.Printf("    Task Execution Cycle: %d\n", counter.TaskExecutionCycle())
+		}
+
 		temperature, err := device.DeviceTemperature()
 		if err != nil {
 			fmt.Println(err.Error())
