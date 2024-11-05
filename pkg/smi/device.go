@@ -91,7 +91,7 @@ func (d *device) CoreStatus() (map[uint32]CoreStatus, error) {
 		return nil, ToError(ret)
 	}
 
-	coreStatusMap := make(map[uint32]CoreStatus)
+	coreStatusMap := make(map[uint32]CoreStatus, out.Count)
 	for i := 0; i < int(out.Count); i++ {
 		coreStatusMap[uint32(i)] = CoreStatus(out.CoreStatus[i])
 	}
