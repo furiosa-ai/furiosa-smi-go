@@ -60,10 +60,10 @@ func TestRngdPowerConsumption(t *testing.T) {
 	testPowerConsumption(ArchRngd, t, expected)
 }
 
-func testDeviceUtilization(arch Arch, t *testing.T) {
+func testCoreUtilization(arch Arch, t *testing.T) {
 	mockdevice := GetStaticMockDevice(arch, 0)
 
-	_, err := mockdevice.DeviceUtilization() // Currenlty, not to check the value.
+	_, err := mockdevice.CoreUtilization() // Currenlty, not to check the value.
 
 	if err != nil {
 		t.Errorf("Failed to get Device Utilization")
@@ -71,9 +71,9 @@ func testDeviceUtilization(arch Arch, t *testing.T) {
 }
 
 func TestWarboyDeviceUtilization(t *testing.T) {
-	testDeviceUtilization(ArchWarboy, t)
+	testCoreUtilization(ArchWarboy, t)
 }
 
 func TestRngdDeviceUtilization(t *testing.T) {
-	testDeviceUtilization(ArchRngd, t)
+	testCoreUtilization(ArchRngd, t)
 }

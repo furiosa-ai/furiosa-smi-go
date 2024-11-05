@@ -26,7 +26,6 @@ func main() {
 			fmt.Printf("%s\n", err.Error())
 			os.Exit(1)
 		}
-
 		header = append(header, filepath.Base(info.Name()))
 	}
 	t.AppendHeader(header)
@@ -40,13 +39,13 @@ func main() {
 
 		row := table.Row{filepath.Base(info1.Name())}
 		for _, device2 := range devices {
-			linkType, err := device1.DeviceToDeviceLinkType(device2)
+			p2pAccessible, err := device1.P2PAccessible(device2)
 			if err != nil {
 				fmt.Printf("%s\n", err.Error())
 				os.Exit(1)
 			}
 
-			row = append(row, linkTypeToString(linkType))
+			row = append(row, p2pAccessibleToString(p2pAccessible))
 		}
 		t.AppendRow(row)
 	}
@@ -54,17 +53,9 @@ func main() {
 	t.Render()
 }
 
-func linkTypeToString(linkType smi.LinkType) string {
-	switch linkType {
-	case smi.LinkTypeInterconnect:
-		return "Interconnect"
-	case smi.LinkTypeCpu:
-		return "CPU"
-	case smi.LinkTypeHostBridge:
-		return "Host Bridge"
-	case smi.LinkTypeNoc:
-		return "NoC"
-	default:
-		return "Unknown"
+func p2pAccessibleToString(p2pAccessible bool) string {
+	if p2pAccessible {
+		return "Accessible"
 	}
+	return "Not Accessible"
 }
