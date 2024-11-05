@@ -121,7 +121,7 @@ func main() {
 		fmt.Printf("Device Performance Counter:\n")
 		for coreIdx, counter := range performanceCounter.PerformanceCounter() {
 			fmt.Printf("  Core %d Performance Counter:\n", coreIdx)
-			fmt.Printf("    Timestamp: %s\n", counter.Timestamp().Format("1970-01-01 15:04:05"))
+			fmt.Printf("    Timestamp: %s\n", counter.Timestamp().Format("1970-01-01 00:00:00"))
 			fmt.Printf("    Cycle Count: %d\n", counter.CycleCount())
 			fmt.Printf("    Task Execution Cycle: %d\n", counter.TaskExecutionCycle())
 		}

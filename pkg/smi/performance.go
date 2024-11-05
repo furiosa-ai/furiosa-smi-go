@@ -128,8 +128,9 @@ func newDevicePerformanceCounter(raw binding.FuriosaSmiDevicePerformanceCounter)
 
 func (d *devicePerformanceCounter) PerformanceCounter() []PerformanceCounter {
 	var ret []PerformanceCounter
-	for _, counter := range d.raw.PePerformanceCounters {
-		ret = append(ret, newPerformanceCounter(counter))
+
+	for i := uint32(0); i < d.raw.PeCount; i++ {
+		ret = append(ret, newPerformanceCounter(d.raw.PePerformanceCounters[i]))
 	}
 
 	return ret
