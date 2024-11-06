@@ -1,10 +1,10 @@
 module github.com/furiosa-ai/furiosa-smi-go
 
-go 1.22.6
+go 1.23.2
 
 require (
 	github.com/bradfitz/iter v0.0.0-20191230175014-e8f45d346db8
-	github.com/jedib0t/go-pretty/v6 v6.5.9
+	github.com/jedib0t/go-pretty/v6 v6.6.1
 )
 
 require (
