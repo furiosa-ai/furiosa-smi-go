@@ -12,6 +12,7 @@ type Writer interface {
 	AppendRows(rows []Row, configs ...RowConfig)
 	AppendSeparator()
 	Length() int
+	Pager(opts ...PagerOption) Pager
 	Render() string
 	RenderCSV() string
 	RenderHTML() string
@@ -20,13 +21,11 @@ type Writer interface {
 	ResetFooters()
 	ResetHeaders()
 	ResetRows()
-	SetAllowedRowLength(length int)
 	SetAutoIndex(autoIndex bool)
 	SetCaption(format string, a ...interface{})
 	SetColumnConfigs(configs []ColumnConfig)
 	SetIndexColumn(colNum int)
 	SetOutputMirror(mirror io.Writer)
-	SetPageSize(numLines int)
 	SetRowPainter(painter RowPainter)
 	SetStyle(style Style)
 	SetTitle(format string, a ...interface{})
@@ -35,8 +34,12 @@ type Writer interface {
 	SuppressEmptyColumns()
 	SuppressTrailingSpaces()
 
+	// deprecated; in favor if Style().Size.WidthMax
+	SetAllowedRowLength(length int)
 	// deprecated; in favor of Style().HTML.CSSClass
 	SetHTMLCSSClass(cssClass string)
+	// deprecated; in favor of Pager()
+	SetPageSize(numLines int)
 }
 
 // NewWriter initializes and returns a Writer.
