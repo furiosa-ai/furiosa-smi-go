@@ -1,57 +1,46 @@
-# Furiosa System Management Interface (SMI) Go Binding
+# Furiosa System Management Interface Go Binding
 
 ## Overview
+Furiosa System Management Interface, is a programmatic interface for managing and monitoring FuriosaAI NPUs.
 
-Furiosa System Management Interface Go Binding, `furiosa-smi-go`, is a Go Binding to manage and monitor FuriosaAI NPU devices.
+The interface provides the following API modules, each designed to offer distinct functionalities for managing and monitoring NPU devices.
+These modules enable developers to access essential hardware information, topology details, system-wide information, and performance metrics.
 
-Currently, it supports 4 modules for FuriosaAI NPU devices.
-- Device module
-    - Provides NPU device discovery and information.
-        - e.g. name, serial, uuid, driver version, firmware version
-    - Diagnose NPU device status.
-        - e.g. liveness, error information
-- Topology module
-    - Provides the device topology status in the system.
-        - e.g. device link type
-- System module
-    - Provides the system information about NPU devices.
-        - e.g. driver information
-- Performance module
-    - Provides NPU device performance status.
-        - e.g. power consumption, temperature, NPU utilization
+#### Device Module
+Provides NPU device discovery and information.
 
-We provide additional language bindings for furiosa-smi.
+- **Features:**
+    - Device Specifications
+    - Liveness
+    - Error Status
 
-| Language | Repository                                                       |
-|----------|------------------------------------------------------------------|
-| Rust     | [`furiosa-smi-rs`](https://github.com/furiosa-ai/furiosa-smi-rs) |
-| C        | [`furiosa-smi`](https://github.com/furiosa-ai/furiosa-smi)       |
+#### Topology Module
+Provides the device topology status within the system.
 
-For additional information, please refer to [Documentation](https://pkg.go.dev/github.com/furiosa-ai/furiosa-smi-go).
+- **Features:**
+    - Device-to-Device Link Type
 
-## Install
+#### System Module
+Provides system-wide information about NPU devices.
 
-### Requirements
+- **Features:**
+    - Driver Information
 
-#### Driver & Firmware
+#### Performance Module
+Provides NPU device performance status and metrics.
 
-See [following guide](https://furiosa-ai.github.io/docs/latest/en/software/installation.html) to install the driver and firmware.
+- **Features:**
+    - Power Consumption
+    - Temperature
+    - Core Utilization
+    - Memory Utilization
+    - Performance Counter
 
-#### `furiosa-smi` C Library
+## Prerequisites
 
 `furiosa-smi-go` uses `furiosa-smi` C Library.
 
 Please follow [`furiosa-smi`](https://github.com/furiosa-ai/furiosa-smi) installation guide first.
-
-### Using go package manager
-
-Get package via below command in your go project.
-
-```shell
-go get github.com/furiosa-si/furiosa-smi-go@latest
-```
-
-After installation, you can use it in the other go project.
 
 ## Example
 
