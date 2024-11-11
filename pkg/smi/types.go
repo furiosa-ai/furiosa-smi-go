@@ -6,13 +6,13 @@ import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 type Arch uint32
 
 const (
-	// ArchWarboy represents Gen 1 - Vision NPU.
+	// ArchWarboy represents Gen 1 - Vision NPU architecture.
 	ArchWarboy = Arch(binding.FuriosaSmiArchWarboy)
-	// ArchRngd represents Gen 2 - RNGD.
+	// ArchRngd represents Gen 2 - RNGD architecture.
 	ArchRngd = Arch(binding.FuriosaSmiArchRngd)
-	// ArchRngdMax represents RNGD-Max architecture (not released yet)
+	// ArchRngdMax represents RNGD-Max architecture.
 	ArchRngdMax = Arch(binding.FuriosaSmiArchRngdMax)
-	// ArchRngdS represents RNGD-S architecture (not released yet)
+	// ArchRngdS represents RNGD-S architecture.
 	ArchRngdS = Arch(binding.FuriosaSmiArchRngdS)
 )
 
