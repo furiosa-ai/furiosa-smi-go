@@ -6,7 +6,7 @@ import (
 	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 )
 
-// PeUtilization represents a struct for PE utilization.
+// PeUtilization represents a PE utilization.
 type PeUtilization interface {
 	// Core returns a PE core index.
 	Core() uint32
@@ -40,7 +40,7 @@ func (p *peUtilization) PeUsagePercentage() float64 {
 	return p.raw.PeUsagePercentage
 }
 
-// MemoryUtilization represents a struct for memory utilization.
+// MemoryUtilization represents a memory utilization.
 type MemoryUtilization interface {
 	// TotalBytes returns the total bytes of memory.
 	TotalBytes() uint64
@@ -68,7 +68,7 @@ func (m *memoryUtilization) InUseBytes() uint64 {
 	return m.raw.InUseBytes
 }
 
-// CoreUtilization represents a struct for core utilization.
+// CoreUtilization represents a core utilization.
 type CoreUtilization interface {
 	// PeUtilization returns the list of utilizations for each PE cores.
 	PeUtilization() []PeUtilization
@@ -94,7 +94,7 @@ func (d *coreUtilization) PeUtilization() (ret []PeUtilization) {
 	return
 }
 
-// DeviceTemperature represents a struct for a temperature information of the device.
+// DeviceTemperature represents a temperature information of the device.
 type DeviceTemperature interface {
 	// SocPeak returns the highest temperature observed from SoC sensors.
 	SocPeak() float64
@@ -122,7 +122,7 @@ func (d *deviceTemperature) Ambient() float64 {
 	return d.raw.Ambient
 }
 
-// DevicePerformanceCounter represents a struct for device performance counter.
+// DevicePerformanceCounter represents a device performance counter.
 type DevicePerformanceCounter interface {
 	// PerformanceCounter returns a list of performance counters.
 	PerformanceCounter() []PerformanceCounter
@@ -150,7 +150,7 @@ func (d *devicePerformanceCounter) PerformanceCounter() []PerformanceCounter {
 	return ret
 }
 
-// PerformanceCounter represents a struct for performance counter.
+// PerformanceCounter represents a performance counter.
 type PerformanceCounter interface {
 	// Timestamp returns timestamp.
 	Timestamp() time.Time

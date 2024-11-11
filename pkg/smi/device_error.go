@@ -2,7 +2,7 @@ package smi
 
 import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 
-// DeviceErrorInfo represents a struct for device error information.
+// DeviceErrorInfo represents a device error information.
 type DeviceErrorInfo interface {
 	// AxiPostErrorCount returns an axi post error count.
 	AxiPostErrorCount() uint32

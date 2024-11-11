@@ -2,7 +2,7 @@ package smi
 
 import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 
-// Arch represents type for NPU architecture.
+// Arch represents NPU architecture.
 type Arch uint32
 
 const (

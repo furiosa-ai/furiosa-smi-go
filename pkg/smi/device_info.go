@@ -2,7 +2,7 @@ package smi
 
 import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 
-// DeviceInfo represents a struct for device information.
+// DeviceInfo represents a device information.
 type DeviceInfo interface {
 	// Index returns an index number of the device based on hardware topology.
 	Index() uint32

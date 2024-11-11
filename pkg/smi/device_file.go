@@ -2,7 +2,7 @@ package smi
 
 import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 
-// DeviceFile represents a struct for device file.
+// DeviceFile represents a device file.
 type DeviceFile interface {
 	// Cores returns a list of core for device file.
 	Cores() []uint32
