@@ -38,7 +38,7 @@ type Device interface {
 	DeviceInfo() (DeviceInfo, error)
 	// DeviceFiles list device files under this device.
 	DeviceFiles() ([]DeviceFile, error)
-	// CoreStatus examine each core of the device, whether it is available or not.
+	// CoreStatus examine each core of the device, whether it is occupied or available.
 	CoreStatus() (map[uint32]CoreStatus, error)
 	// DeviceErrorInfo returns error states of the device.
 	DeviceErrorInfo() (DeviceErrorInfo, error)
