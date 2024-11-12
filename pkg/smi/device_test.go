@@ -1,79 +1,98 @@
 package smi
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func testCoreStatus(arch Arch, t *testing.T, expected map[uint32]CoreStatus) {
-	mockdevice := GetStaticMockDevice(arch, 0)
+func testCoreStatus(t *testing.T, arch Arch, expected map[uint32]CoreStatus) {
+	mockDevice := GetStaticMockDevice(arch, 0)
 
-	core_status, err := mockdevice.CoreStatus()
+	coreStat, err := mockDevice.CoreStatus()
+	assert.NoError(t, err)
 
-	if err != nil {
-		t.Errorf("Failed to get core status")
+	assert.Equal(t, expected, coreStat)
+}
+
+func TestCoreStatus(t *testing.T) {
+	tests := []struct {
+		description string
+		arch        Arch
+		expected    map[uint32]CoreStatus
+	}{
+		{
+			description: "Test Warboy Core Status",
+			arch:        ArchWarboy,
+			expected: func() map[uint32]CoreStatus {
+				exp := make(map[uint32]CoreStatus)
+				for i := 0; i < 2; i++ {
+					exp[uint32(i)] = CoreStatusAvailable
+				}
+
+				return exp
+			}(),
+		},
+		{
+			description: "Test RNGD Core Status",
+			arch:        ArchRngd,
+			expected: func() map[uint32]CoreStatus {
+				exp := make(map[uint32]CoreStatus)
+				for i := 0; i < 8; i++ {
+					exp[uint32(i)] = CoreStatusAvailable
+				}
+
+				return exp
+			}(),
+		},
 	}
 
-	if !reflect.DeepEqual(expected, core_status) {
-		t.Errorf("expected core status %v but got %v", expected, core_status)
+	for _, test := range tests {
+		t.Run(test.description, func(t *testing.T) {
+			testCoreStatus(t, test.arch, test.expected)
+		})
 	}
 }
 
-func TestWarboyCoreStatus(t *testing.T) {
-	expected := make(map[uint32]CoreStatus)
+func testLiveness(t *testing.T, arch Arch, expected bool) {
+	mockDevice := GetStaticMockDevice(arch, 0)
 
-	for i := 0; i < 2; i++ {
-		expected[uint32(i)] = CoreStatusAvailable
+	liveness, err := mockDevice.Liveness()
+	assert.NoError(t, err)
+
+	assert.Equal(t, expected, liveness)
+}
+
+func TestLiveness(t *testing.T) {
+	tests := []struct {
+		description string
+		arch        Arch
+		expected    bool
+	}{
+		{
+			description: "Test Warboy Liveness",
+			arch:        ArchWarboy,
+			expected:    true,
+		},
+		{
+			description: "Test RNGD Liveness",
+			arch:        ArchRngd,
+			expected:    true,
+		},
 	}
 
-	testCoreStatus(ArchWarboy, t, expected)
-}
-
-func TestRngdCoreStatus(t *testing.T) {
-	expected := make(map[uint32]CoreStatus)
-
-	for i := 0; i < 8; i++ {
-		expected[uint32(i)] = CoreStatusAvailable
-	}
-
-	testCoreStatus(ArchRngd, t, expected)
-}
-
-func testLiveness(arch Arch, t *testing.T, expected bool) {
-	mockdevice := GetStaticMockDevice(arch, 0)
-
-	liveness, err := mockdevice.Liveness()
-
-	if err != nil {
-		t.Errorf("Failed to get liveness")
-	}
-
-	if !reflect.DeepEqual(expected, liveness) {
-		t.Errorf("expected liveness %v but got %v", expected, liveness)
+	for _, tc := range tests {
+		t.Run(tc.description, func(t *testing.T) {
+			testLiveness(t, tc.arch, tc.expected)
+		})
 	}
 }
 
-func TestWarboyLiveness(t *testing.T) {
-	expected := true
-
-	testLiveness(ArchWarboy, t, expected)
-}
-
-func TestRngdLiveness(t *testing.T) {
-	expected := true
-
-	testLiveness(ArchRngd, t, expected)
-}
-
-func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T, expectedMap map[int]map[int]LinkType) {
-
+func testDeviceToDeviceLinkType(t *testing.T, devices []Device, expectedMap map[int]map[int]LinkType) {
 	for i, device0 := range devices {
 		for j, device1 := range devices {
-			linktype, err := device0.DeviceToDeviceLinkType(device1)
-
-			if err != nil {
-				t.Errorf("Failed to get linktype")
-			}
+			linkType, err := device0.DeviceToDeviceLinkType(device1)
+			assert.NoError(t, err)
 
 			idx0, idx1 := i, j
 			if i > j {
@@ -81,21 +100,29 @@ func testGetDeviceToDeviceLinkType(devices []Device, t *testing.T, expectedMap m
 			}
 
 			expected := expectedMap[idx0][idx1]
-			if !reflect.DeepEqual(expected, linktype) {
-				t.Errorf("expected linktype between npu%d, npu%d is %v but got %v", i, j, expected, linktype)
-			}
+			assert.Equalf(t, expected, linkType, "expected linktype between npu%d, npu%d is %v but got %v", i, j, expected, linkType)
 		}
 	}
 }
 
-func TestWarboyGetDeviceToDeviceLinkType(t *testing.T) {
-	devices := GetStaticMockDevices(ArchRngd)
+func TestDeviceToDeviceLinkType(t *testing.T) {
+	tests := []struct {
+		description string
+		arch        Arch
+	}{
+		{
+			description: "Test Warboy DeviceToDeviceLinkType",
+			arch:        ArchWarboy,
+		},
+		{
+			description: "Test RNGD DeviceToDeviceLinkType",
+			arch:        ArchRngd,
+		},
+	}
 
-	testGetDeviceToDeviceLinkType(devices, t, linkTypeHintMap)
-}
-
-func TestRngdGetDeviceToDeviceLinkType(t *testing.T) {
-	devices := GetStaticMockDevices(ArchRngd)
-
-	testGetDeviceToDeviceLinkType(devices, t, linkTypeHintMap)
+	for _, tc := range tests {
+		t.Run(tc.description, func(t *testing.T) {
+			testDeviceToDeviceLinkType(t, GetStaticMockDevices(tc.arch), linkTypeHintMap)
+		})
+	}
 }

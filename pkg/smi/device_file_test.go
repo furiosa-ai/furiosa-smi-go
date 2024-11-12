@@ -1,33 +1,23 @@
 package smi
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
+	"github.com/stretchr/testify/assert"
 )
 
-func testDeviceFiles(arch Arch, t *testing.T, expected []DeviceFile) {
-	mockdevice := GetStaticMockDevice(arch, 0)
+func testDeviceFiles(t *testing.T, arch Arch, expected []DeviceFile) {
+	mockDevice := GetStaticMockDevice(arch, 0)
 
-	device_files, err := mockdevice.DeviceFiles()
+	devFiles, err := mockDevice.DeviceFiles()
+	assert.NoErrorf(t, err, "Failed to get Device Files")
 
-	if err != nil {
-		t.Errorf("Failed to get Device Files")
-	}
-
-	if len(expected) != len(device_files) {
-		t.Errorf("expected device files num %d but got %d", len(expected), len(device_files))
-	}
+	assert.Len(t, devFiles, len(expected))
 
 	for i := 0; i < len(expected); i++ {
-		if !reflect.DeepEqual(expected[i].Cores(), device_files[i].Cores()) {
-			t.Errorf("expected cores %v but got %v", expected[i].Cores(), device_files[i].Cores())
-		}
-
-		if !reflect.DeepEqual(expected[i].Path(), device_files[i].Path()) {
-			t.Errorf("expected path %s but got %s", expected[i].Path(), device_files[i].Path())
-		}
+		assert.Equal(t, expected[i].Cores(), devFiles[i].Cores())
+		assert.Equal(t, expected[i].Path(), devFiles[i].Path())
 	}
 
 }
@@ -38,50 +28,63 @@ func stringTo256ByteArray(str string) [256]byte {
 	return arr
 }
 
-func TestWarboyDeviceFiles(t *testing.T) {
-	expected := []DeviceFile{
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 0, CoreEnd: 0, Path: stringTo256ByteArray("/dev/npu0pe0")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 1, CoreEnd: 1, Path: stringTo256ByteArray("/dev/npu0pe1")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 0, CoreEnd: 1, Path: stringTo256ByteArray("/dev/npu0pe0-1")}),
+func TestDeviceFiles(t *testing.T) {
+	tests := []struct {
+		description string
+		arch        Arch
+		expected    []DeviceFile
+	}{
+		{
+			description: "Test Warboy Device Files",
+			arch:        ArchWarboy,
+			expected: []DeviceFile{
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 0, Path: stringTo256ByteArray("/dev/npu0pe0")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 1, CoreEnd: 1, Path: stringTo256ByteArray("/dev/npu0pe1")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 1, Path: stringTo256ByteArray("/dev/npu0pe0-1")}),
+			},
+		},
+		{
+			description: "Test RNGD Device Files",
+			arch:        ArchRngd,
+			expected: []DeviceFile{
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 0, Path: stringTo256ByteArray("/dev/rngd/npu0pe0")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 1, CoreEnd: 1, Path: stringTo256ByteArray("/dev/rngd/npu0pe1")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 1, Path: stringTo256ByteArray("/dev/rngd/npu0pe0-1")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 2, CoreEnd: 2, Path: stringTo256ByteArray("/dev/rngd/npu0pe2")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 3, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe3")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 2, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe2-3")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe0-3")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 4, CoreEnd: 4, Path: stringTo256ByteArray("/dev/rngd/npu0pe4")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 5, CoreEnd: 5, Path: stringTo256ByteArray("/dev/rngd/npu0pe5")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 4, CoreEnd: 5, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-5")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 6, CoreEnd: 6, Path: stringTo256ByteArray("/dev/rngd/npu0pe6")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 7, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe7")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 6, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe6-7")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 4, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-7")}),
+			},
+		},
 	}
 
-	testDeviceFiles(ArchWarboy, t, expected)
-}
-
-func TestRngdDeviceFiles(t *testing.T) {
-	expected := []DeviceFile{
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 0, CoreEnd: 0, Path: stringTo256ByteArray("/dev/rngd/npu0pe0")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 1, CoreEnd: 1, Path: stringTo256ByteArray("/dev/rngd/npu0pe1")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 0, CoreEnd: 1, Path: stringTo256ByteArray("/dev/rngd/npu0pe0-1")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 2, CoreEnd: 2, Path: stringTo256ByteArray("/dev/rngd/npu0pe2")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 3, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe3")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 2, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe2-3")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 0, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe0-3")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 4, CoreEnd: 4, Path: stringTo256ByteArray("/dev/rngd/npu0pe4")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 5, CoreEnd: 5, Path: stringTo256ByteArray("/dev/rngd/npu0pe5")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 4, CoreEnd: 5, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-5")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 6, CoreEnd: 6, Path: stringTo256ByteArray("/dev/rngd/npu0pe6")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 7, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe7")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 6, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe6-7")}),
-		newDeviceFile(binding.FuriosaSmiDeviceFile{
-			CoreStart: 4, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-7")}),
+	for _, tc := range tests {
+		t.Run(tc.description, func(t *testing.T) {
+			testDeviceFiles(t, tc.arch, tc.expected)
+		})
 	}
-
-	testDeviceFiles(ArchRngd, t, expected)
 }
