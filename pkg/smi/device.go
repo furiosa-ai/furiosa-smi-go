@@ -8,6 +8,7 @@ import (
 
 type furiosaSmiObserverInstance = *binding.FuriosaSmiObserver
 
+// ListDevices lists all Furiosa NPU devices in the system.
 func ListDevices() ([]Device, error) {
 	var outDeviceHandle binding.FuriosaSmiDeviceHandles
 	if ret := binding.FuriosaSmiGetDeviceHandles(&outDeviceHandle); ret != binding.FuriosaSmiReturnCodeOk {
@@ -31,18 +32,31 @@ func ListDevices() ([]Device, error) {
 	return devices, nil
 }
 
+// Device represents the abstraction for a single Furiosa NPU device.
 type Device interface {
+	// DeviceInfo returns `DeviceInfo` which contains information about NPU device. (e.g. arch, serial, ...)
 	DeviceInfo() (DeviceInfo, error)
+	// DeviceFiles list device files under this device.
 	DeviceFiles() ([]DeviceFile, error)
+	// CoreStatus examine each core of the device, whether it is occupied or available.
 	CoreStatus() (map[uint32]CoreStatus, error)
+	// DeviceErrorInfo returns error states of the device.
 	DeviceErrorInfo() (DeviceErrorInfo, error)
+	// Liveness returns a liveness state of the device.
 	Liveness() (bool, error)
+	// CoreUtilization returns a core utilization of the device.
 	CoreUtilization() (CoreUtilization, error)
+	// MemoryUtilization returns a memory utilization of the device.
 	MemoryUtilization() (MemoryUtilization, error)
+	// PowerConsumption returns a power consumption of the device.
 	PowerConsumption() (float64, error)
+	// DeviceTemperature returns a temperature of the device.
 	DeviceTemperature() (DeviceTemperature, error)
+	// DeviceToDeviceLinkType returns a device link type between two devices.
 	DeviceToDeviceLinkType(target Device) (LinkType, error)
+	// P2PAccessible returns whether two devices are p2p accessible each other or not.
 	P2PAccessible(target Device) (bool, error)
+	// DevicePerformanceCounter returns a performance counter of the device.
 	DevicePerformanceCounter() (DevicePerformanceCounter, error)
 }
 

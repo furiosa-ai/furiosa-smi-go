@@ -2,13 +2,18 @@ package smi
 
 import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 
+// Arch represents NPU architecture.
 type Arch uint32
 
 const (
-	ArchWarboy  = Arch(binding.FuriosaSmiArchWarboy)
-	ArchRngd    = Arch(binding.FuriosaSmiArchRngd)
+	// ArchWarboy represents Gen 1 - Vision NPU architecture.
+	ArchWarboy = Arch(binding.FuriosaSmiArchWarboy)
+	// ArchRngd represents Gen 2 - RNGD architecture.
+	ArchRngd = Arch(binding.FuriosaSmiArchRngd)
+	// ArchRngdMax represents RNGD-Max architecture.
 	ArchRngdMax = Arch(binding.FuriosaSmiArchRngdMax)
-	ArchRngdS   = Arch(binding.FuriosaSmiArchRngdS)
+	// ArchRngdS represents RNGD-S architecture.
+	ArchRngdS = Arch(binding.FuriosaSmiArchRngdS)
 )
 
 func (a Arch) ToString() string {
@@ -26,19 +31,28 @@ func (a Arch) ToString() string {
 	}
 }
 
+// CoreStatus represents a device core status
 type CoreStatus uint32
 
 const (
+	// CoreStatusAvailable represents core is available.
 	CoreStatusAvailable = CoreStatus(binding.FuriosaSmiCoreStatusAvailable)
-	CoreStatusOccupied  = CoreStatus(binding.FuriosaSmiCoreStatusOccupied)
+	// CoreStatusOccupied represents core is occupied.
+	CoreStatusOccupied = CoreStatus(binding.FuriosaSmiCoreStatusOccupied)
 )
 
+// LinkType represents a topology link type between 2 NPU devices.
 type LinkType uint32
 
 const (
-	LinkTypeUnknown      = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeUnknown)
+	// LinkTypeUnknown means unknown link type.
+	LinkTypeUnknown = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeUnknown)
+	// LinkTypeInterconnect represents link type under same machine.
 	LinkTypeInterconnect = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeInterconnect)
-	LinkTypeCpu          = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeCpu)
-	LinkTypeHostBridge   = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeBridge)
-	LinkTypeNoc          = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeNoc)
+	// LinkTypeCpu represents link type under same cpu.
+	LinkTypeCpu = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeCpu)
+	// LinkTypeHostBridge represents link type under same switch.
+	LinkTypeHostBridge = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeBridge)
+	// LinkTypeNoc represents link type under same socket.
+	LinkTypeNoc = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeNoc)
 )
