@@ -8,6 +8,30 @@ import (
 
 type furiosaSmiObserverInstance = *binding.FuriosaSmiObserver
 
+// ListDevices lists all Furiosa NPU devices in the system.
+func ListDevices() ([]Device, error) {
+	var outDeviceHandle binding.FuriosaSmiDeviceHandles
+	if ret := binding.FuriosaSmiGetDeviceHandles(&outDeviceHandle); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	var outObserverInstance = new(furiosaSmiObserverInstance)
+	if ret := binding.FuriosaSmiCreateObserver(outObserverInstance); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	defer runtime.SetFinalizer(outObserverInstance, func(observerInstance *furiosaSmiObserverInstance) {
+		_ = binding.FuriosaSmiDestroyObserver(observerInstance)
+	})
+
+	var devices []Device
+	for i := 0; i < int(outDeviceHandle.Count); i++ {
+		devices = append(devices, newDevice(outDeviceHandle.DeviceHandles[i], outObserverInstance))
+	}
+
+	return devices, nil
+}
+
 // Device represents the abstraction for a single Furiosa NPU device.
 type Device interface {
 	// DeviceInfo returns `DeviceInfo` which contains information about NPU device. (e.g. arch, serial, ...)
@@ -177,28 +201,4 @@ func (d *device) DevicePerformanceCounter() (DevicePerformanceCounter, error) {
 	}
 
 	return newDevicePerformanceCounter(out), nil
-}
-
-// ListDevices lists all Furiosa NPU devices in the system.
-func ListDevices() ([]Device, error) {
-	var outDeviceHandle binding.FuriosaSmiDeviceHandles
-	if ret := binding.FuriosaSmiGetDeviceHandles(&outDeviceHandle); ret != binding.FuriosaSmiReturnCodeOk {
-		return nil, toError(ret)
-	}
-
-	var outObserverInstance = new(furiosaSmiObserverInstance)
-	if ret := binding.FuriosaSmiCreateObserver(outObserverInstance); ret != binding.FuriosaSmiReturnCodeOk {
-		return nil, toError(ret)
-	}
-
-	defer runtime.SetFinalizer(outObserverInstance, func(observerInstance *furiosaSmiObserverInstance) {
-		_ = binding.FuriosaSmiDestroyObserver(observerInstance)
-	})
-
-	var devices []Device
-	for i := 0; i < int(outDeviceHandle.Count); i++ {
-		devices = append(devices, newDevice(outDeviceHandle.DeviceHandles[i], outObserverInstance))
-	}
-
-	return devices, nil
 }
