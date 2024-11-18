@@ -36,22 +36,18 @@ Provides NPU device performance status and metrics.
     - Memory Utilization
     - Performance Counter
 
-## Prerequisites
+## Installation
 
-`furiosa-smi-go` uses `furiosa-smi` C Library.
-
-Please follow [`furiosa-smi`](https://github.com/furiosa-ai/furiosa-smi) installation guide first.
-
-## Example
-The following example demonstrates how to use the Furiosa System Management Interface Go Binding to access and monitor NPU device information.
-
-Start by getting the necessary package.
+Getting the necessary package.
 
 ```shell
 go get github.com/furiosa-ai/furiosa-smi-go@latest
 ```
 
-After that, import package to use go binding.
+## Example
+The following example demonstrates how to use the Furiosa System Management Interface Go Binding to access and monitor NPU device information.
+
+After installation step, import package to use go binding.
 
 ```go
 import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
