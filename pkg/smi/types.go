@@ -16,6 +16,7 @@ const (
 	ArchRngdS = Arch(binding.FuriosaSmiArchRngdS)
 )
 
+// ToString converts given arch into the string representation.
 func (a Arch) ToString() string {
 	switch a {
 	case ArchWarboy:
