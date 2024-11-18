@@ -34,17 +34,29 @@ func ListDevices() ([]Device, error) {
 
 // Device represents the abstraction for a single Furiosa NPU device.
 type Device interface {
+	// DeviceInfo returns `DeviceInfo` which contains information about NPU device. (e.g. arch, serial, ...)
 	DeviceInfo() (DeviceInfo, error)
+	// DeviceFiles list device files under this device.
 	DeviceFiles() ([]DeviceFile, error)
+	// CoreStatus examine each core of the device, whether it is occupied or available.
 	CoreStatus() (map[uint32]CoreStatus, error)
+	// DeviceErrorInfo returns error states of the device.
 	DeviceErrorInfo() (DeviceErrorInfo, error)
+	// Liveness returns a liveness state of the device.
 	Liveness() (bool, error)
+	// CoreUtilization returns a core utilization of the device.
 	CoreUtilization() (CoreUtilization, error)
+	// MemoryUtilization returns a memory utilization of the device.
 	MemoryUtilization() (MemoryUtilization, error)
+	// PowerConsumption returns a power consumption of the device.
 	PowerConsumption() (float64, error)
+	// DeviceTemperature returns a temperature of the device.
 	DeviceTemperature() (DeviceTemperature, error)
+	// DeviceToDeviceLinkType returns a device link type between two devices.
 	DeviceToDeviceLinkType(target Device) (LinkType, error)
+	// P2PAccessible returns whether two devices are p2p accessible each other or not.
 	P2PAccessible(target Device) (bool, error)
+	// DevicePerformanceCounter returns a performance counter of the device.
 	DevicePerformanceCounter() (DevicePerformanceCounter, error)
 }
 
@@ -62,7 +74,6 @@ func newDevice(handle binding.FuriosaSmiDeviceHandle, observerInstance *furiosaS
 	}
 }
 
-// DeviceInfo returns `DeviceInfo` which contains information about NPU device. (e.g. arch, serial, ...)
 func (d *device) DeviceInfo() (DeviceInfo, error) {
 	var out binding.FuriosaSmiDeviceInfo
 	if ret := binding.FuriosaSmiGetDeviceInfo(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
@@ -72,7 +83,6 @@ func (d *device) DeviceInfo() (DeviceInfo, error) {
 	return newDeviceInfo(out), nil
 }
 
-// DeviceFiles list device files under this device.
 func (d *device) DeviceFiles() ([]DeviceFile, error) {
 	var out binding.FuriosaSmiDeviceFiles
 
@@ -88,7 +98,6 @@ func (d *device) DeviceFiles() ([]DeviceFile, error) {
 	return deviceFiles, nil
 }
 
-// CoreStatus examine each core of the device, whether it is occupied or available.
 func (d *device) CoreStatus() (map[uint32]CoreStatus, error) {
 	var out binding.FuriosaSmiCoreStatuses
 
@@ -104,7 +113,6 @@ func (d *device) CoreStatus() (map[uint32]CoreStatus, error) {
 	return coreStatusMap, nil
 }
 
-// DeviceErrorInfo returns error states of the device.
 func (d *device) DeviceErrorInfo() (DeviceErrorInfo, error) {
 	var out binding.FuriosaSmiDeviceErrorInfo
 
@@ -115,7 +123,6 @@ func (d *device) DeviceErrorInfo() (DeviceErrorInfo, error) {
 	return newDeviceErrorInfo(out), nil
 }
 
-// Liveness returns a liveness state of the device.
 func (d *device) Liveness() (bool, error) {
 	var out bool
 
@@ -126,7 +133,6 @@ func (d *device) Liveness() (bool, error) {
 	return out, nil
 }
 
-// CoreUtilization returns a core utilization of the device.
 func (d *device) CoreUtilization() (CoreUtilization, error) {
 	var out binding.FuriosaSmiCoreUtilization
 
@@ -137,7 +143,6 @@ func (d *device) CoreUtilization() (CoreUtilization, error) {
 	return newCoreUtilization(out), nil
 }
 
-// MemoryUtilization returns a memory utilization of the device.
 func (d *device) MemoryUtilization() (MemoryUtilization, error) {
 	var out binding.FuriosaSmiMemoryUtilization
 
@@ -148,7 +153,6 @@ func (d *device) MemoryUtilization() (MemoryUtilization, error) {
 	return newMemoryUtilization(out), nil
 }
 
-// PowerConsumption returns a power consumption of the device.
 func (d *device) PowerConsumption() (float64, error) {
 	var out binding.FuriosaSmiDevicePowerConsumption
 
@@ -159,7 +163,6 @@ func (d *device) PowerConsumption() (float64, error) {
 	return out.RmsTotal, nil
 }
 
-// DeviceTemperature returns a temperature of the device.
 func (d *device) DeviceTemperature() (DeviceTemperature, error) {
 	var out binding.FuriosaSmiDeviceTemperature
 
@@ -170,7 +173,6 @@ func (d *device) DeviceTemperature() (DeviceTemperature, error) {
 	return newDeviceTemperature(out), nil
 }
 
-// DeviceToDeviceLinkType returns a device link type between two devices.
 func (d *device) DeviceToDeviceLinkType(target Device) (LinkType, error) {
 	var linkType binding.FuriosaSmiDeviceToDeviceLinkType
 
@@ -181,7 +183,6 @@ func (d *device) DeviceToDeviceLinkType(target Device) (LinkType, error) {
 	return LinkType(linkType), nil
 }
 
-// P2PAccessible returns whether two devices are p2p accessible each other or not.
 func (d *device) P2PAccessible(target Device) (bool, error) {
 	var out bool
 
@@ -192,7 +193,6 @@ func (d *device) P2PAccessible(target Device) (bool, error) {
 	return out, nil
 }
 
-// DevicePerformanceCounter returns a performance counter of the device.
 func (d *device) DevicePerformanceCounter() (DevicePerformanceCounter, error) {
 	var out binding.FuriosaSmiDevicePerformanceCounter
 
