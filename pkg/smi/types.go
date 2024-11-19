@@ -6,9 +6,9 @@ import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 type Arch uint32
 
 const (
-	// ArchWarboy represents Gen 1 - Vision NPU architecture.
+	// ArchWarboy represents Warboy architecture.
 	ArchWarboy = Arch(binding.FuriosaSmiArchWarboy)
-	// ArchRngd represents Gen 2 - RNGD architecture.
+	// ArchRngd represents RNGD architecture.
 	ArchRngd = Arch(binding.FuriosaSmiArchRngd)
 	// ArchRngdMax represents RNGD-Max architecture.
 	ArchRngdMax = Arch(binding.FuriosaSmiArchRngdMax)
@@ -16,6 +16,7 @@ const (
 	ArchRngdS = Arch(binding.FuriosaSmiArchRngdS)
 )
 
+// ToString converts given arch into the string representation.
 func (a Arch) ToString() string {
 	switch a {
 	case ArchWarboy:
