@@ -6,35 +6,14 @@ Furiosa System Management Interface, is a programmatic interface for managing an
 The interface provides the following API modules, each designed to offer distinct functionalities for managing and monitoring NPU devices.
 These modules enable developers to access essential hardware information, topology details, system-wide information, and performance metrics.
 
-#### Device Module
-Provides NPU device discovery and information.
+Each module provides the following features:
+- **Device module** provides NPU device discovery and information including *device specification*, *liveness*, and *error status*
 
-- **Features:**
-    - Device Specifications
-    - Liveness
-    - Error Status
+- **Topology module** provides the topology status within a system including *device-to-device link type* and *p2p accessibility*.
 
-#### Topology Module
-Provides the device topology status within the system.
+- **System module** provides system-wide information of each NPU device, including *firmware version* and *driver version*.
 
-- **Features:**
-    - Device-to-Device Link Type
-
-#### System Module
-Provides system-wide information about NPU devices.
-
-- **Features:**
-    - Driver Information
-
-#### Performance Module
-Provides NPU device performance status and metrics.
-
-- **Features:**
-    - Power Consumption
-    - Temperature
-    - Core Utilization
-    - Memory Utilization
-    - Performance Counter
+- **Performance module** provides the device performance metrics including *power consumption*, *temperature*, *utilization*.
 
 ## Installation
 
