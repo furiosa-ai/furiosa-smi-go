@@ -77,7 +77,7 @@ The expected output is as below.
 found 1 device(s)
 Device Arch: 8
 Device CoreNum: 0
-Device NumaNode: 1986356271
+Device NumaNode: 0
 Device Name: /rngd/npu0
 
 ...
