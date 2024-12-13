@@ -69,24 +69,6 @@ func main() {
 			fmt.Printf("  Path: %s\n", deviceFile.Path())
 		}
 
-		//print DeviceErrorInfo nicely
-		deviceErrorInfo, err := device.DeviceErrorInfo()
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(1)
-		}
-
-		fmt.Printf("Device Error Info:\n")
-		fmt.Printf("  AxiPostErrorCount: %d\n", deviceErrorInfo.AxiPostErrorCount())
-		fmt.Printf("  AxiFetchErrorCount: %d\n", deviceErrorInfo.AxiFetchErrorCount())
-		fmt.Printf("  AxiDiscardErrorCount: %d\n", deviceErrorInfo.AxiDiscardErrorCount())
-		fmt.Printf("  AxiDoorbellErrorCount: %d\n", deviceErrorInfo.AxiDoorbellErrorCount())
-		fmt.Printf("  PciePostErrorCount: %d\n", deviceErrorInfo.PciePostErrorCount())
-		fmt.Printf("  PcieFetchErrorCount: %d\n", deviceErrorInfo.PcieFetchErrorCount())
-		fmt.Printf("  PcieDiscardErrorCount: %d\n", deviceErrorInfo.PcieDiscardErrorCount())
-		fmt.Printf("  PcieDoorbellErrorCount: %d\n", deviceErrorInfo.PcieDoorbellErrorCount())
-		fmt.Printf("  DeviceErrorCount: %d\n", deviceErrorInfo.DeviceErrorCount())
-
 		coreUtilization, err := device.CoreUtilization()
 		if err != nil {
 			fmt.Println(err.Error())
