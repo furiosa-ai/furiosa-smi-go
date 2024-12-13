@@ -7,13 +7,13 @@ The interface provides the following API modules, each designed to offer distinc
 These modules enable developers to access essential hardware information, topology details, system-wide information, and performance metrics.
 
 Each module provides the following features:
-- **Device module** provides NPU device discovery and information including *device specification*, *liveness*, and *error status*
+- **Device module** provides NPU device discovery and information including *device specification* and *liveness*.
 
 - **Topology module** provides the topology status within a system including *device-to-device link type* and *p2p accessibility*.
 
 - **System module** provides system-wide information of each NPU device, including *firmware version* and *driver version*.
 
-- **Performance module** provides the device performance metrics including *power consumption*, *temperature*, *utilization*.
+- **Performance module** provides the device performance metrics including *power consumption*, *temperature*, and *utilization*.
 
 ## Installation
 
