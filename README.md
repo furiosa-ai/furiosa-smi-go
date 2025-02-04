@@ -7,6 +7,8 @@ The interface provides the following API modules, each designed to offer distinc
 These modules enable developers to access essential hardware information, topology details, system-wide information, and performance metrics.
 
 Each module provides the following features:
+- **Initialize module** handles initialization of the Furiosa SMI library.
+
 - **Device module** provides NPU device discovery and information including *device specification* and *liveness*.
 
 - **Topology module** provides the topology status within a system including *device-to-device link type* and *p2p accessibility*.
@@ -46,6 +48,11 @@ import (
 )
 
 func main() {
+	if err := smi.Init(); err != nil {
+		fmt.Printf("%s\n", err.Error())
+		os.Exit(1)
+	}
+
 	devices, err := smi.ListDevices()
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
