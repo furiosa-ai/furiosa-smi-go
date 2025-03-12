@@ -158,12 +158,6 @@ typedef struct {
   FuriosaSmiPeUtilization pe[FURIOSA_SMI_MAX_PE_SIZE];
 } FuriosaSmiCoreUtilization;
 
-/// \brief Represent a memory utilization.
-typedef struct {
-  uint64_t total_bytes;
-  uint64_t in_use_bytes;
-} FuriosaSmiMemoryUtilization;
-
 /// \brief Represent a PE performance counter.
 typedef struct {
   long timestamp;
@@ -330,14 +324,6 @@ FuriosaSmiReturnCode furiosa_smi_destroy_observer(FuriosaSmiObserverInstance *p_
 FuriosaSmiReturnCode furiosa_smi_get_core_utilization(FuriosaSmiObserverInstance observer_instance,
                                                       FuriosaSmiDeviceHandle handle,
                                                       FuriosaSmiCoreUtilization *out_utilization_info);
-
-/// \brief Get a memory utilization of Furiosa NPU device.
-///
-/// @param handle handle of Furiosa NPU device.
-/// @param[out] out_utilization_info output buffer for pointer to FuriosaSmiMemoryUtilization.
-/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
-FuriosaSmiReturnCode furiosa_smi_get_memory_utilization(FuriosaSmiDeviceHandle handle,
-                                                        FuriosaSmiMemoryUtilization *out_utilization_info);
 
 /// \brief Get a performance counter of Furiosa NPU device.
 ///

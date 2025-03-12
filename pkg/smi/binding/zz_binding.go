@@ -158,16 +158,6 @@ func FuriosaSmiGetCoreUtilization(observerInstance *FuriosaSmiObserver, handle F
 	return __v
 }
 
-func FuriosaSmiGetMemoryUtilization(handle FuriosaSmiDeviceHandle, outUtilizationInfo *FuriosaSmiMemoryUtilization) FuriosaSmiReturnCode {
-	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
-	coutUtilizationInfo, coutUtilizationInfoAllocMap := (*C.FuriosaSmiMemoryUtilization)(unsafe.Pointer(outUtilizationInfo)), cgoAllocsUnknown
-	__ret := C.furiosa_smi_get_memory_utilization(chandle, coutUtilizationInfo)
-	runtime.KeepAlive(coutUtilizationInfoAllocMap)
-	runtime.KeepAlive(chandleAllocMap)
-	__v := (FuriosaSmiReturnCode)(__ret)
-	return __v
-}
-
 func FuriosaSmiGetDevicePerformanceCounter(handle FuriosaSmiDeviceHandle, outPerformanceCounterInfo *FuriosaSmiDevicePerformanceCounter) FuriosaSmiReturnCode {
 	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
 	coutPerformanceCounterInfo, coutPerformanceCounterInfoAllocMap := (*C.FuriosaSmiDevicePerformanceCounter)(unsafe.Pointer(outPerformanceCounterInfo)), cgoAllocsUnknown
