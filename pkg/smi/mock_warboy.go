@@ -42,6 +42,19 @@ func (m *staticWarboyMockDevice) Liveness() (bool, error) {
 	return true, nil
 }
 
+func (m *staticWarboyMockDevice) CoreFrequency() (CoreFrequency, error) {
+	return &staticMockCoreFrequency{
+		pe: []PeFrequency{
+			&staticMockPeFrequency{core: 0, frequency: 2000},
+			&staticMockPeFrequency{core: 1, frequency: 2000},
+		},
+	}, nil
+}
+
+func (m *staticWarboyMockDevice) MemoryFrequency() (MemoryFrequency, error) {
+	return &staticMockMemoryFrequency{frequency: 4266}, nil
+}
+
 func (m *staticWarboyMockDevice) CoreUtilization() (CoreUtilization, error) {
 	return &staticMockCoreUtilization{
 		pe: []PeUtilization{

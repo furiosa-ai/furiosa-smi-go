@@ -37,6 +37,8 @@ TRANSLATOR:
       - {target: furiosa_smi_get_driver_info, tips: [ref]}
       - {target: furiosa_smi_create_observer, tips: [sref]}
       - {target: furiosa_smi_destroy_observer, tips: [sref]}
+      - {target: furiosa_smi_get_core_frequency, tips: [0,ref]}
+      - {target: furiosa_smi_get_memory_frequency, tips: [0,ref]}
       - {target: furiosa_smi_get_core_utilization, tips: [ref,0,ref]}
       - {target: furiosa_smi_get_memory_utilization, tips: [0,ref]}
       - {target: furiosa_smi_get_device_performance_counter, tips: [0,ref]}

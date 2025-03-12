@@ -158,6 +158,26 @@ func FuriosaSmiGetCoreUtilization(observerInstance *FuriosaSmiObserver, handle F
 	return __v
 }
 
+func FuriosaSmiGetCoreFrequency(handle FuriosaSmiDeviceHandle, outCoreFrequencyInfo *FuriosaSmiCoreFrequency) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutCoreFrequencyInfo, coutCoreFrequencyInfoAllocMap := (*C.FuriosaSmiCoreFrequency)(unsafe.Pointer(outCoreFrequencyInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_core_frequency(chandle, coutCoreFrequencyInfo)
+	runtime.KeepAlive(coutCoreFrequencyInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
+
+func FuriosaSmiGetMemoryFrequency(handle FuriosaSmiDeviceHandle, outMemoryFrequencyInfo *FuriosaSmiMemoryFrequency) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutMemoryFrequencyInfo, coutMemoryFrequencyInfoAllocMap := (*C.FuriosaSmiMemoryFrequency)(unsafe.Pointer(outMemoryFrequencyInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_memory_frequency(chandle, coutMemoryFrequencyInfo)
+	runtime.KeepAlive(coutMemoryFrequencyInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
+
 func FuriosaSmiGetMemoryUtilization(handle FuriosaSmiDeviceHandle, outUtilizationInfo *FuriosaSmiMemoryUtilization) FuriosaSmiReturnCode {
 	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
 	coutUtilizationInfo, coutUtilizationInfoAllocMap := (*C.FuriosaSmiMemoryUtilization)(unsafe.Pointer(outUtilizationInfo)), cgoAllocsUnknown

@@ -68,6 +68,20 @@ type FuriosaSmiCoreUtilization struct {
 	Pe             [64]FuriosaSmiPeUtilization
 }
 
+type FuriosaSmiPeFrequency struct {
+	Core           uint32
+	Frequency      uint32
+}
+
+type FuriosaSmiCoreFrequency struct {
+	PeCount        uint32
+	Pe             [64]FuriosaSmiPeFrequency
+}
+
+type FuriosaSmiMemoryFrequency struct {
+	Frequency      uint32
+}
+
 type FuriosaSmiMemoryUtilization struct {
 	TotalBytes     uint64
 	InUseBytes     uint64

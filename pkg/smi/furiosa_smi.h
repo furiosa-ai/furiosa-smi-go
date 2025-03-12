@@ -158,6 +158,22 @@ typedef struct {
   FuriosaSmiPeUtilization pe[FURIOSA_SMI_MAX_PE_SIZE];
 } FuriosaSmiCoreUtilization;
 
+typedef struct {
+  uint32_t core;
+  uint32_t frequency;
+} FuriosaSmiPeFrequency;
+
+/// \brief Represent a core frequency information (MHz).
+typedef struct {
+  uint32_t pe_count;
+  FuriosaSmiPeFrequency pe[FURIOSA_SMI_MAX_PE_SIZE];
+} FuriosaSmiCoreFrequency;
+
+/// \brief Represent a memory frequency information (Mhz).
+typedef struct {
+  uint32_t frequency;
+} FuriosaSmiMemoryFrequency;
+
 /// \brief Represent a memory utilization.
 typedef struct {
   uint64_t total_bytes;
@@ -330,6 +346,22 @@ FuriosaSmiReturnCode furiosa_smi_destroy_observer(FuriosaSmiObserverInstance *p_
 FuriosaSmiReturnCode furiosa_smi_get_core_utilization(FuriosaSmiObserverInstance observer_instance,
                                                       FuriosaSmiDeviceHandle handle,
                                                       FuriosaSmiCoreUtilization *out_utilization_info);
+
+/// \brief Get a core frequency of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_core_frequency_info output buffer for pointer to FuriosaSmiCoreFrequency.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_core_frequency(FuriosaSmiDeviceHandle handle,
+                                                    FuriosaSmiCoreFrequency *out_core_frequency_info);
+
+/// \brief Get a memory frequency of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_memory_frequency_info output buffer for pointer to FuriosaSmiMemoryFrequency.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_memory_frequency(FuriosaSmiDeviceHandle handle,
+                                                      FuriosaSmiMemoryFrequency *out_memory_frequency_info);
 
 /// \brief Get a memory utilization of Furiosa NPU device.
 ///

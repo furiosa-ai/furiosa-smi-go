@@ -57,3 +57,72 @@ const (
 	// LinkTypeNoc represents link type under same socket.
 	LinkTypeNoc = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeNoc)
 )
+
+type PeFrequency interface {
+	Core() uint32
+	Frequency() uint32
+}
+
+var _ PeFrequency = new(peFrequency)
+
+type peFrequency struct {
+	raw binding.FuriosaSmiPeFrequency
+}
+
+func newPeFrequency(raw binding.FuriosaSmiPeFrequency) PeFrequency {
+	return &peFrequency{
+		raw: raw,
+	}
+}
+
+func (p *peFrequency) Core() uint32 {
+	return p.raw.Core
+}
+
+func (p *peFrequency) Frequency() uint32 {
+	return p.raw.Frequency
+}
+
+type CoreFrequency interface {
+	PeFrequency() []PeFrequency
+}
+
+var _ CoreFrequency = new(coreFrequency)
+
+type coreFrequency struct {
+	raw binding.FuriosaSmiCoreFrequency
+}
+
+func newCoreFrequency(raw binding.FuriosaSmiCoreFrequency) CoreFrequency {
+	return &coreFrequency{
+		raw: raw,
+	}
+}
+
+func (c *coreFrequency) PeFrequency() (ret []PeFrequency) {
+	for i := uint32(0); i < c.raw.PeCount; i++ {
+		ret = append(ret, newPeFrequency(c.raw.Pe[i]))
+	}
+
+	return
+}
+
+type MemoryFrequency interface {
+	Frequency() uint32
+}
+
+var _ MemoryFrequency = new(memoryFrequency)
+
+type memoryFrequency struct {
+	raw binding.FuriosaSmiMemoryFrequency
+}
+
+func newMemoryFrequency(raw binding.FuriosaSmiMemoryFrequency) MemoryFrequency {
+	return &memoryFrequency{
+		raw: raw,
+	}
+}
+
+func (m *memoryFrequency) Frequency() uint32 {
+	return m.raw.Frequency
+}
