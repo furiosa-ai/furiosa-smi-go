@@ -50,10 +50,6 @@ func (m *staticWarboyMockDevice) CoreUtilization() (CoreUtilization, error) {
 	}, nil
 }
 
-func (m *staticWarboyMockDevice) MemoryUtilization() (MemoryUtilization, error) {
-	return &staticMockMemoryUtilization{}, nil
-}
-
 func (m *staticWarboyMockDevice) PowerConsumption() (float64, error) {
 	return float64(100), nil
 }

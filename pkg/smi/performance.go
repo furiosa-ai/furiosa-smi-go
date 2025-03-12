@@ -40,34 +40,6 @@ func (p *peUtilization) PeUsagePercentage() float64 {
 	return p.raw.PeUsagePercentage
 }
 
-// MemoryUtilization represents a memory utilization.
-type MemoryUtilization interface {
-	// TotalBytes returns the total bytes of memory.
-	TotalBytes() uint64
-	// InUseBytes returns the memory bytes currently in use.
-	InUseBytes() uint64
-}
-
-var _ MemoryUtilization = new(memoryUtilization)
-
-func newMemoryUtilization(raw binding.FuriosaSmiMemoryUtilization) MemoryUtilization {
-	return &memoryUtilization{
-		raw: raw,
-	}
-}
-
-type memoryUtilization struct {
-	raw binding.FuriosaSmiMemoryUtilization
-}
-
-func (m *memoryUtilization) TotalBytes() uint64 {
-	return m.raw.TotalBytes
-}
-
-func (m *memoryUtilization) InUseBytes() uint64 {
-	return m.raw.InUseBytes
-}
-
 // CoreUtilization represents a core utilization.
 type CoreUtilization interface {
 	// PeUtilization returns the list of utilizations for each PE cores.
