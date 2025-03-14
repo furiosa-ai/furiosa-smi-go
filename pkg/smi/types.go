@@ -32,6 +32,59 @@ func (a Arch) ToString() string {
 	}
 }
 
+type CoreStatuses interface {
+	// CoreStatus returns a core status of the device.
+	PeStatus() []PeStatus
+}
+
+var _ CoreStatuses = new(coreStatuses)
+
+type coreStatuses struct {
+	raw binding.FuriosaSmiCoreStatuses
+}
+
+func newCoreStatuses(raw binding.FuriosaSmiCoreStatuses) CoreStatuses {
+	return &coreStatuses{
+		raw: raw,
+	}
+}
+
+func (c *coreStatuses) PeStatus() (ret []PeStatus) {
+	for i := uint32(0); i < c.raw.Count; i++ {
+		ret = append(ret, newPeStatus(c.raw.CoreStatus[i]))
+	}
+
+	return
+}
+
+// PeStatus represents a device core status.
+type PeStatus interface {
+	// Core returns a core index.
+	Core() uint32
+	// Status returns a core status.
+	Status() CoreStatus
+}
+
+var _ PeStatus = new(peStatus)
+
+type peStatus struct {
+	raw binding.FuriosaSmiPeStatus
+}
+
+func newPeStatus(raw binding.FuriosaSmiPeStatus) PeStatus {
+	return &peStatus{
+		raw: raw,
+	}
+}
+
+func (p *peStatus) Core() uint32 {
+	return p.raw.Core
+}
+
+func (p *peStatus) Status() CoreStatus {
+	return CoreStatus(p.raw.Status)
+}
+
 // CoreStatus represents a device core status
 type CoreStatus uint32
 

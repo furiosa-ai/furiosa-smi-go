@@ -137,10 +137,15 @@ typedef struct {
   FuriosaSmiDeviceFile device_files[FURIOSA_SMI_MAX_DEVICE_HANDLE_SIZE];
 } FuriosaSmiDeviceFiles;
 
+typedef struct {
+  uint32_t core;
+  FuriosaSmiCoreStatus status;
+} FuriosaSmiPeStatus;
+
 /// \brief Represent a core status list of device.
 typedef struct {
   uint32_t count;
-  FuriosaSmiCoreStatus core_status[FURIOSA_SMI_MAX_CORE_STATUS_SIZE];
+  FuriosaSmiPeStatus core_status[FURIOSA_SMI_MAX_CORE_STATUS_SIZE];
 } FuriosaSmiCoreStatuses;
 
 typedef FuriosaSmiObserver *FuriosaSmiObserverInstance;
