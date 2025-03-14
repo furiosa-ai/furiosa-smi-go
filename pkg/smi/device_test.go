@@ -6,13 +6,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func testCoreStatus(t *testing.T, arch Arch, expected map[uint32]CoreStatus) {
+func testCoreStatus(t *testing.T, arch Arch) {
 	mockDevice := GetStaticMockDevice(arch, 0)
 
 	coreStat, err := mockDevice.CoreStatus()
 	assert.NoError(t, err)
 
-	assert.Equal(t, expected, coreStat)
+	for i, peStatus := range coreStat.PeStatus() {
+		assert.Equal(t, uint32(i), peStatus.Core())
+		assert.Equal(t, CoreStatusAvailable, peStatus.Status())
+	}
 }
 
 func TestCoreStatus(t *testing.T) {
@@ -24,32 +27,16 @@ func TestCoreStatus(t *testing.T) {
 		{
 			description: "Test Warboy Core Status",
 			arch:        ArchWarboy,
-			expected: func() map[uint32]CoreStatus {
-				exp := make(map[uint32]CoreStatus)
-				for i := 0; i < 2; i++ {
-					exp[uint32(i)] = CoreStatusAvailable
-				}
-
-				return exp
-			}(),
 		},
 		{
 			description: "Test RNGD Core Status",
 			arch:        ArchRngd,
-			expected: func() map[uint32]CoreStatus {
-				exp := make(map[uint32]CoreStatus)
-				for i := 0; i < 8; i++ {
-					exp[uint32(i)] = CoreStatusAvailable
-				}
-
-				return exp
-			}(),
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
-			testCoreStatus(t, test.arch, test.expected)
+			testCoreStatus(t, test.arch)
 		})
 	}
 }

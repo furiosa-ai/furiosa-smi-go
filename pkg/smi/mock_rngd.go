@@ -76,16 +76,18 @@ func (m *staticRngdMockDevice) DeviceFiles() ([]DeviceFile, error) {
 	}, nil
 }
 
-func (m *staticRngdMockDevice) CoreStatus() (map[uint32]CoreStatus, error) {
-	return map[uint32]CoreStatus{
-		0: CoreStatusAvailable,
-		1: CoreStatusAvailable,
-		2: CoreStatusAvailable,
-		3: CoreStatusAvailable,
-		4: CoreStatusAvailable,
-		5: CoreStatusAvailable,
-		6: CoreStatusAvailable,
-		7: CoreStatusAvailable,
+func (m *staticRngdMockDevice) CoreStatus() (CoreStatuses, error) {
+	return staticMockCoreStatuses{
+		coreStatus: []PeStatus{
+			&staticMockPeStatus{core: 0, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 1, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 2, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 3, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 4, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 5, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 6, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 7, status: CoreStatusAvailable},
+		},
 	}, nil
 }
 
