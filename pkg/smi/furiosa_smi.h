@@ -167,6 +167,7 @@ typedef struct {
 /// \brief Represent a PE performance counter.
 typedef struct {
   long timestamp;
+  uint32_t core;
   uint64_t cycle_count;
   uint64_t task_execution_cycle;
 } FuriosaSmiPePerformanceCounter;

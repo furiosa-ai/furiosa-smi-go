@@ -75,6 +75,7 @@ type FuriosaSmiMemoryUtilization struct {
 
 type FuriosaSmiPePerformanceCounter struct {
 	Timestamp          int64
+	Core               uint32
 	CycleCount         uint64
 	TaskExecutionCycle uint64
 }
