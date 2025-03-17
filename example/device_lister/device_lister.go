@@ -58,8 +58,8 @@ func main() {
 		}
 
 		fmt.Printf("Core Status:\n")
-		for core, status := range coreStatus {
-			fmt.Printf("  Core %d: %v\n", core, status)
+		for _, peStatus := range coreStatus.PeStatus() {
+			fmt.Printf("  Core %d: %v\n", peStatus.Core(), peStatus.Status())
 		}
 
 		deviceFiles, err := device.DeviceFiles()

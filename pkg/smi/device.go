@@ -39,7 +39,7 @@ type Device interface {
 	// DeviceFiles list device files under this device.
 	DeviceFiles() ([]DeviceFile, error)
 	// CoreStatus examine each core of the device, whether it is occupied or available.
-	CoreStatus() (map[uint32]CoreStatus, error)
+	CoreStatus() (CoreStatuses, error)
 	// Liveness returns a liveness state of the device.
 	Liveness() (bool, error)
 	// CoreFrequency returns a core frequency of the device.
@@ -98,19 +98,14 @@ func (d *device) DeviceFiles() ([]DeviceFile, error) {
 	return deviceFiles, nil
 }
 
-func (d *device) CoreStatus() (map[uint32]CoreStatus, error) {
+func (d *device) CoreStatus() (CoreStatuses, error) {
 	var out binding.FuriosaSmiCoreStatuses
 
 	if ret := binding.FuriosaSmiGetDeviceCoreStatus(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
 		return nil, toError(ret)
 	}
 
-	coreStatusMap := make(map[uint32]CoreStatus, out.Count)
-	for i := 0; i < int(out.Count); i++ {
-		coreStatusMap[uint32(i)] = CoreStatus(out.CoreStatus[i])
-	}
-
-	return coreStatusMap, nil
+	return newCoreStatuses(out), nil
 }
 
 func (d *device) Liveness() (bool, error) {

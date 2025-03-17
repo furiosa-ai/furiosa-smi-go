@@ -125,6 +125,31 @@ func (m *staticMockPeFrequency) Frequency() uint32 {
 	return m.frequency
 }
 
+type staticMockCoreStatuses struct {
+	coreStatus []PeStatus
+}
+
+var _ CoreStatuses = new(staticMockCoreStatuses)
+
+func (m staticMockCoreStatuses) PeStatus() []PeStatus {
+	return m.coreStatus
+}
+
+type staticMockPeStatus struct {
+	core   uint32
+	status CoreStatus
+}
+
+var _ PeStatus = new(staticMockPeStatus)
+
+func (m *staticMockPeStatus) Core() uint32 {
+	return m.core
+}
+
+func (m *staticMockPeStatus) Status() CoreStatus {
+	return m.status
+}
+
 type staticMockPeUtilization struct {
 	core       uint32
 	timeWindow uint32
