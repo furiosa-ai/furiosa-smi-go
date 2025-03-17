@@ -197,13 +197,13 @@ const (
 func (p GovernorProfile) String() string {
 	switch p {
 	case OnDemand:
-		return "simple_ondemand"
+		return "OnDemand"
 
 	case Performance:
-		return "performance"
+		return "Performance"
 
 	case PowerSave:
-		return "powersave"
+		return "PowerSave"
 	}
 
 	// should not reach here!
