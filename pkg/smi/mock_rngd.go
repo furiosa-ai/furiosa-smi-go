@@ -108,10 +108,6 @@ func (m *staticRngdMockDevice) CoreUtilization() (CoreUtilization, error) {
 	}, nil
 }
 
-func (m *staticRngdMockDevice) MemoryUtilization() (MemoryUtilization, error) {
-	return &staticMockMemoryUtilization{}, nil
-}
-
 func (m *staticRngdMockDevice) PowerConsumption() (float64, error) {
 	return float64(100), nil
 }

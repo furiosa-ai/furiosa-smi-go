@@ -44,8 +44,6 @@ type Device interface {
 	Liveness() (bool, error)
 	// CoreUtilization returns a core utilization of the device.
 	CoreUtilization() (CoreUtilization, error)
-	// MemoryUtilization returns a memory utilization of the device.
-	MemoryUtilization() (MemoryUtilization, error)
 	// PowerConsumption returns a power consumption of the device.
 	PowerConsumption() (float64, error)
 	// DeviceTemperature returns a temperature of the device.
@@ -129,16 +127,6 @@ func (d *device) CoreUtilization() (CoreUtilization, error) {
 	}
 
 	return newCoreUtilization(out), nil
-}
-
-func (d *device) MemoryUtilization() (MemoryUtilization, error) {
-	var out binding.FuriosaSmiMemoryUtilization
-
-	if ret := binding.FuriosaSmiGetMemoryUtilization(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
-		return nil, toError(ret)
-	}
-
-	return newMemoryUtilization(out), nil
 }
 
 func (d *device) PowerConsumption() (float64, error) {

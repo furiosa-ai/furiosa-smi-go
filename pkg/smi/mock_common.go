@@ -120,18 +120,6 @@ func (m *staticMockPeUtilization) PeUsagePercentage() float64 {
 	return m.usage
 }
 
-type staticMockMemoryUtilization struct{}
-
-var _ MemoryUtilization = new(staticMockMemoryUtilization)
-
-func (m *staticMockMemoryUtilization) TotalBytes() uint64 {
-	return 0
-}
-
-func (m *staticMockMemoryUtilization) InUseBytes() uint64 {
-	return 0
-}
-
 type staticMockCoreUtilization struct {
 	pe []PeUtilization
 }
