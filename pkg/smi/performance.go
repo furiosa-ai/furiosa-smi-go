@@ -126,6 +126,8 @@ func (d *devicePerformanceCounter) PerformanceCounter() []PerformanceCounter {
 type PerformanceCounter interface {
 	// Timestamp returns timestamp.
 	Timestamp() time.Time
+	// Core returns a core index.
+	Core() uint32
 	// CycleCount returns total cycle count in 64-bit unsigned int.
 	CycleCount() uint64
 	// TaskExecutionCycle returns cycle count used for task execution in 64-bit unsigned int.
@@ -146,6 +148,10 @@ func newPerformanceCounter(raw binding.FuriosaSmiPePerformanceCounter) Performan
 
 func (p *performanceCounter) Timestamp() time.Time {
 	return time.Unix(p.raw.Timestamp, 0)
+}
+
+func (p *performanceCounter) Core() uint32 {
+	return p.raw.Core
 }
 
 func (p *performanceCounter) CycleCount() uint64 {

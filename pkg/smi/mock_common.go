@@ -243,6 +243,10 @@ func (s staticMockPerformanceCounter) Timestamp() time.Time {
 	return time.Now()
 }
 
+func (s staticMockPerformanceCounter) Core() uint32 {
+	return 0
+}
+
 func (s staticMockPerformanceCounter) CycleCount() uint64 {
 	return 0
 }
