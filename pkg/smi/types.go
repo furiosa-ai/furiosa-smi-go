@@ -1,6 +1,8 @@
 package smi
 
-import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
+import (
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
+)
 
 // Arch represents NPU architecture.
 type Arch uint32
@@ -178,4 +180,32 @@ func newMemoryFrequency(raw binding.FuriosaSmiMemoryFrequency) MemoryFrequency {
 
 func (m *memoryFrequency) Frequency() uint32 {
 	return m.raw.Frequency
+}
+
+// GovernorProfile Represents a governor profile
+type GovernorProfile uint32
+
+const (
+	// OnDemand governor profile
+	OnDemand = GovernorProfile(binding.FuriosaSmiGovernorProfileOnDemand)
+	// Performance governor profile
+	Performance = GovernorProfile(binding.FuriosaSmiGovernorProfilePerformance)
+	// PowerSave governor profile
+	PowerSave = GovernorProfile(binding.FuriosaSmiGovernorProfilePowerSave)
+)
+
+func (p GovernorProfile) String() string {
+	switch p {
+	case OnDemand:
+		return "simple_ondemand"
+
+	case Performance:
+		return "performance"
+
+	case PowerSave:
+		return "powersave"
+	}
+
+	// should not reach here!
+	panic("unknown governor profile")
 }

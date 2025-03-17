@@ -150,6 +150,14 @@ func (m *staticRngdMockDevice) DevicePerformanceCounter() (DevicePerformanceCoun
 	return &staticMockDevicePerformanceCounter{}, nil
 }
 
+func (m *staticRngdMockDevice) GovernorProfile() (GovernorProfile, error) {
+	return OnDemand, nil
+}
+
+func (m *staticRngdMockDevice) SetGovernorProfile(profile GovernorProfile) error {
+	return nil
+}
+
 type staticRngdMockDeviceInfo struct {
 	nodeIdx int
 }

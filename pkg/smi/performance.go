@@ -161,3 +161,19 @@ func (p *performanceCounter) CycleCount() uint64 {
 func (p *performanceCounter) TaskExecutionCycle() uint64 {
 	return p.raw.TaskExecutionCycle
 }
+
+func newGovernorProfile(profile binding.FuriosaSmiGovernorProfile) GovernorProfile {
+	switch profile {
+	case binding.FuriosaSmiGovernorProfileOnDemand:
+		return OnDemand
+
+	case binding.FuriosaSmiGovernorProfilePerformance:
+		return Performance
+
+	case binding.FuriosaSmiGovernorProfilePowerSave:
+		return PowerSave
+
+	default:
+		return OnDemand
+	}
+}

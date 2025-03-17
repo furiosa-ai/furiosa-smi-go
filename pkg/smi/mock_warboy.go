@@ -96,6 +96,14 @@ func (m *staticWarboyMockDevice) DevicePerformanceCounter() (DevicePerformanceCo
 	return &staticMockDevicePerformanceCounter{}, nil
 }
 
+func (m *staticWarboyMockDevice) GovernorProfile() (GovernorProfile, error) {
+	return OnDemand, nil
+}
+
+func (m *staticWarboyMockDevice) SetGovernorProfile(profile GovernorProfile) error {
+	return nil
+}
+
 type staticWarboyMockDeviceInfo struct {
 	nodeIdx int
 }

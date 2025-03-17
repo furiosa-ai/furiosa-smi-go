@@ -58,6 +58,10 @@ type Device interface {
 	P2PAccessible(target Device) (bool, error)
 	// DevicePerformanceCounter returns a performance counter of the device.
 	DevicePerformanceCounter() (DevicePerformanceCounter, error)
+	// GovernorProfile returns a governor profile of the device.
+	GovernorProfile() (GovernorProfile, error)
+	// SetGovernorProfile set a governor profile of the device.
+	SetGovernorProfile(governorProfile GovernorProfile) error
 }
 
 var _ Device = new(device)
@@ -196,4 +200,23 @@ func (d *device) DevicePerformanceCounter() (DevicePerformanceCounter, error) {
 	}
 
 	return newDevicePerformanceCounter(out), nil
+}
+
+func (d *device) GovernorProfile() (GovernorProfile, error) {
+	var out binding.FuriosaSmiGovernorProfile
+
+	if ret := binding.FuriosaSmiGetGovernorProfile(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
+		return 0, toError(ret)
+	}
+
+	return newGovernorProfile(out), nil
+}
+
+func (d *device) SetGovernorProfile(profile GovernorProfile) error {
+	rawProfile := binding.FuriosaSmiGovernorProfile(profile)
+	if ret := binding.FuriosaSmiSetGovernorProfile(d.handle, rawProfile); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
 }

@@ -138,5 +138,13 @@ func main() {
 		}
 
 		fmt.Printf("Power Consumption: %f\n", powerConsumption)
+
+		governor, err := device.GovernorProfile()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Governor Profile: %s\n", governor)
 	}
 }
