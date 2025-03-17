@@ -93,6 +93,25 @@ func (m *staticRngdMockDevice) Liveness() (bool, error) {
 	return true, nil
 }
 
+func (m *staticRngdMockDevice) CoreFrequency() (CoreFrequency, error) {
+	return &staticMockCoreFrequency{
+		pe: []PeFrequency{
+			&staticMockPeFrequency{core: 0, frequency: 500},
+			&staticMockPeFrequency{core: 1, frequency: 500},
+			&staticMockPeFrequency{core: 2, frequency: 500},
+			&staticMockPeFrequency{core: 3, frequency: 500},
+			&staticMockPeFrequency{core: 4, frequency: 500},
+			&staticMockPeFrequency{core: 5, frequency: 500},
+			&staticMockPeFrequency{core: 6, frequency: 500},
+			&staticMockPeFrequency{core: 7, frequency: 500},
+		},
+	}, nil
+}
+
+func (m *staticRngdMockDevice) MemoryFrequency() (MemoryFrequency, error) {
+	return &staticMockMemoryFrequency{frequency: 6000}, nil
+}
+
 func (m *staticRngdMockDevice) CoreUtilization() (CoreUtilization, error) {
 	return &staticMockCoreUtilization{
 		pe: []PeUtilization{

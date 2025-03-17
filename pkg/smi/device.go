@@ -42,6 +42,10 @@ type Device interface {
 	CoreStatus() (map[uint32]CoreStatus, error)
 	// Liveness returns a liveness state of the device.
 	Liveness() (bool, error)
+	// CoreFrequency returns a core frequency of the device.
+	CoreFrequency() (CoreFrequency, error)
+	// MemoryFrequency returns a memory frequency of the device.
+	MemoryFrequency() (MemoryFrequency, error)
 	// CoreUtilization returns a core utilization of the device.
 	CoreUtilization() (CoreUtilization, error)
 	// PowerConsumption returns a power consumption of the device.
@@ -117,6 +121,26 @@ func (d *device) Liveness() (bool, error) {
 	}
 
 	return out, nil
+}
+
+func (d *device) CoreFrequency() (CoreFrequency, error) {
+	var out binding.FuriosaSmiCoreFrequency
+
+	if ret := binding.FuriosaSmiGetCoreFrequency(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	return newCoreFrequency(out), nil
+}
+
+func (d *device) MemoryFrequency() (MemoryFrequency, error) {
+	var out binding.FuriosaSmiMemoryFrequency
+
+	if ret := binding.FuriosaSmiGetMemoryFrequency(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	return newMemoryFrequency(out), nil
 }
 
 func (d *device) CoreUtilization() (CoreUtilization, error) {

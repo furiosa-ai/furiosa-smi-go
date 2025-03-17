@@ -100,6 +100,31 @@ func (m *staticMockDeviceFile) Path() string {
 	return m.path
 }
 
+type staticMockCoreFrequency struct {
+	pe []PeFrequency
+}
+
+var _ CoreFrequency = new(staticMockCoreFrequency)
+
+func (m *staticMockCoreFrequency) PeFrequency() []PeFrequency {
+	return m.pe
+}
+
+type staticMockPeFrequency struct {
+	core      uint32
+	frequency uint32
+}
+
+var _ PeFrequency = new(staticMockPeFrequency)
+
+func (m *staticMockPeFrequency) Core() uint32 {
+	return m.core
+}
+
+func (m *staticMockPeFrequency) Frequency() uint32 {
+	return m.frequency
+}
+
 type staticMockPeUtilization struct {
 	core       uint32
 	timeWindow uint32
@@ -118,6 +143,16 @@ func (m *staticMockPeUtilization) TimeWindowMill() uint32 {
 
 func (m *staticMockPeUtilization) PeUsagePercentage() float64 {
 	return m.usage
+}
+
+type staticMockMemoryFrequency struct {
+	frequency uint32
+}
+
+var _ MemoryFrequency = new(staticMockMemoryFrequency)
+
+func (m *staticMockMemoryFrequency) Frequency() uint32 {
+	return m.frequency
 }
 
 type staticMockCoreUtilization struct {

@@ -3,6 +3,7 @@ package smi
 import (
 	"testing"
 
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -123,6 +124,91 @@ func TestDeviceToDeviceLinkType(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.description, func(t *testing.T) {
 			testDeviceToDeviceLinkType(t, GetStaticMockDevices(tc.arch), linkTypeHintMap)
+		})
+	}
+}
+
+func testCoreFrequency(t *testing.T, arch Arch, expected coreFrequency) {
+	mockDevice := GetStaticMockDevice(arch, 0)
+
+	freq, err := mockDevice.CoreFrequency()
+	assert.NoError(t, err)
+
+	for i := 0; i < int(expected.raw.PeCount); i++ {
+		assert.Equal(t, expected.raw.Pe[i].Core, freq.PeFrequency()[i].Core())
+		assert.Equal(t, expected.raw.Pe[i].Frequency, freq.PeFrequency()[i].Frequency())
+	}
+}
+
+func TestCoreFrequency(t *testing.T) {
+	tests := []struct {
+		description string
+		arch        Arch
+		expected    coreFrequency
+	}{
+		{
+			description: "Test Warboy Core Frequency",
+			arch:        ArchWarboy,
+			expected: func() coreFrequency {
+				exp := coreFrequency{binding.FuriosaSmiCoreFrequency{PeCount: 2, Pe: [64]binding.FuriosaSmiPeFrequency{}}}
+				for i := 0; i < 2; i++ {
+					exp.raw.Pe[i] = binding.FuriosaSmiPeFrequency{Core: uint32(i), Frequency: 2000}
+				}
+
+				return exp
+			}(),
+		},
+		{
+			description: "Test RNGD Core Frequency",
+			arch:        ArchRngd,
+			expected: func() coreFrequency {
+				exp := coreFrequency{binding.FuriosaSmiCoreFrequency{PeCount: 8, Pe: [64]binding.FuriosaSmiPeFrequency{}}}
+				for i := 0; i < 8; i++ {
+					exp.raw.Pe[i] = binding.FuriosaSmiPeFrequency{Core: uint32(i), Frequency: 500}
+				}
+
+				return exp
+			}(),
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.description, func(t *testing.T) {
+			testCoreFrequency(t, tc.arch, tc.expected)
+		})
+	}
+}
+
+func testMemoryFrequency(t *testing.T, arch Arch, expected uint32) {
+	mockDevice := GetStaticMockDevice(arch, 0)
+
+	freq, err := mockDevice.MemoryFrequency()
+	assert.NoError(t, err)
+
+	assert.Equal(t, expected, freq.Frequency())
+}
+
+func TestMemoryFrequency(t *testing.T) {
+	tests := []struct {
+		description string
+		arch        Arch
+		expected    uint32
+	}{
+		{
+			description: "Test Warboy Memory Frequency",
+			arch:        ArchWarboy,
+			expected:    4266,
+		},
+		{
+			description: "Test RNGD Memory Frequency",
+			arch:        ArchRngd,
+			expected:    6000,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.description, func(t *testing.T) {
+			testMemoryFrequency(t, tc.arch, tc.expected)
 		})
 	}
 }

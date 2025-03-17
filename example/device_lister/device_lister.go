@@ -102,6 +102,25 @@ func main() {
 			fmt.Printf("    Task Execution Cycle: %d\n", counter.TaskExecutionCycle())
 		}
 
+		memoryFrequency, err := device.MemoryFrequency()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Memory Frequency: %d MHz\n", memoryFrequency.Frequency())
+
+		coreFrequency, err := device.CoreFrequency()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Core Frequency:\n")
+		for _, frequency := range coreFrequency.PeFrequency() {
+			fmt.Printf("  Core %d Frequency: %d MHz\n", frequency.Core(), frequency.Frequency())
+		}
+
 		temperature, err := device.DeviceTemperature()
 		if err != nil {
 			fmt.Println(err.Error())
