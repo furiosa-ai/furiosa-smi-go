@@ -58,8 +58,8 @@ func main() {
 		}
 
 		fmt.Printf("Core Status:\n")
-		for core, status := range coreStatus {
-			fmt.Printf("  Core %d: %v\n", core, status)
+		for _, peStatus := range coreStatus.PeStatus() {
+			fmt.Printf("  Core %d: %v\n", peStatus.Core(), peStatus.Status())
 		}
 
 		deviceFiles, err := device.DeviceFiles()
@@ -88,17 +88,6 @@ func main() {
 			fmt.Printf("    PE Usage Percentage: %f\n", peUtilization.PeUsagePercentage())
 		}
 
-		memoryUtilization, err := device.MemoryUtilization()
-		if err != nil {
-			fmt.Println(err.Error())
-			// skit this error, Memory Utilization is not supported for now.
-			//os.Exit(1)
-		} else {
-			fmt.Printf("  Memory Utilization:\n")
-			fmt.Printf("    Total Bytes: %d\n", memoryUtilization.TotalBytes())
-			fmt.Printf("    In Use Bytes: %d\n", memoryUtilization.InUseBytes())
-		}
-
 		performanceCounter, err := device.DevicePerformanceCounter()
 		if err != nil {
 			fmt.Println(err.Error())
@@ -106,11 +95,30 @@ func main() {
 		}
 
 		fmt.Printf("Device Performance Counter:\n")
-		for coreIdx, counter := range performanceCounter.PerformanceCounter() {
-			fmt.Printf("  Core %d Performance Counter:\n", coreIdx)
+		for _, counter := range performanceCounter.PerformanceCounter() {
+			fmt.Printf("  Core %d Performance Counter:\n", counter.Core())
 			fmt.Printf("    Timestamp: %v\n", counter.Timestamp())
 			fmt.Printf("    Cycle Count: %d\n", counter.CycleCount())
 			fmt.Printf("    Task Execution Cycle: %d\n", counter.TaskExecutionCycle())
+		}
+
+		memoryFrequency, err := device.MemoryFrequency()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Memory Frequency: %d MHz\n", memoryFrequency.Frequency())
+
+		coreFrequency, err := device.CoreFrequency()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Core Frequency:\n")
+		for _, frequency := range coreFrequency.PeFrequency() {
+			fmt.Printf("  Core %d Frequency: %d MHz\n", frequency.Core(), frequency.Frequency())
 		}
 
 		temperature, err := device.DeviceTemperature()
@@ -130,5 +138,13 @@ func main() {
 		}
 
 		fmt.Printf("Power Consumption: %f\n", powerConsumption)
+
+		governor, err := device.GovernorProfile()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Governor Profile: %s\n", governor)
 	}
 }
