@@ -186,23 +186,23 @@ func (m *memoryFrequency) Frequency() uint32 {
 type GovernorProfile uint32
 
 const (
-	// OnDemand governor profile
-	OnDemand = GovernorProfile(binding.FuriosaSmiGovernorProfileOnDemand)
-	// Performance governor profile
-	Performance = GovernorProfile(binding.FuriosaSmiGovernorProfilePerformance)
-	// PowerSave governor profile
-	PowerSave = GovernorProfile(binding.FuriosaSmiGovernorProfilePowerSave)
+	// GovernorProfileOnDemand governor profile
+	GovernorProfileOnDemand = GovernorProfile(binding.FuriosaSmiGovernorProfileOnDemand)
+	// GovernorProfilePerformance governor profile
+	GovernorProfilePerformance = GovernorProfile(binding.FuriosaSmiGovernorProfilePerformance)
+	// GovernorProfilePowerSave governor profile
+	GovernorProfilePowerSave = GovernorProfile(binding.FuriosaSmiGovernorProfilePowerSave)
 )
 
 func (p GovernorProfile) String() string {
 	switch p {
-	case OnDemand:
+	case GovernorProfileOnDemand:
 		return "OnDemand"
 
-	case Performance:
+	case GovernorProfilePerformance:
 		return "Performance"
 
-	case PowerSave:
+	case GovernorProfilePowerSave:
 		return "PowerSave"
 	}
 
