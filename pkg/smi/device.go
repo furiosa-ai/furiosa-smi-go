@@ -42,9 +42,9 @@ type Device interface {
 	CoreStatus() (CoreStatuses, error)
 	// Liveness returns a liveness state of the device.
 	Liveness() (bool, error)
-	// CoreFrequency returns a core frequency of the device.
+	// CoreFrequency returns a core frequency (MHz) of the device.
 	CoreFrequency() (CoreFrequency, error)
-	// MemoryFrequency returns a memory frequency of the device.
+	// MemoryFrequency returns a memory frequency (MHz) of the device.
 	MemoryFrequency() (MemoryFrequency, error)
 	// CoreUtilization returns a core utilization of the device.
 	CoreUtilization() (CoreUtilization, error)
