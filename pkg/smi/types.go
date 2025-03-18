@@ -204,8 +204,8 @@ func (p GovernorProfile) String() string {
 
 	case GovernorProfilePowerSave:
 		return "PowerSave"
-	}
 
-	// should not reach here!
-	panic("unknown governor profile")
+	default: // should not reach here!
+		return "Unknown"
+	}
 }
