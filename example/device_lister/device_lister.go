@@ -21,6 +21,14 @@ func main() {
 
 	fmt.Printf("found %d device(s)\n", len(devices))
 
+	driverInfo, err := smi.DriverInfo()
+	if err != nil {
+		fmt.Printf("%s\n", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Printf("driver info: %s\n", driverInfo)
+
 	for _, device := range devices {
 		deviceInfo, err := device.DeviceInfo()
 		if err != nil {
