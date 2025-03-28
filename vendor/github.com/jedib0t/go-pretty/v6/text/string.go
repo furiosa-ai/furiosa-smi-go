@@ -5,7 +5,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/mattn/go-runewidth"
-	"golang.org/x/text/width"
 )
 
 // RuneWidth stuff
@@ -25,7 +24,7 @@ func InsertEveryN(str string, runeToInsert rune, n int) string {
 		return str
 	}
 
-	sLen := StringWidthWithoutEscSequences(str)
+	sLen := RuneWidthWithoutEscSequences(str)
 	var out strings.Builder
 	out.Grow(sLen + (sLen / n))
 	outLen, esp := 0, escSeqParser{}
@@ -103,7 +102,7 @@ func OverrideRuneWidthEastAsianWidth(val bool) {
 //	Pad("Ghost", 7, ' ') == "Ghost  "
 //	Pad("Ghost", 10, '.') == "Ghost....."
 func Pad(str string, maxLen int, paddingChar rune) string {
-	strLen := StringWidthWithoutEscSequences(str)
+	strLen := RuneWidthWithoutEscSequences(str)
 	if strLen < maxLen {
 		str += strings.Repeat(string(paddingChar), maxLen-strLen)
 	}
@@ -181,7 +180,7 @@ func RepeatAndTrim(str string, maxRunes int) string {
 //
 // Deprecated: in favor of RuneWidthWithoutEscSequences
 func RuneCount(str string) int {
-	return StringWidthWithoutEscSequences(str)
+	return RuneWidthWithoutEscSequences(str)
 }
 
 // RuneWidth returns the mostly accurate character-width of the rune. This is
@@ -204,50 +203,7 @@ func RuneWidth(r rune) int {
 //	RuneWidthWithoutEscSequences("Ghost") == 5
 //	RuneWidthWithoutEscSequences("\x1b[33mGhost\x1b[0m") == 5
 //	RuneWidthWithoutEscSequences("\x1b[33mGhost\x1b[0") == 5
-//
-// deprecated: use StringWidthWithoutEscSequences instead
 func RuneWidthWithoutEscSequences(str string) int {
-	return StringWidthWithoutEscSequences(str)
-}
-
-// Snip returns the given string with a fixed length. For ex.:
-//
-//	Snip("Ghost", 0, "~") == "Ghost"
-//	Snip("Ghost", 1, "~") == "~"
-//	Snip("Ghost", 3, "~") == "Gh~"
-//	Snip("Ghost", 5, "~") == "Ghost"
-//	Snip("Ghost", 7, "~") == "Ghost  "
-//	Snip("\x1b[33mGhost\x1b[0m", 7, "~") == "\x1b[33mGhost\x1b[0m  "
-func Snip(str string, length int, snipIndicator string) string {
-	if length > 0 {
-		lenStr := StringWidthWithoutEscSequences(str)
-		if lenStr > length {
-			lenStrFinal := length - StringWidthWithoutEscSequences(snipIndicator)
-			return Trim(str, lenStrFinal) + snipIndicator
-		}
-	}
-	return str
-}
-
-// StringWidth is similar to RuneWidth, except it works on a string. For
-// ex.:
-//
-//	StringWidth("Ghost 生命"): 10
-//	StringWidth("\x1b[33mGhost 生命\x1b[0m"): 19
-func StringWidth(str string) int {
-	return rwCondition.StringWidth(str)
-}
-
-// StringWidthWithoutEscSequences is similar to RuneWidth, except for the fact
-// that it ignores escape sequences while counting. For ex.:
-//
-//	StringWidthWithoutEscSequences("") == 0
-//	StringWidthWithoutEscSequences("Ghost") == 5
-//	StringWidthWithoutEscSequences("\x1b[33mGhost\x1b[0m") == 5
-//	StringWidthWithoutEscSequences("\x1b[33mGhost\x1b[0") == 5
-//	StringWidthWithoutEscSequences("Ghost 生命"): 10
-//	StringWidthWithoutEscSequences("\x1b[33mGhost 生命\x1b[0m"): 10
-func StringWidthWithoutEscSequences(str string) int {
 	count, esp := 0, escSeqParser{}
 	for _, c := range str {
 		if esp.InSequence() {
@@ -260,6 +216,25 @@ func StringWidthWithoutEscSequences(str string) int {
 		}
 	}
 	return count
+}
+
+// Snip returns the given string with a fixed length. For ex.:
+//
+//	Snip("Ghost", 0, "~") == "Ghost"
+//	Snip("Ghost", 1, "~") == "~"
+//	Snip("Ghost", 3, "~") == "Gh~"
+//	Snip("Ghost", 5, "~") == "Ghost"
+//	Snip("Ghost", 7, "~") == "Ghost  "
+//	Snip("\x1b[33mGhost\x1b[0m", 7, "~") == "\x1b[33mGhost\x1b[0m  "
+func Snip(str string, length int, snipIndicator string) string {
+	if length > 0 {
+		lenStr := RuneWidthWithoutEscSequences(str)
+		if lenStr > length {
+			lenStrFinal := length - RuneWidthWithoutEscSequences(snipIndicator)
+			return Trim(str, lenStrFinal) + snipIndicator
+		}
+	}
+	return str
 }
 
 // Trim trims a string to the given length while ignoring escape sequences. For
@@ -296,29 +271,4 @@ func Trim(str string, maxLen int) string {
 		}
 	}
 	return out.String()
-}
-
-// Widen is like width.Widen.String() but ignores escape sequences. For ex:
-//
-//	Widen("Ghost 生命"): "Ｇｈｏｓｔ\u3000生命"
-//	Widen("\x1b[33mGhost 生命\x1b[0m"): "\x1b[33mＧｈｏｓｔ\u3000生命\x1b[0m"
-func Widen(str string) string {
-	sb := strings.Builder{}
-	sb.Grow(len(str))
-
-	esp := escSeqParser{}
-	for _, c := range str {
-		if esp.InSequence() {
-			sb.WriteRune(c)
-			esp.Consume(c)
-			continue
-		}
-		esp.Consume(c)
-		if !esp.InSequence() {
-			sb.WriteString(width.Widen.String(string(c)))
-		} else {
-			sb.WriteRune(c)
-		}
-	}
-	return sb.String()
 }

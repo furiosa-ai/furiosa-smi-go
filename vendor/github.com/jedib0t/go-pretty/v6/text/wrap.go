@@ -2,6 +2,7 @@ package text
 
 import (
 	"strings"
+	"unicode/utf8"
 )
 
 // WrapHard wraps a string to the given length using a newline. Handles strings
@@ -14,7 +15,7 @@ func WrapHard(str string, wrapLen int) string {
 		return ""
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
-	sLen := StringWidthWithoutEscSequences(str)
+	sLen := utf8.RuneCountInString(str)
 	if sLen <= wrapLen {
 		return str
 	}
@@ -42,7 +43,7 @@ func WrapSoft(str string, wrapLen int) string {
 		return ""
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
-	sLen := StringWidthWithoutEscSequences(str)
+	sLen := utf8.RuneCountInString(str)
 	if sLen <= wrapLen {
 		return str
 	}
@@ -69,7 +70,7 @@ func WrapText(str string, wrapLen int) string {
 		return ""
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
-	sLen := StringWidthWithoutEscSequences(str)
+	sLen := utf8.RuneCountInString(str)
 	if sLen <= wrapLen {
 		return str
 	}
@@ -110,7 +111,7 @@ func appendChar(char rune, wrapLen int, lineLen *int, inEscSeq bool, lastSeenEsc
 
 		// increment the line index if not in the middle of an escape sequence
 		if !inEscSeq {
-			*lineLen += RuneWidth(char)
+			*lineLen++
 		}
 	}
 }
@@ -169,7 +170,7 @@ func wrapHard(paragraph string, wrapLen int, out *strings.Builder) {
 			lineLen++
 		}
 
-		wordLen := StringWidthWithoutEscSequences(word)
+		wordLen := RuneWidthWithoutEscSequences(word)
 		if lineLen+wordLen <= wrapLen { // word fits within the line
 			out.WriteString(word)
 			lineLen += wordLen
@@ -195,7 +196,7 @@ func wrapSoft(paragraph string, wrapLen int, out *strings.Builder) {
 		}
 
 		spacing, spacingLen := wrapSoftSpacing(lineLen)
-		wordLen := StringWidthWithoutEscSequences(word)
+		wordLen := RuneWidthWithoutEscSequences(word)
 		if lineLen+spacingLen+wordLen <= wrapLen { // word fits within the line
 			out.WriteString(spacing)
 			out.WriteString(word)

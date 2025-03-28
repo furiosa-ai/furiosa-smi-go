@@ -690,29 +690,17 @@ var (
 
 // FormatOptions defines the text-formatting to perform on parts of the Table.
 type FormatOptions struct {
-	Direction    text.Direction // (forced) BiDi direction for each Column
-	Footer       text.Format    // default text format
-	FooterAlign  text.Align     // default horizontal align
-	FooterVAlign text.VAlign    // default vertical align
-	Header       text.Format    // default text format
-	HeaderAlign  text.Align     // default horizontal align
-	HeaderVAlign text.VAlign    // default vertical align
-	Row          text.Format    // default text format
-	RowAlign     text.Align     // default horizontal align
-	RowVAlign    text.VAlign    // default vertical align
+	Direction text.Direction // (forced) BiDi direction for each Column
+	Footer    text.Format    // footer row(s) text format
+	Header    text.Format    // header row(s) text format
+	Row       text.Format    // (data) row(s) text format
 }
 
 // FormatOptionsDefault defines sensible formatting options.
 var FormatOptionsDefault = FormatOptions{
-	Footer:       text.FormatUpper,
-	FooterAlign:  text.AlignDefault,
-	FooterVAlign: text.VAlignDefault,
-	Header:       text.FormatUpper,
-	HeaderAlign:  text.AlignDefault,
-	HeaderVAlign: text.VAlignDefault,
-	Row:          text.FormatDefault,
-	RowAlign:     text.AlignDefault,
-	RowVAlign:    text.VAlignDefault,
+	Footer: text.FormatUpper,
+	Header: text.FormatUpper,
+	Row:    text.FormatDefault,
 }
 
 // HTMLOptions defines the global options to control HTML rendering.
