@@ -8,6 +8,8 @@ import (
 
 // VersionInfo represents a version information.
 type VersionInfo interface {
+	fmt.Stringer // added for `String() string` method
+
 	// Major returns a major part of version.
 	Major() uint32
 	// Minor returns a minor part of version.
@@ -16,8 +18,6 @@ type VersionInfo interface {
 	Patch() uint32
 	// Metadata returns a metadata of version.
 	Metadata() string
-	// String returns a string value of it in semantic version format.
-	String() string
 }
 
 var _ VersionInfo = new(versionInfo)
