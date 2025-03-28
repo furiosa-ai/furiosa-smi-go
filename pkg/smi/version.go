@@ -1,6 +1,10 @@
 package smi
 
-import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
+import (
+	"fmt"
+
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
+)
 
 // VersionInfo represents a version information.
 type VersionInfo interface {
@@ -12,6 +16,8 @@ type VersionInfo interface {
 	Patch() uint32
 	// Metadata returns a metadata of version.
 	Metadata() string
+	// String returns a string value of it in semantic version format.
+	String() string
 }
 
 var _ VersionInfo = new(versionInfo)
@@ -38,4 +44,8 @@ func (v *versionInfo) Patch() uint32 {
 
 func (v *versionInfo) Metadata() string {
 	return byteBufferToString(v.raw.Metadata[:])
+}
+
+func (v *versionInfo) String() string {
+	return fmt.Sprintf("%d.%d.%d+%s", v.Major(), v.Minor(), v.Patch(), v.Metadata())
 }
