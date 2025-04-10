@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Prepare `furiosa-smi`
-        uses: furiosa-ai/furiosa-smi/actions/prepare@fix-furiosa-smi-prepare-gh-action-cn-112
+        uses: furiosa-ai/furiosa-smi/actions/prepare@main
         with:
           personal-access-token: '${{ secrets.TOKEN_FOR_CLONE_ANOTHER_REPO }}'
 
