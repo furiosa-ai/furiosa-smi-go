@@ -25,30 +25,29 @@ const (
 	FuriosaSmiMaxCstrSize = 96
 )
 
-// FuriosaSmiArch as declared in smi/furiosa_smi.h:31
+// FuriosaSmiArch as declared in smi/furiosa_smi.h:29
 type FuriosaSmiArch int32
 
-// FuriosaSmiArch enumeration from smi/furiosa_smi.h:31
+// FuriosaSmiArch enumeration from smi/furiosa_smi.h:29
 const (
-	FuriosaSmiArchWarboy  FuriosaSmiArch = iota
 	FuriosaSmiArchRngd    FuriosaSmiArch = 1
 	FuriosaSmiArchRngdMax FuriosaSmiArch = 2
 	FuriosaSmiArchRngdS   FuriosaSmiArch = 3
 )
 
-// FuriosaSmiCoreStatus as declared in smi/furiosa_smi.h:39
+// FuriosaSmiCoreStatus as declared in smi/furiosa_smi.h:37
 type FuriosaSmiCoreStatus int32
 
-// FuriosaSmiCoreStatus enumeration from smi/furiosa_smi.h:39
+// FuriosaSmiCoreStatus enumeration from smi/furiosa_smi.h:37
 const (
 	FuriosaSmiCoreStatusAvailable FuriosaSmiCoreStatus = iota
 	FuriosaSmiCoreStatusOccupied  FuriosaSmiCoreStatus = 1
 )
 
-// FuriosaSmiDeviceToDeviceLinkType as declared in smi/furiosa_smi.h:53
+// FuriosaSmiDeviceToDeviceLinkType as declared in smi/furiosa_smi.h:51
 type FuriosaSmiDeviceToDeviceLinkType int32
 
-// FuriosaSmiDeviceToDeviceLinkType enumeration from smi/furiosa_smi.h:53
+// FuriosaSmiDeviceToDeviceLinkType enumeration from smi/furiosa_smi.h:51
 const (
 	FuriosaSmiDeviceToDeviceLinkTypeUnknown      FuriosaSmiDeviceToDeviceLinkType = iota
 	FuriosaSmiDeviceToDeviceLinkTypeInterconnect FuriosaSmiDeviceToDeviceLinkType = 10
@@ -57,20 +56,20 @@ const (
 	FuriosaSmiDeviceToDeviceLinkTypeNoc          FuriosaSmiDeviceToDeviceLinkType = 70
 )
 
-// FuriosaSmiGovernorProfile as declared in smi/furiosa_smi.h:63
+// FuriosaSmiGovernorProfile as declared in smi/furiosa_smi.h:61
 type FuriosaSmiGovernorProfile int32
 
-// FuriosaSmiGovernorProfile enumeration from smi/furiosa_smi.h:63
+// FuriosaSmiGovernorProfile enumeration from smi/furiosa_smi.h:61
 const (
 	FuriosaSmiGovernorProfileOnDemand    FuriosaSmiGovernorProfile = iota
 	FuriosaSmiGovernorProfilePerformance FuriosaSmiGovernorProfile = 1
 	FuriosaSmiGovernorProfilePowerSave   FuriosaSmiGovernorProfile = 2
 )
 
-// FuriosaSmiReturnCode as declared in smi/furiosa_smi.h:101
+// FuriosaSmiReturnCode as declared in smi/furiosa_smi.h:99
 type FuriosaSmiReturnCode int32
 
-// FuriosaSmiReturnCode enumeration from smi/furiosa_smi.h:101
+// FuriosaSmiReturnCode enumeration from smi/furiosa_smi.h:99
 const (
 	FuriosaSmiReturnCodeOk                       FuriosaSmiReturnCode = iota
 	FuriosaSmiReturnCodeInvalidArgumentError     FuriosaSmiReturnCode = 1
