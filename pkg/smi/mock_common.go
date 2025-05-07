@@ -71,16 +71,12 @@ func GetStaticMockDevices(arch Arch) (mockDevices []Device) {
 // GetStaticMockDevice returns single mock device with given Arch and idx number for test purpose.
 func GetStaticMockDevice(arch Arch, nodeIdx int) Device {
 	switch arch {
-	case ArchWarboy:
-		return &staticWarboyMockDevice{
-			arch:    ArchWarboy,
-			nodeIdx: nodeIdx,
-		}
 	case ArchRngd:
 		return &staticRngdMockDevice{
 			arch:    ArchRngd,
 			nodeIdx: nodeIdx,
 		}
+		// TODO: add more arch
 	}
 
 	panic("unknown arch")

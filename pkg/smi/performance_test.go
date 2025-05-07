@@ -24,11 +24,6 @@ func TestDeviceTemperature(t *testing.T) {
 		expected    deviceTemperature
 	}{
 		{
-			description: "Test Warboy Device Temperature",
-			arch:        ArchWarboy,
-			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
-		},
-		{
 			description: "Test RNGD Device Temperature",
 			arch:        ArchRngd,
 			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
@@ -57,11 +52,6 @@ func TestPowerConsumption(t *testing.T) {
 		arch        Arch
 		expected    float64
 	}{
-		{
-			description: "Test Warboy Device Power Consumption",
-			arch:        ArchWarboy,
-			expected:    100.0,
-		},
 		{
 			description: "Test RNGD Device Power Consumption",
 			arch:        ArchRngd,
