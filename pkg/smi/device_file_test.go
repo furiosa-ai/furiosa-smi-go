@@ -35,18 +35,6 @@ func TestDeviceFiles(t *testing.T) {
 		expected    []DeviceFile
 	}{
 		{
-			description: "Test Warboy Device Files",
-			arch:        ArchWarboy,
-			expected: []DeviceFile{
-				newDeviceFile(binding.FuriosaSmiDeviceFile{
-					CoreStart: 0, CoreEnd: 0, Path: stringTo256ByteArray("/dev/npu0pe0")}),
-				newDeviceFile(binding.FuriosaSmiDeviceFile{
-					CoreStart: 1, CoreEnd: 1, Path: stringTo256ByteArray("/dev/npu0pe1")}),
-				newDeviceFile(binding.FuriosaSmiDeviceFile{
-					CoreStart: 0, CoreEnd: 1, Path: stringTo256ByteArray("/dev/npu0pe0-1")}),
-			},
-		},
-		{
 			description: "Test RNGD Device Files",
 			arch:        ArchRngd,
 			expected: []DeviceFile{
