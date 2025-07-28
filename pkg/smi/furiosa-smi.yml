@@ -24,6 +24,7 @@ TRANSLATOR:
       - {load: snakecase}
   MemTips:
     - { target: "^furiosa_smi_", default: "raw" }
+    - { target: "^FuriosaSmiDisabledDevices$", self: "raw" }
   PtrTips:
     function:
       - {target: furiosa_smi_get_device_handles, tips: [ref]}
@@ -47,3 +48,4 @@ TRANSLATOR:
       - {target: furiosa_smi_set_governor_profile, tips: [0,0] }
       - {target: furiosa_smi_get_device_to_device_link_type, tips: [0,0,ref]}
       - {target: furiosa_smi_get_p2p_accessible, tips: [0,0,ref]}
+      - { target: furiosa_smi_get_disabled_devices, tips: [ ref ] }

@@ -415,8 +415,10 @@ typedef char FuriosaSmiBdf[FURIOSA_SMI_MAX_CSTR_SIZE];
 
 typedef struct {
   uint32_t count;
-  char bdfs[FURIOSA_SMI_MAX_DEVICE_HANDLE_SIZE][FURIOSA_SMI_MAX_CSTR_SIZE];
+  FuriosaSmiBdf bdfs[FURIOSA_SMI_MAX_DEVICE_HANDLE_SIZE];
 } FuriosaSmiDisabledDevices;
+
+FuriosaSmiReturnCode furiosa_smi_get_disabled_devices(FuriosaSmiDisabledDevices *out_disabled_devices);
 
 
 

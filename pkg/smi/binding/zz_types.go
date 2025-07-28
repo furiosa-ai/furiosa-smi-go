@@ -110,7 +110,4 @@ type FuriosaSmiDeviceTemperature struct {
 
 type FuriosaSmiBdf [96]byte
 
-type FuriosaSmiDisabledDevices struct {
-	Count          uint32
-	Bdfs           [64][96]byte
-}
+type FuriosaSmiDisabledDevices C.FuriosaSmiDisabledDevices
