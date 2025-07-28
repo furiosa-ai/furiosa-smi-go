@@ -411,6 +411,14 @@ FuriosaSmiReturnCode furiosa_smi_get_governor_profile(FuriosaSmiDeviceHandle han
 /// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
 FuriosaSmiReturnCode furiosa_smi_set_governor_profile(FuriosaSmiDeviceHandle handle,
                                                       FuriosaSmiGovernorProfile governor_profile);
+typedef char FuriosaSmiBdf[FURIOSA_SMI_MAX_CSTR_SIZE];
+
+typedef struct {
+  uint32_t count;
+  char bdfs[FURIOSA_SMI_MAX_DEVICE_HANDLE_SIZE][FURIOSA_SMI_MAX_CSTR_SIZE];
+} FuriosaSmiDisabledDevices;
+
+
 
 /// @}
 
