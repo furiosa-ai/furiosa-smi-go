@@ -227,3 +227,11 @@ func FuriosaSmiSetGovernorProfile(handle FuriosaSmiDeviceHandle, governorProfile
 	__v := (FuriosaSmiReturnCode)(__ret)
 	return __v
 }
+
+func FuriosaSmiGetDisabledDevices(outDisabledDevices *FuriosaSmiDisabledDevices) FuriosaSmiReturnCode {
+	coutDisabledDevices, coutDisabledDevicesAllocMap := (*C.FuriosaSmiDisabledDevices)(unsafe.Pointer(outDisabledDevices)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_disabled_devices(coutDisabledDevices)
+	runtime.KeepAlive(coutDisabledDevicesAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
