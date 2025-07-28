@@ -104,6 +104,14 @@ func (m *staticWarboyMockDevice) SetGovernorProfile(profile GovernorProfile) err
 	return nil
 }
 
+func (m *staticWarboyMockDevice) EnableDevice() error {
+	return nil
+}
+
+func (m *staticWarboyMockDevice) DisableDevice() error {
+	return nil
+}
+
 type staticWarboyMockDeviceInfo struct {
 	nodeIdx int
 }

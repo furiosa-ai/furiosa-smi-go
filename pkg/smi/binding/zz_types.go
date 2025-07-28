@@ -107,3 +107,7 @@ type FuriosaSmiDeviceTemperature struct {
 	SocPeak        float64
 	Ambient        float64
 }
+
+type FuriosaSmiBdf [96]byte
+
+type FuriosaSmiDisabledDevices C.FuriosaSmiDisabledDevices

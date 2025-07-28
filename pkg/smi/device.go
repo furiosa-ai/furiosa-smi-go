@@ -32,6 +32,23 @@ func ListDevices() ([]Device, error) {
 	return devices, nil
 }
 
+func ListDisabledDevices() ([]DisabledDevice, error) {
+	var outDisabledDevice binding.FuriosaSmiDisabledDevices
+	if ret := binding.FuriosaSmiGetDisabledDevices(&outDisabledDevice); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	convertedDisabledDevice := binding.ConvertDisabledDevices(&outDisabledDevice)
+
+	var disabledDevices []DisabledDevice
+	for i := 0; i < int(convertedDisabledDevice.Count); i++ {
+		var bdf = convertedDisabledDevice.Bdfs[i][:]
+		disabledDevices = append(disabledDevices, newDisabledDevice(byteBufferToString(bdf)))
+	}
+
+	return disabledDevices, nil
+}
+
 // DriverInfo return a driver information of the device.
 func DriverInfo() (VersionInfo, error) {
 	var outDriverInfo binding.FuriosaSmiVersion
@@ -72,6 +89,10 @@ type Device interface {
 	GovernorProfile() (GovernorProfile, error)
 	// SetGovernorProfile set a governor profile of the device.
 	SetGovernorProfile(governorProfile GovernorProfile) error
+	// EnableDevice binds the device.
+	EnableDevice() error
+	// DisableDevice unbinds the device.
+	DisableDevice() error
 }
 
 var _ Device = new(device)
@@ -86,6 +107,27 @@ func newDevice(handle binding.FuriosaSmiDeviceHandle, observerInstance *furiosaS
 		observerInstance: observerInstance,
 		handle:           handle,
 	}
+}
+
+// DisabledDevice represents the abstraction for a disabled Furiosa NPU device.
+type DisabledDevice interface {
+	Bdf() string
+}
+
+var _ DisabledDevice = new(disabledDevice)
+
+type disabledDevice struct {
+	bdf string
+}
+
+func newDisabledDevice(bdf string) DisabledDevice {
+	return &disabledDevice{
+		bdf: bdf,
+	}
+}
+
+func (d *disabledDevice) Bdf() string {
+	return d.bdf
 }
 
 func (d *device) DeviceInfo() (DeviceInfo, error) {
@@ -225,6 +267,22 @@ func (d *device) GovernorProfile() (GovernorProfile, error) {
 func (d *device) SetGovernorProfile(profile GovernorProfile) error {
 	rawProfile := binding.FuriosaSmiGovernorProfile(profile)
 	if ret := binding.FuriosaSmiSetGovernorProfile(d.handle, rawProfile); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
+}
+
+func (d *device) EnableDevice() error {
+	if ret := binding.FuriosaSmiEnableDevice(d.handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
+}
+
+func (d *device) DisableDevice() error {
+	if ret := binding.FuriosaSmiDisableDevice(d.handle); ret != binding.FuriosaSmiReturnCodeOk {
 		return toError(ret)
 	}
 
