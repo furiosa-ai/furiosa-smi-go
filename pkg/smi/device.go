@@ -32,7 +32,8 @@ func ListDevices() ([]Device, error) {
 	return devices, nil
 }
 
-func ListDisabledDevices() ([]DisabledDevice, error) {
+// ListDisabledDevices lists all disabled Furiosa NPU devices in the system. It returns a list of BDF strings representing the disabled devices.
+func ListDisabledDevices() ([]string, error) {
 	var outDisabledDevice binding.FuriosaSmiDisabledDevices
 	if ret := binding.FuriosaSmiGetDisabledDevices(&outDisabledDevice); ret != binding.FuriosaSmiReturnCodeOk {
 		return nil, toError(ret)
@@ -40,10 +41,10 @@ func ListDisabledDevices() ([]DisabledDevice, error) {
 
 	convertedDisabledDevice := binding.ConvertDisabledDevices(&outDisabledDevice)
 
-	var disabledDevices []DisabledDevice
+	var disabledDevices []string
 	for i := 0; i < int(convertedDisabledDevice.Count); i++ {
 		var bdf = convertedDisabledDevice.Bdfs[i][:]
-		disabledDevices = append(disabledDevices, newDisabledDevice(byteBufferToString(bdf)))
+		disabledDevices = append(disabledDevices, byteBufferToString(bdf))
 	}
 
 	return disabledDevices, nil
@@ -107,27 +108,6 @@ func newDevice(handle binding.FuriosaSmiDeviceHandle, observerInstance *furiosaS
 		observerInstance: observerInstance,
 		handle:           handle,
 	}
-}
-
-// DisabledDevice represents the abstraction for a disabled Furiosa NPU device.
-type DisabledDevice interface {
-	Bdf() string
-}
-
-var _ DisabledDevice = new(disabledDevice)
-
-type disabledDevice struct {
-	bdf string
-}
-
-func newDisabledDevice(bdf string) DisabledDevice {
-	return &disabledDevice{
-		bdf: bdf,
-	}
-}
-
-func (d *disabledDevice) Bdf() string {
-	return d.bdf
 }
 
 func (d *device) DeviceInfo() (DeviceInfo, error) {
