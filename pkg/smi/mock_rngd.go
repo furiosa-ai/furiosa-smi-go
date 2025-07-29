@@ -158,6 +158,14 @@ func (m *staticRngdMockDevice) SetGovernorProfile(profile GovernorProfile) error
 	return nil
 }
 
+func (m *staticRngdMockDevice) EnableDevice() error {
+	return nil
+}
+
+func (m *staticRngdMockDevice) DisableDevice() error {
+	return nil
+}
+
 type staticRngdMockDeviceInfo struct {
 	nodeIdx int
 }
