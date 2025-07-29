@@ -19,6 +19,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	disabledDevices, err := smi.ListDisabledDevices()
+	if err != nil {
+		fmt.Printf("%s\n", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Printf("There are %d disabled device(s).\n", len(disabledDevices))
+
+	for _, disabledDevice := range disabledDevices {
+		fmt.Printf("  Disabled Device BDF: %s\n", disabledDevice.Bdf())
+	}
+
 	fmt.Printf("found %d device(s)\n", len(devices))
 
 	driverInfo, err := smi.DriverInfo()
