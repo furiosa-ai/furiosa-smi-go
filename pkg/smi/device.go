@@ -50,6 +50,36 @@ func ListDisabledDevices() ([]string, error) {
 	return disabledDevices, nil
 }
 
+// EnableDevice enables a Furiosa NPU device by bdf. This requires root privileges.
+func EnableDevice(bdf string) error {
+	var handle binding.FuriosaSmiDeviceHandle
+
+	if ret := binding.FuriosaSmiGetDeviceHandleByBdf(bdf, &handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiEnableDevice(handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
+}
+
+// DisableDevice disables a Furiosa NPU device by bdf. This requires root privileges.
+func DisableDevice(bdf string) error {
+	var handle binding.FuriosaSmiDeviceHandle
+
+	if ret := binding.FuriosaSmiGetDeviceHandleByBdf(bdf, &handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiDisableDevice(handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
+}
+
 // DriverInfo return a driver information of the device.
 func DriverInfo() (VersionInfo, error) {
 	var outDriverInfo binding.FuriosaSmiVersion
@@ -90,10 +120,6 @@ type Device interface {
 	GovernorProfile() (GovernorProfile, error)
 	// SetGovernorProfile set a governor profile of the device.
 	SetGovernorProfile(governorProfile GovernorProfile) error
-	// EnableDevice binds the device.
-	EnableDevice() error
-	// DisableDevice unbinds the device.
-	DisableDevice() error
 }
 
 var _ Device = new(device)
@@ -247,22 +273,6 @@ func (d *device) GovernorProfile() (GovernorProfile, error) {
 func (d *device) SetGovernorProfile(profile GovernorProfile) error {
 	rawProfile := binding.FuriosaSmiGovernorProfile(profile)
 	if ret := binding.FuriosaSmiSetGovernorProfile(d.handle, rawProfile); ret != binding.FuriosaSmiReturnCodeOk {
-		return toError(ret)
-	}
-
-	return nil
-}
-
-func (d *device) EnableDevice() error {
-	if ret := binding.FuriosaSmiEnableDevice(d.handle); ret != binding.FuriosaSmiReturnCodeOk {
-		return toError(ret)
-	}
-
-	return nil
-}
-
-func (d *device) DisableDevice() error {
-	if ret := binding.FuriosaSmiDisableDevice(d.handle); ret != binding.FuriosaSmiReturnCodeOk {
 		return toError(ret)
 	}
 
