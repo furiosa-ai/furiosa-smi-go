@@ -221,6 +221,45 @@ typedef struct {
   FuriosaSmiBdf bdfs[FURIOSA_SMI_MAX_DEVICE_HANDLE_SIZE];
 } FuriosaSmiDisabledDevices;
 
+/// \brief Represent a PCIe device information.
+typedef struct {
+  uint16_t device_id;
+  uint16_t subsystem_vendor_id;
+  uint16_t subsystem_device_id;
+  uint8_t revision_id;
+  uint8_t class_id;
+  uint8_t sub_class_id;
+} FuriosaSmiPcieDeviceInfo;
+
+/// \brief Represent a PCIe link information.
+typedef struct {
+  uint8_t pcie_gen_status;
+  uint32_t link_width_status;
+  double link_speed_status;
+  uint32_t max_link_width_capability;
+  double max_link_speed_capability;
+} FuriosaSmiPcieLinkInfo;
+
+/// \brief Represent a SR-IOV information.
+typedef struct {
+  uint32_t sriov_total_vfs;
+  uint32_t sriov_enabled_vfs;
+} FuriosaSmiSriovInfo;
+
+/// \brief Represent a PCIe root complex information.
+typedef struct {
+  uint16_t domain;
+  uint8_t bus;
+} FuriosaSmiPcieRootComplexInfo;
+
+/// \brief Represent a PCIe switch information. If switch doesn't exist, all values are max value.
+typedef struct {
+  uint16_t domain;
+  uint8_t bus;
+  uint8_t device;
+  uint8_t function;
+} FuriosaSmiPcieSwitchInfo;
+
 /// @defgroup Initialize Initialize
 /// @brief Initialize module for Furiosa smi.
 /// @{
@@ -438,6 +477,46 @@ FuriosaSmiReturnCode furiosa_smi_disable_device(FuriosaSmiDeviceHandle handle);
 /// @param[out] out_disabled_devices output buffer for pointer to FuriosaSmiDisabledDevices.
 /// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
 FuriosaSmiReturnCode furiosa_smi_get_disabled_devices(FuriosaSmiDisabledDevices *out_disabled_devices);
+
+/// \brief Get a PCIe information of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_pcie_device_info output buffer for pointer to FuriosaSmiPcieDeviceInfo.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_pcie_device_info(FuriosaSmiDeviceHandle handle,
+                                                      FuriosaSmiPcieDeviceInfo *out_pcie_device_info);
+
+/// \brief Get a PCIe link information of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_pcie_link_info output buffer for pointer to FuriosaSmiPcieLinkInfo.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_pcie_link_info(FuriosaSmiDeviceHandle handle,
+                                                    FuriosaSmiPcieLinkInfo *out_pcie_link_info);
+
+/// \brief Get a SR-IOV information of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_sriov_info output buffer for pointer to FuriosaSmiSriovInfo.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_sriov_info(FuriosaSmiDeviceHandle handle,
+                                                FuriosaSmiSriovInfo *out_sriov_info);
+
+/// \brief Get a PCIe root complex information of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_root_complex_info output buffer for pointer to FuriosaSmiPcieRootComplexInfo.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_pcie_root_complex_info(FuriosaSmiDeviceHandle handle,
+                                                            FuriosaSmiPcieRootComplexInfo *out_root_complex_info);
+
+/// \brief Get a PCIe switch information of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_pcie_switch_info output buffer for pointer to FuriosaSmiPcieSwitchInfo.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_pcie_switch_info(FuriosaSmiDeviceHandle handle,
+                                                      FuriosaSmiPcieSwitchInfo *out_pcie_switch_info);
 
 /// @}
 

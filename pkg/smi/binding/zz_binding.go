@@ -251,3 +251,53 @@ func FuriosaSmiGetDisabledDevices(outDisabledDevices *FuriosaSmiDisabledDevices)
 	__v := (FuriosaSmiReturnCode)(__ret)
 	return __v
 }
+
+func FuriosaSmiGetPcieDeviceInfo(handle FuriosaSmiDeviceHandle, outPcieDeviceInfo *FuriosaSmiPcieDeviceInfo) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutPcieDeviceInfo, coutPcieDeviceInfoAllocMap := (*C.FuriosaSmiPcieDeviceInfo)(unsafe.Pointer(outPcieDeviceInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_pcie_device_info(chandle, coutPcieDeviceInfo)
+	runtime.KeepAlive(coutPcieDeviceInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
+
+func FuriosaSmiGetPcieLinkInfo(handle FuriosaSmiDeviceHandle, outPcieLinkInfo *FuriosaSmiPcieLinkInfo) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutPcieLinkInfo, coutPcieLinkInfoAllocMap := (*C.FuriosaSmiPcieLinkInfo)(unsafe.Pointer(outPcieLinkInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_pcie_link_info(chandle, coutPcieLinkInfo)
+	runtime.KeepAlive(coutPcieLinkInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
+
+func FuriosaSmiGetSriovInfo(handle FuriosaSmiDeviceHandle, outSriovInfo *FuriosaSmiSriovInfo) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutSriovInfo, coutSriovInfoAllocMap := (*C.FuriosaSmiSriovInfo)(unsafe.Pointer(outSriovInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_sriov_info(chandle, coutSriovInfo)
+	runtime.KeepAlive(coutSriovInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
+
+func FuriosaSmiGetPcieRootComplexInfo(handle FuriosaSmiDeviceHandle, outRootComplexInfo *FuriosaSmiPcieRootComplexInfo) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutRootComplexInfo, coutRootComplexInfoAllocMap := (*C.FuriosaSmiPcieRootComplexInfo)(unsafe.Pointer(outRootComplexInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_pcie_root_complex_info(chandle, coutRootComplexInfo)
+	runtime.KeepAlive(coutRootComplexInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
+
+func FuriosaSmiGetPcieSwitchInfo(handle FuriosaSmiDeviceHandle, outPcieSwitchInfo *FuriosaSmiPcieSwitchInfo) FuriosaSmiReturnCode {
+	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
+	coutPcieSwitchInfo, coutPcieSwitchInfoAllocMap := (*C.FuriosaSmiPcieSwitchInfo)(unsafe.Pointer(outPcieSwitchInfo)), cgoAllocsUnknown
+	__ret := C.furiosa_smi_get_pcie_switch_info(chandle, coutPcieSwitchInfo)
+	runtime.KeepAlive(coutPcieSwitchInfoAllocMap)
+	runtime.KeepAlive(chandleAllocMap)
+	__v := (FuriosaSmiReturnCode)(__ret)
+	return __v
+}
