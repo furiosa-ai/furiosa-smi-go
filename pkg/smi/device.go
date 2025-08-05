@@ -120,6 +120,8 @@ type Device interface {
 	GovernorProfile() (GovernorProfile, error)
 	// SetGovernorProfile set a governor profile of the device.
 	SetGovernorProfile(governorProfile GovernorProfile) error
+	// PcieInfo returns a PCIe information of the device.
+	PcieInfo() (PcieInfo, error)
 }
 
 var _ Device = new(device)
@@ -277,4 +279,40 @@ func (d *device) SetGovernorProfile(profile GovernorProfile) error {
 	}
 
 	return nil
+}
+
+func (d *device) PcieInfo() (PcieInfo, error) {
+	var outPcieDeviceInfo binding.FuriosaSmiPcieDeviceInfo
+	var outPcieLinkInfo binding.FuriosaSmiPcieLinkInfo
+	var outSriovInfo binding.FuriosaSmiSriovInfo
+	var outPcieRootComplexInfo binding.FuriosaSmiPcieRootComplexInfo
+	var outPcieSwitchInfo binding.FuriosaSmiPcieSwitchInfo
+
+	if ret := binding.FuriosaSmiGetPcieDeviceInfo(d.handle, &outPcieDeviceInfo); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiGetPcieLinkInfo(d.handle, &outPcieLinkInfo); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiGetSriovInfo(d.handle, &outSriovInfo); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiGetPcieRootComplexInfo(d.handle, &outPcieRootComplexInfo); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiGetPcieSwitchInfo(d.handle, &outPcieSwitchInfo); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	pcieDeviceInfo := newPcieDeviceInfo(outPcieDeviceInfo)
+	pcieLinkInfo := newPcieLinkInfo(outPcieLinkInfo)
+	sriovInfo := newSriovInfo(outSriovInfo)
+	pcieRootComplexInfo := newPcieRootComplexInfo(outPcieRootComplexInfo)
+	pcieSwitchInfo := newPcieSwitchInfo(outPcieSwitchInfo)
+
+	return newPcieInfo(pcieDeviceInfo, pcieLinkInfo, sriovInfo, pcieRootComplexInfo, pcieSwitchInfo), nil
 }

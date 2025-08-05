@@ -51,3 +51,9 @@ TRANSLATOR:
       - {target: furiosa_smi_enable_device, tips: [ref]}
       - {target: furiosa_smi_disable_device, tips: [ref]}
       - {target: furiosa_smi_get_disabled_devices, tips: [ref]}
+      - {target: furiosa_smi_get_pcie_device_info, tips: [0,ref]}
+      - {target: furiosa_smi_get_pcie_link_info, tips: [0,ref]}
+      - {target: furiosa_smi_get_sriov_info, tips: [0,ref]}
+      - {target: furiosa_smi_get_pcie_root_complex_info, tips: [0,ref]}
+      - {target: furiosa_smi_get_pcie_switch_info, tips: [0,ref]}
+
