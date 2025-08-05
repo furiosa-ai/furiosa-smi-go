@@ -72,6 +72,8 @@ typedef enum {
   FURIOSA_SMI_RETURN_CODE_MAX_BUFFER_SIZE_EXCEED_ERROR,
   /// When a device is not found with the given option.
   FURIOSA_SMI_RETURN_CODE_DEVICE_NOT_FOUND_ERROR,
+  /// When a device is lost.
+  FURIOSA_SMI_RETURN_CODE_DEVICE_LOST_ERROR,
   /// When a device state is busy.
   FURIOSA_SMI_RETURN_CODE_DEVICE_BUSY_ERROR,
   /// When a certain operation is failed by an unexpected io error.
@@ -211,6 +213,13 @@ typedef struct {
   double soc_peak;
   double ambient;
 } FuriosaSmiDeviceTemperature;
+
+typedef char FuriosaSmiBdf[FURIOSA_SMI_MAX_CSTR_SIZE];
+
+typedef struct {
+  uint32_t count;
+  FuriosaSmiBdf bdfs[FURIOSA_SMI_MAX_DEVICE_HANDLE_SIZE];
+} FuriosaSmiDisabledDevices;
 
 /// @defgroup Initialize Initialize
 /// @brief Initialize module for Furiosa smi.
@@ -404,13 +413,31 @@ FuriosaSmiReturnCode furiosa_smi_get_device_temperature(FuriosaSmiDeviceHandle h
 FuriosaSmiReturnCode furiosa_smi_get_governor_profile(FuriosaSmiDeviceHandle handle,
                                                       FuriosaSmiGovernorProfile *out_governor_profile);
 
-/// \brief Set a governor state into Furiosa NPU device.
+/// \brief Set a governor state into Furiosa NPU device. This requires root privileges.
 ///
 /// @param handle handle of Furiosa NPU device.
 /// @param[in] governor_profile input buffer for pointer to FuriosaSmiGovernorProfile.
 /// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
 FuriosaSmiReturnCode furiosa_smi_set_governor_profile(FuriosaSmiDeviceHandle handle,
                                                       FuriosaSmiGovernorProfile governor_profile);
+
+/// \brief Bind a Furiosa NPU device. This requires root privileges.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_enable_device(FuriosaSmiDeviceHandle handle);
+
+/// \brief Unbind a Furiosa NPU device. This requires root privileges.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_disable_device(FuriosaSmiDeviceHandle handle);
+
+/// \brief Get a list of disabled Furiosa NPU devices.
+///
+/// @param[out] out_disabled_devices output buffer for pointer to FuriosaSmiDisabledDevices.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_disabled_devices(FuriosaSmiDisabledDevices *out_disabled_devices);
 
 /// @}
 

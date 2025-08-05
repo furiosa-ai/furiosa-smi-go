@@ -12,11 +12,23 @@ func main() {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
 	}
+	
+	disabledDevices, err := smi.ListDisabledDevices()
+	if err != nil {
+		fmt.Printf("%s\n", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Printf("There are %d disabled device(s).\n", len(disabledDevices))
 
 	devices, err := smi.ListDevices()
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
+	}
+
+	for _, disabledDevice := range disabledDevices {
+		fmt.Printf("  Disabled Device BDF: %s\n", disabledDevice)
 	}
 
 	fmt.Printf("found %d device(s)\n", len(devices))

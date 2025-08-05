@@ -32,6 +32,54 @@ func ListDevices() ([]Device, error) {
 	return devices, nil
 }
 
+// ListDisabledDevices lists all disabled Furiosa NPU devices in the system. It returns a list of BDF strings representing the disabled devices.
+func ListDisabledDevices() ([]string, error) {
+	var outDisabledDevice binding.FuriosaSmiDisabledDevices
+	if ret := binding.FuriosaSmiGetDisabledDevices(&outDisabledDevice); ret != binding.FuriosaSmiReturnCodeOk {
+		return nil, toError(ret)
+	}
+
+	convertedDisabledDevice := binding.ConvertDisabledDevices(&outDisabledDevice)
+
+	var disabledDevices []string
+	for i := 0; i < int(convertedDisabledDevice.Count); i++ {
+		var bdf = convertedDisabledDevice.Bdfs[i][:]
+		disabledDevices = append(disabledDevices, byteBufferToString(bdf))
+	}
+
+	return disabledDevices, nil
+}
+
+// EnableDevice enables a Furiosa NPU device by bdf. This requires root privileges.
+func EnableDevice(bdf string) error {
+	var handle binding.FuriosaSmiDeviceHandle
+
+	if ret := binding.FuriosaSmiGetDeviceHandleByBdf(bdf, &handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiEnableDevice(handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
+}
+
+// DisableDevice disables a Furiosa NPU device by bdf. This requires root privileges.
+func DisableDevice(bdf string) error {
+	var handle binding.FuriosaSmiDeviceHandle
+
+	if ret := binding.FuriosaSmiGetDeviceHandleByBdf(bdf, &handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	if ret := binding.FuriosaSmiDisableDevice(handle); ret != binding.FuriosaSmiReturnCodeOk {
+		return toError(ret)
+	}
+
+	return nil
+}
+
 // DriverInfo return a driver information of the device.
 func DriverInfo() (VersionInfo, error) {
 	var outDriverInfo binding.FuriosaSmiVersion
