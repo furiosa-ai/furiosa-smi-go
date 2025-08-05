@@ -166,3 +166,7 @@ func (m *staticWarboyMockDeviceInfo) FirmwareVersion() VersionInfo {
 func (m *staticWarboyMockDeviceInfo) PertVersion() VersionInfo {
 	return newStaticMockVersionInfo(0, 0, 0, "")
 }
+
+func (m *staticWarboyMockDevice) PcieInfo() (PcieInfo, error) {
+	return &staticMockPcieInfo{}, nil
+}
