@@ -20,8 +20,10 @@
 
 /// \brief Represent an architecture type of device
 typedef enum {
+  /// Warboy architecture
+  FURIOSA_SMI_ARCH_WARBOY = 0,
   /// RNGD architecture
-  FURIOSA_SMI_ARCH_RNGD = 1,
+  FURIOSA_SMI_ARCH_RNGD,
   /// RNGD-Max architecture
   FURIOSA_SMI_ARCH_RNGD_MAX,
   /// RNGD-S architecture
