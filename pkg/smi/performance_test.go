@@ -75,32 +75,3 @@ func TestPowerConsumption(t *testing.T) {
 		})
 	}
 }
-
-func testCoreUtilization(t *testing.T, arch Arch) {
-	mockDevice := GetStaticMockDevice(arch, 0)
-
-	_, err := mockDevice.CoreUtilization() // Currently, not to check the value.
-	assert.NoError(t, err)
-}
-
-func TestCoreUtilization(t *testing.T) {
-	tests := []struct {
-		description string
-		arch        Arch
-	}{
-		{
-			description: "Test Warboy Device CoreUtilization",
-			arch:        ArchWarboy,
-		},
-		{
-			description: "Test RNGD Device CoreUtilization",
-			arch:        ArchRngd,
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.description, func(t *testing.T) {
-			testCoreUtilization(t, tc.arch)
-		})
-	}
-}

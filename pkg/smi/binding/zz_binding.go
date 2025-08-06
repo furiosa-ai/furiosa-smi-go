@@ -130,34 +130,6 @@ func FuriosaSmiGetDriverInfo(outDriverInfo *FuriosaSmiVersion) FuriosaSmiReturnC
 	return __v
 }
 
-func FuriosaSmiCreateObserver(outObserverInstance **FuriosaSmiObserver) FuriosaSmiReturnCode {
-	coutObserverInstance, coutObserverInstanceAllocMap := (*C.FuriosaSmiObserverInstance)(unsafe.Pointer(outObserverInstance)), cgoAllocsUnknown
-	__ret := C.furiosa_smi_create_observer(coutObserverInstance)
-	runtime.KeepAlive(coutObserverInstanceAllocMap)
-	__v := (FuriosaSmiReturnCode)(__ret)
-	return __v
-}
-
-func FuriosaSmiDestroyObserver(pObserverInstance **FuriosaSmiObserver) FuriosaSmiReturnCode {
-	cpObserverInstance, cpObserverInstanceAllocMap := (*C.FuriosaSmiObserverInstance)(unsafe.Pointer(pObserverInstance)), cgoAllocsUnknown
-	__ret := C.furiosa_smi_destroy_observer(cpObserverInstance)
-	runtime.KeepAlive(cpObserverInstanceAllocMap)
-	__v := (FuriosaSmiReturnCode)(__ret)
-	return __v
-}
-
-func FuriosaSmiGetCoreUtilization(observerInstance *FuriosaSmiObserver, handle FuriosaSmiDeviceHandle, outUtilizationInfo *FuriosaSmiCoreUtilization) FuriosaSmiReturnCode {
-	cobserverInstance, cobserverInstanceAllocMap := (*C.FuriosaSmiObserver)(unsafe.Pointer(observerInstance)), cgoAllocsUnknown
-	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
-	coutUtilizationInfo, coutUtilizationInfoAllocMap := (*C.FuriosaSmiCoreUtilization)(unsafe.Pointer(outUtilizationInfo)), cgoAllocsUnknown
-	__ret := C.furiosa_smi_get_core_utilization(cobserverInstance, chandle, coutUtilizationInfo)
-	runtime.KeepAlive(coutUtilizationInfoAllocMap)
-	runtime.KeepAlive(chandleAllocMap)
-	runtime.KeepAlive(cobserverInstanceAllocMap)
-	__v := (FuriosaSmiReturnCode)(__ret)
-	return __v
-}
-
 func FuriosaSmiGetCoreFrequency(handle FuriosaSmiDeviceHandle, outCoreFrequencyInfo *FuriosaSmiCoreFrequency) FuriosaSmiReturnCode {
 	chandle, chandleAllocMap := (C.FuriosaSmiDeviceHandle)(handle), cgoAllocsUnknown
 	coutCoreFrequencyInfo, coutCoreFrequencyInfoAllocMap := (*C.FuriosaSmiCoreFrequency)(unsafe.Pointer(outCoreFrequencyInfo)), cgoAllocsUnknown
