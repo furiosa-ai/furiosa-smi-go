@@ -100,8 +100,6 @@ typedef enum {
   FURIOSA_SMI_RETURN_CODE_NOT_SUPPORTED_ERROR,
 } FuriosaSmiReturnCode;
 
-typedef struct FuriosaSmiObserver FuriosaSmiObserver;
-
 typedef uint32_t FuriosaSmiDeviceHandle;
 
 /// \brief Represent a device handle list in the system.
@@ -157,21 +155,6 @@ typedef struct {
   uint32_t count;
   FuriosaSmiPeStatus core_status[FURIOSA_SMI_MAX_CORE_STATUS_SIZE];
 } FuriosaSmiCoreStatuses;
-
-typedef FuriosaSmiObserver *FuriosaSmiObserverInstance;
-
-/// \brief Represent a PE utilization.
-typedef struct {
-  uint32_t core;
-  uint32_t time_window_mil;
-  double pe_usage_percentage;
-} FuriosaSmiPeUtilization;
-
-/// \brief Represent a core utilization.
-typedef struct {
-  uint32_t pe_count;
-  FuriosaSmiPeUtilization pe[FURIOSA_SMI_MAX_PE_SIZE];
-} FuriosaSmiCoreUtilization;
 
 typedef struct {
   uint32_t core;
@@ -374,34 +357,6 @@ FuriosaSmiReturnCode furiosa_smi_get_p2p_accessible(FuriosaSmiDeviceHandle handl
 /// @param[out] out_driver_info output buffer for pointer to FuriosaSmiVersion.
 /// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
 FuriosaSmiReturnCode furiosa_smi_get_driver_info(FuriosaSmiVersion *out_driver_info);
-
-/// @}
-
-/// @defgroup Performance Performance
-/// @brief Performance module for Furiosa smi.
-/// @{
-
-/// @brief Create an observer instance to collect device information
-///
-/// @param[out] out_observer_instance output buffer for pointer to FuriosaSmiObserverInstance.
-/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
-FuriosaSmiReturnCode furiosa_smi_create_observer(FuriosaSmiObserverInstance *out_observer_instance);
-
-/// \brief Destroy the observer instance
-///
-/// @param p_observer_instance pointer to FuriosaSmiObserverInstance to be destroyed.
-/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
-FuriosaSmiReturnCode furiosa_smi_destroy_observer(FuriosaSmiObserverInstance *p_observer_instance);
-
-/// \brief Get a core utilization of Furiosa NPU device.
-///
-/// @param observer_instance valid FuriosaSmiObserverInstance created by furiosa_smi_create_observer.
-/// @param handle handle of Furiosa NPU device.
-/// @param[out] out_utilization_info output buffer for pointer to FuriosaSmiCoreUtilization.
-/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
-FuriosaSmiReturnCode furiosa_smi_get_core_utilization(FuriosaSmiObserverInstance observer_instance,
-                                                      FuriosaSmiDeviceHandle handle,
-                                                      FuriosaSmiCoreUtilization *out_utilization_info);
 
 /// \brief Get a core frequency of Furiosa NPU device.
 ///
