@@ -13,10 +13,22 @@ func main() {
 		os.Exit(1)
 	}
 
+	disabledDevices, err := smi.ListDisabledDevices()
+	if err != nil {
+		fmt.Printf("%s\n", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Printf("There are %d disabled device(s).\n", len(disabledDevices))
+
 	devices, err := smi.ListDevices()
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
+	}
+
+	for _, disabledDevice := range disabledDevices {
+		fmt.Printf("  Disabled Device BDF: %s\n", disabledDevice)
 	}
 
 	fmt.Printf("found %d device(s)\n", len(devices))
@@ -82,20 +94,6 @@ func main() {
 			fmt.Printf("  Path: %s\n", deviceFile.Path())
 		}
 
-		coreUtilization, err := device.CoreUtilization()
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(1)
-		}
-
-		fmt.Printf("Core Utilization:\n")
-		for _, peUtilization := range coreUtilization.PeUtilization() {
-			fmt.Printf("  PE Utilization:\n")
-			fmt.Printf("    Core: %v\n", peUtilization.Core())
-			fmt.Printf("    Time Window Mill: %d\n", peUtilization.TimeWindowMill())
-			fmt.Printf("    PE Usage Percentage: %f\n", peUtilization.PeUsagePercentage())
-		}
-
 		performanceCounter, err := device.DevicePerformanceCounter()
 		if err != nil {
 			fmt.Println(err.Error())
@@ -154,5 +152,44 @@ func main() {
 		}
 
 		fmt.Printf("Governor Profile: %s\n", governor)
+
+		pcieInfo, err := device.PcieInfo()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		pcieDeviceInfo := pcieInfo.DeviceInfo()
+		fmt.Printf("PCIe Device Info\n")
+		fmt.Printf("  Device id: 0x%04x\n", pcieDeviceInfo.DeviceId())
+		fmt.Printf("  Device subsystem vendor id: 0x%04x\n", pcieDeviceInfo.VendorId())
+		fmt.Printf("  Device subsystem device id: 0x%04x\n", pcieDeviceInfo.SubsystemId())
+		fmt.Printf("  Device revision id: 0x%02x\n", pcieDeviceInfo.RevisionId())
+		fmt.Printf("  Device class id: 0x%02x\n", pcieDeviceInfo.ClassId())
+		fmt.Printf("  Device sub class id: 0x%02x\n", pcieDeviceInfo.SubClassId())
+
+		pcieLinkInfo := pcieInfo.LinkInfo()
+		fmt.Printf("PCIe Link Info\n")
+		fmt.Printf("  Device pcie gen status: %d\n", pcieLinkInfo.PcieGenStatus())
+		fmt.Printf("  Device pcie link width status: %d\n", pcieLinkInfo.LinkWidthStatus())
+		fmt.Printf("  Device pcie link speed: %.2f\n", pcieLinkInfo.LinkSpeedStatus())
+		fmt.Printf("  Device pcie max link width capability: %d\n", pcieLinkInfo.MaxLinkWidthCapability())
+		fmt.Printf("  Device pcie max link speed capability: %.2f\n", pcieLinkInfo.MaxLinkSpeedCapability())
+
+		sriovInfo := pcieInfo.SriovInfo()
+		fmt.Printf("SR-IOV Info\n")
+		fmt.Printf("  Device sr-iov total vfs: %d\n", sriovInfo.SriovTotalVfs())
+		fmt.Printf("  Device sr-iov enabled: %d\n", sriovInfo.SriovEnabledVfs())
+
+		pcieRootComplexInfo := pcieInfo.RootComplexInfo()
+		fmt.Printf("PCIe Root Complex Info\n")
+		fmt.Printf("  Device root complex: %04x:%02x\n", pcieRootComplexInfo.Domain(), pcieRootComplexInfo.Bus())
+
+		pcieSwitchInfo := pcieInfo.SwitchInfo()
+		if pcieSwitchInfo == nil {
+			fmt.Printf("  Device pcie switch: Not available\n")
+		} else {
+			fmt.Printf("  Device pcie switch: %04x:%02x:%02x:%01x\n", pcieSwitchInfo.Domain(), pcieSwitchInfo.Bus(), pcieSwitchInfo.Device(), pcieSwitchInfo.Function())
+		}
 	}
 }

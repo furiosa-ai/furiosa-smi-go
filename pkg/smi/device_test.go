@@ -26,10 +26,6 @@ func TestCoreStatus(t *testing.T) {
 		expected    map[uint32]CoreStatus
 	}{
 		{
-			description: "Test Warboy Core Status",
-			arch:        ArchWarboy,
-		},
-		{
 			description: "Test RNGD Core Status",
 			arch:        ArchRngd,
 		},
@@ -57,11 +53,6 @@ func TestLiveness(t *testing.T) {
 		arch        Arch
 		expected    bool
 	}{
-		{
-			description: "Test Warboy Liveness",
-			arch:        ArchWarboy,
-			expected:    true,
-		},
 		{
 			description: "Test RNGD Liveness",
 			arch:        ArchRngd,
@@ -99,10 +90,6 @@ func TestDeviceToDeviceLinkType(t *testing.T) {
 		arch        Arch
 	}{
 		{
-			description: "Test Warboy DeviceToDeviceLinkType",
-			arch:        ArchWarboy,
-		},
-		{
 			description: "Test RNGD DeviceToDeviceLinkType",
 			arch:        ArchRngd,
 		},
@@ -133,18 +120,6 @@ func TestCoreFrequency(t *testing.T) {
 		arch        Arch
 		expected    coreFrequency
 	}{
-		{
-			description: "Test Warboy Core Frequency",
-			arch:        ArchWarboy,
-			expected: func() coreFrequency {
-				exp := coreFrequency{binding.FuriosaSmiCoreFrequency{PeCount: 2, Pe: [64]binding.FuriosaSmiPeFrequency{}}}
-				for i := 0; i < 2; i++ {
-					exp.raw.Pe[i] = binding.FuriosaSmiPeFrequency{Core: uint32(i), Frequency: 2000}
-				}
-
-				return exp
-			}(),
-		},
 		{
 			description: "Test RNGD Core Frequency",
 			arch:        ArchRngd,
@@ -181,11 +156,6 @@ func TestMemoryFrequency(t *testing.T) {
 		arch        Arch
 		expected    uint32
 	}{
-		{
-			description: "Test Warboy Memory Frequency",
-			arch:        ArchWarboy,
-			expected:    4266,
-		},
 		{
 			description: "Test RNGD Memory Frequency",
 			arch:        ArchRngd,

@@ -24,11 +24,6 @@ func TestDeviceTemperature(t *testing.T) {
 		expected    deviceTemperature
 	}{
 		{
-			description: "Test Warboy Device Temperature",
-			arch:        ArchWarboy,
-			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
-		},
-		{
 			description: "Test RNGD Device Temperature",
 			arch:        ArchRngd,
 			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
@@ -58,11 +53,6 @@ func TestPowerConsumption(t *testing.T) {
 		expected    float64
 	}{
 		{
-			description: "Test Warboy Device Power Consumption",
-			arch:        ArchWarboy,
-			expected:    100.0,
-		},
-		{
 			description: "Test RNGD Device Power Consumption",
 			arch:        ArchRngd,
 			expected:    100.0,
@@ -72,35 +62,6 @@ func TestPowerConsumption(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.description, func(t *testing.T) {
 			testPowerConsumption(t, tc.arch, tc.expected)
-		})
-	}
-}
-
-func testCoreUtilization(t *testing.T, arch Arch) {
-	mockDevice := GetStaticMockDevice(arch, 0)
-
-	_, err := mockDevice.CoreUtilization() // Currently, not to check the value.
-	assert.NoError(t, err)
-}
-
-func TestCoreUtilization(t *testing.T) {
-	tests := []struct {
-		description string
-		arch        Arch
-	}{
-		{
-			description: "Test Warboy Device CoreUtilization",
-			arch:        ArchWarboy,
-		},
-		{
-			description: "Test RNGD Device CoreUtilization",
-			arch:        ArchRngd,
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.description, func(t *testing.T) {
-			testCoreUtilization(t, tc.arch)
 		})
 	}
 }
