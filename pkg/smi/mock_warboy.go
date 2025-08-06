@@ -60,14 +60,6 @@ func (m *staticWarboyMockDevice) MemoryFrequency() (MemoryFrequency, error) {
 	return &staticMockMemoryFrequency{frequency: 4266}, nil
 }
 
-func (m *staticWarboyMockDevice) CoreUtilization() (CoreUtilization, error) {
-	return &staticMockCoreUtilization{
-		pe: []PeUtilization{
-			&staticMockPeUtilization{core: 0, timeWindow: 1000, usage: 50},
-		},
-	}, nil
-}
-
 func (m *staticWarboyMockDevice) PowerConsumption() (float64, error) {
 	return float64(100), nil
 }

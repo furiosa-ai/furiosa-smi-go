@@ -94,20 +94,6 @@ func main() {
 			fmt.Printf("  Path: %s\n", deviceFile.Path())
 		}
 
-		coreUtilization, err := device.CoreUtilization()
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(1)
-		}
-
-		fmt.Printf("Core Utilization:\n")
-		for _, peUtilization := range coreUtilization.PeUtilization() {
-			fmt.Printf("  PE Utilization:\n")
-			fmt.Printf("    Core: %v\n", peUtilization.Core())
-			fmt.Printf("    Time Window Mill: %d\n", peUtilization.TimeWindowMill())
-			fmt.Printf("    PE Usage Percentage: %f\n", peUtilization.PeUsagePercentage())
-		}
-
 		performanceCounter, err := device.DevicePerformanceCounter()
 		if err != nil {
 			fmt.Println(err.Error())

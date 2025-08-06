@@ -151,26 +151,6 @@ func (m *staticMockPeStatus) Status() CoreStatus {
 	return m.status
 }
 
-type staticMockPeUtilization struct {
-	core       uint32
-	timeWindow uint32
-	usage      float64
-}
-
-var _ PeUtilization = new(staticMockPeUtilization)
-
-func (m *staticMockPeUtilization) Core() uint32 {
-	return m.core
-}
-
-func (m *staticMockPeUtilization) TimeWindowMill() uint32 {
-	return m.timeWindow
-}
-
-func (m *staticMockPeUtilization) PeUsagePercentage() float64 {
-	return m.usage
-}
-
 type staticMockMemoryFrequency struct {
 	frequency uint32
 }
@@ -179,16 +159,6 @@ var _ MemoryFrequency = new(staticMockMemoryFrequency)
 
 func (m *staticMockMemoryFrequency) Frequency() uint32 {
 	return m.frequency
-}
-
-type staticMockCoreUtilization struct {
-	pe []PeUtilization
-}
-
-var _ CoreUtilization = new(staticMockCoreUtilization)
-
-func (m *staticMockCoreUtilization) PeUtilization() []PeUtilization {
-	return m.pe
 }
 
 type staticMockDeviceTemperature struct{}

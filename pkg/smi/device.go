@@ -1,12 +1,8 @@
 package smi
 
 import (
-	"runtime"
-
 	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 )
-
-type furiosaSmiObserverInstance = *binding.FuriosaSmiObserver
 
 // ListDevices lists all Furiosa NPU devices in the system.
 func ListDevices() ([]Device, error) {
@@ -15,18 +11,9 @@ func ListDevices() ([]Device, error) {
 		return nil, toError(ret)
 	}
 
-	var outObserverInstance = new(furiosaSmiObserverInstance)
-	if ret := binding.FuriosaSmiCreateObserver(outObserverInstance); ret != binding.FuriosaSmiReturnCodeOk {
-		return nil, toError(ret)
-	}
-
-	defer runtime.SetFinalizer(outObserverInstance, func(observerInstance *furiosaSmiObserverInstance) {
-		_ = binding.FuriosaSmiDestroyObserver(observerInstance)
-	})
-
 	var devices []Device
 	for i := 0; i < int(outDeviceHandle.Count); i++ {
-		devices = append(devices, newDevice(outDeviceHandle.DeviceHandles[i], outObserverInstance))
+		devices = append(devices, newDevice(outDeviceHandle.DeviceHandles[i]))
 	}
 
 	return devices, nil
@@ -104,8 +91,6 @@ type Device interface {
 	CoreFrequency() (CoreFrequency, error)
 	// MemoryFrequency returns a memory frequency (MHz) of the device.
 	MemoryFrequency() (MemoryFrequency, error)
-	// CoreUtilization returns a core utilization of the device.
-	CoreUtilization() (CoreUtilization, error)
 	// PowerConsumption returns a power consumption of the device.
 	PowerConsumption() (float64, error)
 	// DeviceTemperature returns a temperature of the device.
@@ -127,14 +112,12 @@ type Device interface {
 var _ Device = new(device)
 
 type device struct {
-	observerInstance *furiosaSmiObserverInstance
-	handle           binding.FuriosaSmiDeviceHandle
+	handle binding.FuriosaSmiDeviceHandle
 }
 
-func newDevice(handle binding.FuriosaSmiDeviceHandle, observerInstance *furiosaSmiObserverInstance) Device {
+func newDevice(handle binding.FuriosaSmiDeviceHandle) Device {
 	return &device{
-		observerInstance: observerInstance,
-		handle:           handle,
+		handle: handle,
 	}
 }
 
@@ -200,16 +183,6 @@ func (d *device) MemoryFrequency() (MemoryFrequency, error) {
 	}
 
 	return newMemoryFrequency(out), nil
-}
-
-func (d *device) CoreUtilization() (CoreUtilization, error) {
-	var out binding.FuriosaSmiCoreUtilization
-
-	if ret := binding.FuriosaSmiGetCoreUtilization(*d.observerInstance, d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
-		return nil, toError(ret)
-	}
-
-	return newCoreUtilization(out), nil
 }
 
 func (d *device) PowerConsumption() (float64, error) {
