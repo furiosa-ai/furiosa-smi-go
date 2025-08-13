@@ -183,13 +183,13 @@ func main() {
 
 		pcieRootComplexInfo := pcieInfo.RootComplexInfo()
 		fmt.Printf("PCIe Root Complex Info\n")
-		fmt.Printf("  Device root complex: %04x:%02x\n", pcieRootComplexInfo.Domain(), pcieRootComplexInfo.Bus())
+		fmt.Printf("  Device root complex: %s\n", pcieRootComplexInfo.String())
 
 		pcieSwitchInfo := pcieInfo.SwitchInfo()
 		if pcieSwitchInfo == nil {
 			fmt.Printf("  Device pcie switch: Not available\n")
 		} else {
-			fmt.Printf("  Device pcie switch: %04x:%02x:%02x:%01x\n", pcieSwitchInfo.Domain(), pcieSwitchInfo.Bus(), pcieSwitchInfo.Device(), pcieSwitchInfo.Function())
+			fmt.Printf("  Device pcie switch: %s\n", pcieSwitchInfo.String())
 		}
 	}
 }
