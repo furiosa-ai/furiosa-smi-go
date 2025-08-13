@@ -77,6 +77,14 @@ func DriverInfo() (VersionInfo, error) {
 	return newVersionInfo(outDriverInfo), nil
 }
 
+func CreateObserver(opt Opt) (*Observer, error) {
+	return newObserverWithOpt(opt)
+}
+
+func CreateOption() (Opt, error) {
+	return newOpt()
+}
+
 // Device represents the abstraction for a single Furiosa NPU device.
 type Device interface {
 	// DeviceInfo returns `DeviceInfo` which contains information about NPU device. (e.g. arch, serial, ...)
@@ -107,6 +115,8 @@ type Device interface {
 	SetGovernorProfile(governorProfile GovernorProfile) error
 	// PcieInfo returns a PCIe information of the device.
 	PcieInfo() (PcieInfo, error)
+	CoreUtilization(observer *Observer) ([]PeUtilization, error)
+	hash() binding.FuriosaSmiDeviceHandle
 }
 
 var _ Device = new(device)
@@ -119,6 +129,11 @@ func newDevice(handle binding.FuriosaSmiDeviceHandle) Device {
 	return &device{
 		handle: handle,
 	}
+}
+
+func (d *device) hash() binding.FuriosaSmiDeviceHandle {
+	// Convert the handle to a string representation for hashing.
+	return d.handle
 }
 
 func (d *device) DeviceInfo() (DeviceInfo, error) {
@@ -288,4 +303,8 @@ func (d *device) PcieInfo() (PcieInfo, error) {
 	pcieSwitchInfo := newPcieSwitchInfo(outPcieSwitchInfo)
 
 	return newPcieInfo(pcieDeviceInfo, pcieLinkInfo, sriovInfo, pcieRootComplexInfo, pcieSwitchInfo), nil
+}
+
+func (d *device) CoreUtilization(observer *Observer) ([]PeUtilization, error) {
+	return observer.CalculateUtilization(d)
 }

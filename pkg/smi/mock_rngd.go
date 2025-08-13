@@ -1,6 +1,10 @@
 package smi
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
+)
 
 var _ Device = new(staticRngdMockDevice)
 
@@ -208,4 +212,12 @@ func (m *staticRngdMockDeviceInfo) PertVersion() VersionInfo {
 
 func (m *staticRngdMockDevice) PcieInfo() (PcieInfo, error) {
 	return &staticMockPcieInfo{}, nil
+}
+
+func (staticRngdMockDevice) CoreUtilization(observer *Observer) ([]PeUtilization, error) {
+	return nil, nil
+}
+
+func (staticRngdMockDevice) hash() binding.FuriosaSmiDeviceHandle {
+	return 0
 }
