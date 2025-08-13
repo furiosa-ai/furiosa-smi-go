@@ -376,5 +376,5 @@ func (s *staticMockPcieSwitchInfo) Function() uint8 {
 }
 
 func (s *staticMockPcieSwitchInfo) String() string {
-	return fmt.Sprintf("%04x:%02x:%02x.%x", s.Domain(), s.Bus(), s.Device(), s.Function())
+	return fmt.Sprintf("%04x:%02x:%02x.%d", s.Domain(), s.Bus(), s.Device(), s.Function())
 }
