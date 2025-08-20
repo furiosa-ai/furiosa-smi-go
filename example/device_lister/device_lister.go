@@ -41,16 +41,14 @@ func main() {
 
 	fmt.Printf("driver info: %s\n", driverInfo)
 
-	opt, err := smi.CreateOption()
-
-	// opt.SetDevices(devices)
+	opt, err := smi.NewObserverOpt()
 
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
 	}
 
-	o, err := smi.CreateObserver(opt)
+	o, err := smi.CreateObserverWithOpt(opt)
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)

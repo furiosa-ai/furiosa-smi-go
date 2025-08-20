@@ -77,12 +77,17 @@ func DriverInfo() (VersionInfo, error) {
 	return newVersionInfo(outDriverInfo), nil
 }
 
-func CreateObserver(opt Opt) (*Observer, error) {
+func CreateObserverWithOpt(opt ObserverOpt) (*Observer, error) {
 	return newObserverWithOpt(opt)
 }
 
-func CreateOption() (Opt, error) {
-	return newOpt()
+func CreateDefaultObserver() (*Observer, error) {
+	opt, err := NewObserverOpt()
+	if err != nil {
+		return nil, err
+	}
+
+	return newObserverWithOpt(opt)
 }
 
 // Device represents the abstraction for a single Furiosa NPU device.

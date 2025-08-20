@@ -152,33 +152,33 @@ type Observer struct {
 	performanceCounterMap performanceCounterMap
 	stopCh                chan struct{}
 }
-type Opt struct {
+type ObserverOpt struct {
 	devices  []Device
 	interval uint32
 }
 
-func newOpt() (Opt, error) {
+func NewObserverOpt() (ObserverOpt, error) {
 	devices, err := ListDevices()
 
 	if err != nil {
-		return Opt{}, err
+		return ObserverOpt{}, err
 	}
 
-	return Opt{
+	return ObserverOpt{
 		devices:  devices,
 		interval: 500,
 	}, nil
 }
 
-func (o *Opt) SetDevices(devices []Device) {
+func (o *ObserverOpt) SetDevices(devices []Device) {
 	o.devices = devices
 }
 
-func (o *Opt) SetInterval(interval uint32) {
+func (o *ObserverOpt) SetInterval(interval uint32) {
 	o.interval = interval
 }
 
-func newObserverWithOpt(opt Opt) (*Observer, error) {
+func newObserverWithOpt(opt ObserverOpt) (*Observer, error) {
 	devices := opt.devices
 	interval := opt.interval
 
