@@ -116,7 +116,6 @@ type Device interface {
 	// PcieInfo returns a PCIe information of the device.
 	PcieInfo() (PcieInfo, error)
 	CoreUtilization(observer *Observer) ([]PeUtilization, error)
-	hash() binding.FuriosaSmiDeviceHandle
 }
 
 var _ Device = new(device)
@@ -129,11 +128,6 @@ func newDevice(handle binding.FuriosaSmiDeviceHandle) Device {
 	return &device{
 		handle: handle,
 	}
-}
-
-func (d *device) hash() binding.FuriosaSmiDeviceHandle {
-	// Convert the handle to a string representation for hashing.
-	return d.handle
 }
 
 func (d *device) DeviceInfo() (DeviceInfo, error) {

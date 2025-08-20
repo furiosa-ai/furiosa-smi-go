@@ -129,18 +129,18 @@ func newPerformanceCounterMap() performanceCounterMap {
 	}
 }
 
-func (pcm *performanceCounterMap) Get(device Device) (PerformanceCounterInfo, bool) {
+func (pcm *performanceCounterMap) Get(dev Device) (PerformanceCounterInfo, bool) {
 	pcm.mu.RLock()
 	defer pcm.mu.RUnlock()
-	hash := device.hash()
-	info, exists := pcm.data[hash]
+
+	info, exists := pcm.data[dev.(*device).handle]
 	return info, exists
 }
 
-func (pcm *performanceCounterMap) Set(device Device, info PerformanceCounterInfo) {
+func (pcm *performanceCounterMap) Set(dev Device, info PerformanceCounterInfo) {
 	pcm.mu.Lock()
 	defer pcm.mu.Unlock()
-	pcm.data[device.hash()] = info
+	pcm.data[dev.(*device).handle] = info
 }
 
 type PerformanceCounterInfo struct {
