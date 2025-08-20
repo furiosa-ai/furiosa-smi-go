@@ -182,7 +182,7 @@ type observer struct {
 var _ Observer = new(observer)
 
 type Observer interface {
-	GetCoreUtilization(device Device) ([]PeUtilization, error)
+	GetCoreUtilization(device Device) ([]CoreUtilization, error)
 	Stop()
 }
 
@@ -203,7 +203,7 @@ func newObserverWithOpt(opt ObserverOpt) (Observer, error) {
 	return o, nil
 }
 
-func (o *observer) GetCoreUtilization(device Device) ([]PeUtilization, error) {
+func (o *observer) GetCoreUtilization(device Device) ([]CoreUtilization, error) {
 	if device == nil {
 		return nil, fmt.Errorf("device is nil")
 	}
@@ -260,13 +260,13 @@ func (o *observer) updateUtilization(devices []Device) {
 	}
 }
 
-type PeUtilization struct {
+type CoreUtilization struct {
 	Core              uint32
 	TimeWindowMil     uint32
 	PeUsagePercentage float64
 }
 
-func (o *observer) CalculateUtilization(device Device) ([]PeUtilization, error) {
+func (o *observer) CalculateUtilization(device Device) ([]CoreUtilization, error) {
 	performanceCounterInfo, exists := o.performanceCounterMap.Get(device)
 
 	if !exists {
@@ -276,7 +276,7 @@ func (o *observer) CalculateUtilization(device Device) ([]PeUtilization, error) 
 	beforeCounter := performanceCounterInfo.beforeCounter
 	afterCounter := performanceCounterInfo.afterCounter
 
-	utilizationResult := make([]PeUtilization, 0)
+	utilizationResult := make([]CoreUtilization, 0)
 
 	for i, beforePeCounter := range beforeCounter.PerformanceCounter() {
 		afterPeCounter := afterCounter.PerformanceCounter()[i]
@@ -290,7 +290,7 @@ func (o *observer) CalculateUtilization(device Device) ([]PeUtilization, error) 
 
 		peUsagePercentage := safeUsizeDivide(taskExecutionCycleDiff, cycleCountDiff) * 100.0
 
-		utilization := PeUtilization{
+		utilization := CoreUtilization{
 			Core:              beforePeCounter.Core(),
 			TimeWindowMil:     uint32(afterPeCounter.Timestamp().Sub(beforePeCounter.Timestamp()).Milliseconds()),
 			PeUsagePercentage: peUsagePercentage,
