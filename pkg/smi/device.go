@@ -77,12 +77,12 @@ func DriverInfo() (VersionInfo, error) {
 	return newVersionInfo(outDriverInfo), nil
 }
 
-func CreateObserverWithOpt(opt ObserverOpt) (*Observer, error) {
+func CreateObserverWithOpt(opt ObserverOpt) (Observer, error) {
 	return newObserverWithOpt(opt)
 }
 
-func CreateDefaultObserver() (*Observer, error) {
-	opt, err := NewObserverOpt()
+func CreateDefaultObserver() (Observer, error) {
+	opt, err := NewOptForObserver()
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,6 @@ type Device interface {
 	SetGovernorProfile(governorProfile GovernorProfile) error
 	// PcieInfo returns a PCIe information of the device.
 	PcieInfo() (PcieInfo, error)
-	CoreUtilization(observer *Observer) ([]PeUtilization, error)
 }
 
 var _ Device = new(device)
@@ -302,8 +301,4 @@ func (d *device) PcieInfo() (PcieInfo, error) {
 	pcieSwitchInfo := newPcieSwitchInfo(outPcieSwitchInfo)
 
 	return newPcieInfo(pcieDeviceInfo, pcieLinkInfo, sriovInfo, pcieRootComplexInfo, pcieSwitchInfo), nil
-}
-
-func (d *device) CoreUtilization(observer *Observer) ([]PeUtilization, error) {
-	return observer.CalculateUtilization(d)
 }

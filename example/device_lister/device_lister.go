@@ -41,14 +41,14 @@ func main() {
 
 	fmt.Printf("driver info: %s\n", driverInfo)
 
-	opt, err := smi.NewObserverOpt()
+	opt, err := smi.NewOptForObserver()
 
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
 	}
 
-	o, err := smi.CreateObserverWithOpt(opt)
+	obs, err := smi.CreateObserverWithOpt(opt)
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
@@ -205,7 +205,7 @@ func main() {
 			fmt.Printf("  Device pcie switch: %04x:%02x:%02x:%01x\n", pcieSwitchInfo.Domain(), pcieSwitchInfo.Bus(), pcieSwitchInfo.Device(), pcieSwitchInfo.Function())
 		}
 
-		utilization, err := device.CoreUtilization(o)
+		utilization, err := obs.GetCoreUtilization(device)
 		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(1)

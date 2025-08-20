@@ -148,16 +148,12 @@ type PerformanceCounterInfo struct {
 	afterCounter  DevicePerformanceCounter
 }
 
-type Observer struct {
-	performanceCounterMap performanceCounterMap
-	stopCh                chan struct{}
-}
 type ObserverOpt struct {
 	devices  []Device
 	interval uint32
 }
 
-func NewObserverOpt() (ObserverOpt, error) {
+func NewOptForObserver() (ObserverOpt, error) {
 	devices, err := ListDevices()
 
 	if err != nil {
@@ -178,24 +174,49 @@ func (o *ObserverOpt) SetInterval(interval uint32) {
 	o.interval = interval
 }
 
-func newObserverWithOpt(opt ObserverOpt) (*Observer, error) {
+type observer struct {
+	performanceCounterMap performanceCounterMap
+	stopCh                chan struct{}
+}
+
+var _ Observer = new(observer)
+
+type Observer interface {
+	GetCoreUtilization(device Device) ([]PeUtilization, error)
+	Stop()
+}
+
+func newObserverWithOpt(opt ObserverOpt) (Observer, error) {
 	devices := opt.devices
 	interval := opt.interval
 
-	o := &Observer{
+	o := &observer{
 		performanceCounterMap: newPerformanceCounterMap(),
 		stopCh:                make(chan struct{}),
 	}
 
 	o.start(devices, time.Duration(interval)*time.Millisecond)
 
-	runtime.SetFinalizer(o, func(o *Observer) {
-		close(o.stopCh)
+	runtime.SetFinalizer(o, func(o Observer) {
+		o.Stop()
 	})
 	return o, nil
 }
 
-func (o *Observer) start(devices []Device, interval time.Duration) {
+func (o *observer) GetCoreUtilization(device Device) ([]PeUtilization, error) {
+	if device == nil {
+		return nil, fmt.Errorf("device is nil")
+	}
+
+	utilization, err := o.CalculateUtilization(device)
+	if err != nil {
+		return nil, fmt.Errorf("failed to calculate utilization: %w", err)
+	}
+
+	return utilization, nil
+}
+
+func (o *observer) start(devices []Device, interval time.Duration) {
 	o.updateUtilization(devices)
 	go func() {
 		ticker := time.NewTicker(interval)
@@ -213,11 +234,11 @@ func (o *Observer) start(devices []Device, interval time.Duration) {
 	}()
 }
 
-func (o *Observer) Stop() {
+func (o *observer) Stop() {
 	close(o.stopCh)
 }
 
-func (o *Observer) updateUtilization(devices []Device) {
+func (o *observer) updateUtilization(devices []Device) {
 	for _, device := range devices {
 		performanceCounter, err := device.DevicePerformanceCounter()
 
@@ -245,7 +266,7 @@ type PeUtilization struct {
 	PeUsagePercentage float64
 }
 
-func (o *Observer) CalculateUtilization(device Device) ([]PeUtilization, error) {
+func (o *observer) CalculateUtilization(device Device) ([]PeUtilization, error) {
 	performanceCounterInfo, exists := o.performanceCounterMap.Get(device)
 
 	if !exists {

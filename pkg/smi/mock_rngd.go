@@ -212,6 +212,6 @@ func (m *staticRngdMockDevice) PcieInfo() (PcieInfo, error) {
 	return &staticMockPcieInfo{}, nil
 }
 
-func (staticRngdMockDevice) CoreUtilization(observer *Observer) ([]PeUtilization, error) {
+func (staticRngdMockDevice) CoreUtilization(observer Observer) ([]PeUtilization, error) {
 	return nil, nil
 }
