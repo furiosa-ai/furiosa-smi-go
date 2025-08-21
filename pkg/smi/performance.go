@@ -175,6 +175,7 @@ func (o *ObserverOpt) SetInterval(interval uint32) {
 }
 
 type observer struct {
+	once                  sync.Once
 	performanceCounterMap performanceCounterMap
 	stopCh                chan struct{}
 }
@@ -182,8 +183,10 @@ type observer struct {
 var _ Observer = new(observer)
 
 type Observer interface {
+	// GetCoreUtilization returns the core utilization for the given device.
 	GetCoreUtilization(device Device) ([]CoreUtilization, error)
-	Stop()
+	// Destroy stops the observer when it calls explicitly or observer is destroyed by GC.
+	Destroy()
 }
 
 func newObserverWithOpt(opt ObserverOpt) (Observer, error) {
@@ -198,7 +201,7 @@ func newObserverWithOpt(opt ObserverOpt) (Observer, error) {
 	o.start(devices, time.Duration(interval)*time.Millisecond)
 
 	runtime.SetFinalizer(o, func(o Observer) {
-		o.Stop()
+		o.Destroy()
 	})
 	return o, nil
 }
@@ -234,8 +237,10 @@ func (o *observer) start(devices []Device, interval time.Duration) {
 	}()
 }
 
-func (o *observer) Stop() {
-	close(o.stopCh)
+func (o *observer) Destroy() {
+	o.once.Do(func() {
+		close(o.stopCh)
+	})
 }
 
 func (o *observer) updateUtilization(devices []Device) {
