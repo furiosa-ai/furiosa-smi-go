@@ -41,14 +41,7 @@ func main() {
 
 	fmt.Printf("driver info: %s\n", driverInfo)
 
-	opt, err := smi.NewOptForObserver()
-
-	if err != nil {
-		fmt.Printf("%s\n", err.Error())
-		os.Exit(1)
-	}
-
-	obs, err := smi.CreateObserverWithOpt(opt)
+	obs, err := smi.CreateDefaultObserver()
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
