@@ -129,7 +129,7 @@ func newPerformanceCounterMap() performanceCounterMap {
 	}
 }
 
-func (pcm *performanceCounterMap) Get(dev Device) (PerformanceCounterInfo, bool) {
+func (pcm *performanceCounterMap) get(dev Device) (PerformanceCounterInfo, bool) {
 	pcm.mu.RLock()
 	defer pcm.mu.RUnlock()
 
@@ -137,7 +137,7 @@ func (pcm *performanceCounterMap) Get(dev Device) (PerformanceCounterInfo, bool)
 	return info, exists
 }
 
-func (pcm *performanceCounterMap) Set(dev Device, info PerformanceCounterInfo) {
+func (pcm *performanceCounterMap) set(dev Device, info PerformanceCounterInfo) {
 	pcm.mu.Lock()
 	defer pcm.mu.Unlock()
 	pcm.data[dev.(*device).handle] = info
@@ -242,14 +242,14 @@ func (o *observer) updateUtilization(devices []Device) {
 	for _, device := range devices {
 		performanceCounter, err := device.DevicePerformanceCounter()
 
-		pc, exists := o.performanceCounterMap.Get(device)
+		pc, exists := o.performanceCounterMap.get(device)
 
 		if exists {
-			o.performanceCounterMap.Set(device, PerformanceCounterInfo{
+			o.performanceCounterMap.set(device, PerformanceCounterInfo{
 				beforeCounter: pc.afterCounter,
 				afterCounter:  performanceCounter})
 		} else {
-			o.performanceCounterMap.Set(device, PerformanceCounterInfo{
+			o.performanceCounterMap.set(device, PerformanceCounterInfo{
 				beforeCounter: performanceCounter,
 				afterCounter:  performanceCounter})
 		}
@@ -267,7 +267,7 @@ type CoreUtilization struct {
 }
 
 func (o *observer) CalculateUtilization(device Device) ([]CoreUtilization, error) {
-	performanceCounterInfo, exists := o.performanceCounterMap.Get(device)
+	performanceCounterInfo, exists := o.performanceCounterMap.get(device)
 
 	if !exists {
 		return nil, fmt.Errorf("no performance counter info found for device %v", device)
