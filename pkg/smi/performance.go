@@ -206,7 +206,20 @@ func newObserverWithOpt(opt ObserverOpt) (Observer, error) {
 	return o, nil
 }
 
+func (o *observer) isDestroyed() bool {
+	select {
+	case <-o.stopCh:
+		return true
+	default:
+		return false
+	}
+}
+
 func (o *observer) GetCoreUtilization(device Device) ([]CoreUtilization, error) {
+	if o.isDestroyed() {
+		return nil, fmt.Errorf("observer is already destroyed")
+	}
+
 	if device == nil {
 		return nil, fmt.Errorf("device is nil")
 	}
