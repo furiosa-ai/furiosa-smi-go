@@ -41,6 +41,12 @@ func main() {
 
 	fmt.Printf("driver info: %s\n", driverInfo)
 
+	obs, err := smi.CreateDefaultObserver()
+	if err != nil {
+		fmt.Printf("%s\n", err.Error())
+		os.Exit(1)
+	}
+
 	for _, device := range devices {
 		deviceInfo, err := device.DeviceInfo()
 		if err != nil {
@@ -190,6 +196,17 @@ func main() {
 			fmt.Printf("  Device pcie switch: Not available\n")
 		} else {
 			fmt.Printf("  Device pcie switch: %s\n", pcieSwitchInfo.String())
+		}
+
+		utilization, err := obs.GetCoreUtilization(device)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Core Utilization:\n")
+		for _, peUtilization := range utilization {
+			fmt.Printf("  Core %d: %.2f%%\n", peUtilization.Core, peUtilization.PeUsagePercentage)
 		}
 	}
 }

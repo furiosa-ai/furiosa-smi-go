@@ -1,6 +1,8 @@
 package smi
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var _ Device = new(staticRngdMockDevice)
 
@@ -208,4 +210,8 @@ func (m *staticRngdMockDeviceInfo) PertVersion() VersionInfo {
 
 func (m *staticRngdMockDevice) PcieInfo() (PcieInfo, error) {
 	return &staticMockPcieInfo{}, nil
+}
+
+func (staticRngdMockDevice) CoreUtilization(observer Observer) ([]CoreUtilization, error) {
+	return nil, nil
 }
