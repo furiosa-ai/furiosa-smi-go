@@ -224,10 +224,7 @@ func (o *observer) GetCoreUtilization(device Device) ([]CoreUtilization, error) 
 	timeout := time.After(time.Millisecond * 200)
 	interval := time.Duration(time.Millisecond * 10)
 
-	for {
-		if o.isInitialized {
-			break
-		}
+	for !o.isInitialized {
 		time.Sleep(interval)
 
 		select {
