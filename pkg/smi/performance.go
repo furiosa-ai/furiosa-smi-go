@@ -177,6 +177,7 @@ func (o *ObserverOpt) SetInterval(interval uint32) {
 type observer struct {
 	once                  sync.Once
 	performanceCounterMap performanceCounterMap
+	isInitialized         bool
 	stopCh                chan struct{}
 }
 
@@ -220,6 +221,23 @@ func (o *observer) GetCoreUtilization(device Device) ([]CoreUtilization, error) 
 		return nil, fmt.Errorf("observer is already destroyed")
 	}
 
+	timeout := time.After(time.Millisecond * 200)
+	interval := time.Duration(time.Millisecond * 10)
+
+	for {
+		if o.isInitialized {
+			break
+		}
+		time.Sleep(interval)
+
+		select {
+		case <-timeout:
+			return nil, fmt.Errorf("timeout waiting for observer to be initialized")
+		default:
+			continue
+		}
+	}
+
 	if device == nil {
 		return nil, fmt.Errorf("device is nil")
 	}
@@ -233,7 +251,12 @@ func (o *observer) GetCoreUtilization(device Device) ([]CoreUtilization, error) 
 }
 
 func (o *observer) start(devices []Device, interval time.Duration) {
-	o.updateUtilization(devices)
+	o.updateUtilization(devices, false)
+	go func() {
+		time.Sleep(time.Duration(100) * time.Millisecond)
+		o.updateUtilization(devices, true)
+	}()
+
 	go func() {
 		ticker := time.NewTicker(interval)
 		defer ticker.Stop()
@@ -241,7 +264,7 @@ func (o *observer) start(devices []Device, interval time.Duration) {
 		for {
 			select {
 			case <-ticker.C:
-				o.updateUtilization(devices)
+				o.updateUtilization(devices, false)
 
 			case <-o.stopCh:
 				return
@@ -256,7 +279,7 @@ func (o *observer) Destroy() {
 	})
 }
 
-func (o *observer) updateUtilization(devices []Device) {
+func (o *observer) updateUtilization(devices []Device, init_flag bool) {
 	for _, device := range devices {
 		performanceCounter, err := device.DevicePerformanceCounter()
 
@@ -275,6 +298,10 @@ func (o *observer) updateUtilization(devices []Device) {
 		if err != nil {
 			continue
 		}
+	}
+
+	if init_flag {
+		o.isInitialized = true
 	}
 }
 
