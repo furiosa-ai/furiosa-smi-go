@@ -306,7 +306,14 @@ func (o *observer) CalculateUtilization(device Device) ([]CoreUtilization, error
 		afterPeCounter := afterPerfCounter[i]
 
 		if afterPeCounter.CycleCount() < beforePeCounter.CycleCount() {
-			return nil, fmt.Errorf("cycle count become less then before")
+			utilization := CoreUtilization{
+				Core:              beforePeCounter.Core(),
+				TimeWindowMil:     0,
+				PeUsagePercentage: 0.0,
+			}
+
+			utilizationResult = append(utilizationResult, utilization)
+			continue
 		}
 
 		taskExecutionCycleDiff := afterPeCounter.TaskExecutionCycle() - beforePeCounter.TaskExecutionCycle()
