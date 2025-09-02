@@ -234,6 +234,9 @@ func (o *observer) GetCoreUtilization(device Device) ([]CoreUtilization, error) 
 
 func (o *observer) start(devices []Device, interval time.Duration) {
 	o.updateUtilization(devices)
+	time.Sleep(100 * time.Millisecond)
+	o.updateUtilization(devices)
+
 	go func() {
 		ticker := time.NewTicker(interval)
 		defer ticker.Stop()
@@ -296,11 +299,21 @@ func (o *observer) CalculateUtilization(device Device) ([]CoreUtilization, error
 
 	utilizationResult := make([]CoreUtilization, 0)
 
-	for i, beforePeCounter := range beforeCounter.PerformanceCounter() {
-		afterPeCounter := afterCounter.PerformanceCounter()[i]
+	afterPerfCounter := afterCounter.PerformanceCounter()
+	beforePerfCounter := beforeCounter.PerformanceCounter()
+
+	for i, beforePeCounter := range beforePerfCounter {
+		afterPeCounter := afterPerfCounter[i]
 
 		if afterPeCounter.CycleCount() < beforePeCounter.CycleCount() {
-			return nil, fmt.Errorf("cycle count become less then before")
+			utilization := CoreUtilization{
+				Core:              beforePeCounter.Core(),
+				TimeWindowMil:     0,
+				PeUsagePercentage: 0.0,
+			}
+
+			utilizationResult = append(utilizationResult, utilization)
+			continue
 		}
 
 		taskExecutionCycleDiff := afterPeCounter.TaskExecutionCycle() - beforePeCounter.TaskExecutionCycle()
