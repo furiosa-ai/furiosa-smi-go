@@ -129,7 +129,6 @@ typedef struct {
   uint16_t major;
   uint16_t minor;
   FuriosaSmiVersion firmware_version;
-  FuriosaSmiVersion pert_version;
 } FuriosaSmiDeviceInfo;
 
 /// \brief Represent a device file information.
