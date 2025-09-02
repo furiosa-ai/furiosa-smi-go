@@ -204,10 +204,6 @@ func (m *staticRngdMockDeviceInfo) FirmwareVersion() VersionInfo {
 	return newStaticMockVersionInfo(1, 6, 0, "c1bebfd")
 }
 
-func (m *staticRngdMockDeviceInfo) PertVersion() VersionInfo {
-	return newStaticMockVersionInfo(0, 0, 0, "")
-}
-
 func (m *staticRngdMockDevice) PcieInfo() (PcieInfo, error) {
 	return &staticMockPcieInfo{}, nil
 }
