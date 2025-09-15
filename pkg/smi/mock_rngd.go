@@ -211,3 +211,7 @@ func (m *staticRngdMockDevice) PcieInfo() (PcieInfo, error) {
 func (staticRngdMockDevice) CoreUtilization(observer Observer) ([]CoreUtilization, error) {
 	return nil, nil
 }
+
+func (staticRngdMockDevice) ThrottleReason() (uint32, error) {
+	return 0, nil
+}

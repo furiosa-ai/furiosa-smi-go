@@ -100,6 +100,18 @@ typedef enum {
   FURIOSA_SMI_RETURN_CODE_NOT_SUPPORTED_ERROR,
 } FuriosaSmiReturnCode;
 
+/// \brief Represent a reason for throttling
+typedef enum {
+  FURIOSA_SMI_THROTTLE_REASON_IDLE = 1,
+  FURIOSA_SMI_THROTTLE_REASON_THERMAL_SLOWDOWN = 2,
+  FURIOSA_SMI_THROTTLE_REASON_APP_POWER_CAP = 4,
+  FURIOSA_SMI_THROTTLE_REASON_APP_CLOCK_CAP = 8,
+  FURIOSA_SMI_THROTTLE_REASON_HW_CLOCK_CAP = 16,
+  FURIOSA_SMI_THROTTLE_REASON_HW_BUS_LIMIT = 32,
+  FURIOSA_SMI_THROTTLE_REASON_HW_POWER_CAP = 64,
+  FURIOSA_SMI_THROTTLE_REASON_OTHER_REASON = 128,
+} FuriosaSmiThrottleReason;
+
 typedef uint32_t FuriosaSmiDeviceHandle;
 
 /// \brief Represent a device handle list in the system.
@@ -471,6 +483,14 @@ FuriosaSmiReturnCode furiosa_smi_get_pcie_root_complex_info(FuriosaSmiDeviceHand
 /// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
 FuriosaSmiReturnCode furiosa_smi_get_pcie_switch_info(FuriosaSmiDeviceHandle handle,
                                                       FuriosaSmiPcieSwitchInfo *out_pcie_switch_info);
+
+/// \brief Get a throttle reason of Furiosa NPU device.
+///
+/// @param handle handle of Furiosa NPU device.
+/// @param[out] out_throttle_reason output buffer for pointer to FuriosaSmiThrottleReason.
+/// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
+FuriosaSmiReturnCode furiosa_smi_get_throttle_reason(FuriosaSmiDeviceHandle handle,
+                                                     uint32_t *out_throttle_reason);
 
 /// @}
 

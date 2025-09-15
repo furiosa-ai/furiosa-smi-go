@@ -338,3 +338,45 @@ func safeUsizeDivide(fst, snd uint64) float64 {
 	}
 	return float64(fst) / float64(snd)
 }
+
+type ThrottleReason uint32
+
+const (
+	Idle            = ThrottleReason(binding.FuriosaSmiThrottleReasonIdle)
+	ThermalSlowdown = ThrottleReason(binding.FuriosaSmiThrottleReasonThermalSlowdown)
+	AppPowerCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppPowerCap)
+	AppClockCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppClockCap)
+	HwClockCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwClockCap)
+	HwBusLimit      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwBusLimit)
+	HwPowerCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwPowerCap)
+	OtherReason     = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
+)
+
+func FromUint32ToThrottleReasons(value uint32) []ThrottleReason {
+	var reasons []ThrottleReason
+	if value&(1<<0) != 0 {
+		reasons = append(reasons, Idle)
+	}
+	if value&(1<<1) != 0 {
+		reasons = append(reasons, ThermalSlowdown)
+	}
+	if value&(1<<2) != 0 {
+		reasons = append(reasons, AppPowerCap)
+	}
+	if value&(1<<3) != 0 {
+		reasons = append(reasons, AppClockCap)
+	}
+	if value&(1<<4) != 0 {
+		reasons = append(reasons, HwClockCap)
+	}
+	if value&(1<<5) != 0 {
+		reasons = append(reasons, HwBusLimit)
+	}
+	if value&(1<<6) != 0 {
+		reasons = append(reasons, HwPowerCap)
+	}
+	if value&(1<<7) != 0 {
+		reasons = append(reasons, OtherReason)
+	}
+	return reasons
+}

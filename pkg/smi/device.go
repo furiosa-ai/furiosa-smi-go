@@ -120,6 +120,7 @@ type Device interface {
 	SetGovernorProfile(governorProfile GovernorProfile) error
 	// PcieInfo returns a PCIe information of the device.
 	PcieInfo() (PcieInfo, error)
+	ThrottleReason() (uint32, error)
 }
 
 var _ Device = new(device)
@@ -301,4 +302,14 @@ func (d *device) PcieInfo() (PcieInfo, error) {
 	pcieSwitchInfo := newPcieSwitchInfo(outPcieSwitchInfo)
 
 	return newPcieInfo(pcieDeviceInfo, pcieLinkInfo, sriovInfo, pcieRootComplexInfo, pcieSwitchInfo), nil
+}
+
+func (d *device) ThrottleReason() (uint32, error) {
+	var out uint32
+
+	if ret := binding.FuriosaSmiGetThrottleReason(d.handle, &out); ret != binding.FuriosaSmiReturnCodeOk {
+		return 0, toError(ret)
+	}
+
+	return out, nil
 }

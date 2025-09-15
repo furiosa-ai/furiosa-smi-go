@@ -90,3 +90,18 @@ const (
 	FuriosaSmiReturnCodeContextError             FuriosaSmiReturnCode = 16
 	FuriosaSmiReturnCodeNotSupportedError        FuriosaSmiReturnCode = 17
 )
+
+// FuriosaSmiThrottleReason as declared in smi/furiosa_smi.h:113
+type FuriosaSmiThrottleReason int32
+
+// FuriosaSmiThrottleReason enumeration from smi/furiosa_smi.h:113
+const (
+	FuriosaSmiThrottleReasonIdle            FuriosaSmiThrottleReason = 1
+	FuriosaSmiThrottleReasonThermalSlowdown FuriosaSmiThrottleReason = 2
+	FuriosaSmiThrottleReasonAppPowerCap     FuriosaSmiThrottleReason = 4
+	FuriosaSmiThrottleReasonAppClockCap     FuriosaSmiThrottleReason = 8
+	FuriosaSmiThrottleReasonHwClockCap      FuriosaSmiThrottleReason = 16
+	FuriosaSmiThrottleReasonHwBusLimit      FuriosaSmiThrottleReason = 32
+	FuriosaSmiThrottleReasonHwPowerCap      FuriosaSmiThrottleReason = 64
+	FuriosaSmiThrottleReasonOtherReason     FuriosaSmiThrottleReason = 128
+)
