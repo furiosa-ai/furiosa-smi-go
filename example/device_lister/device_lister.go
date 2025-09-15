@@ -208,5 +208,12 @@ func main() {
 		for _, peUtilization := range utilization {
 			fmt.Printf("  Core %d: %.2f%%\n", peUtilization.Core, peUtilization.PeUsagePercentage)
 		}
+
+		throttleReason, err := device.ThrottleReason()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		fmt.Printf("Throttle Reason: 0x%08x\n", throttleReason)
 	}
 }
