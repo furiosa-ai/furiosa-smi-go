@@ -352,7 +352,7 @@ const (
 	OtherReason     = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
 )
 
-func FromUint32ToThrottleReasons(value uint32) []ThrottleReason {
+func FromBitmaskToSlice(value uint32) []ThrottleReason {
 	var reasons []ThrottleReason
 	if value&(1<<0) != 0 {
 		reasons = append(reasons, Idle)
