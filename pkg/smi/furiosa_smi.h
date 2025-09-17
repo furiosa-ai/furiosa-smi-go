@@ -245,20 +245,31 @@ typedef struct {
 /// \brief Represent a reason for throttling
 typedef uint32_t FuriosaSmiThrottleReason;
 
+/// Throttling not active
+#define FURIOSA_SMI_THROTTLE_REASON_NONE 0
+
+/// Throttling in idle or unused state
 #define FURIOSA_SMI_THROTTLE_REASON_IDLE (1 << 0)
 
+/// Throttling triggered by high temperature
 #define FURIOSA_SMI_THROTTLE_REASON_THERMAL_SLOWDOWN (1 << 1)
 
+/// Throttling due to host-defined power limit
 #define FURIOSA_SMI_THROTTLE_REASON_APP_POWER_CAP (1 << 2)
 
+/// Throttling due to host-defined clock limit
 #define FURIOSA_SMI_THROTTLE_REASON_APP_CLOCK_CAP (1 << 3)
 
+/// Throttling from device-internal clock limit
 #define FURIOSA_SMI_THROTTLE_REASON_HW_CLOCK_CAP (1 << 4)
 
+/// Throttling from internal bus/NoC bandwidth limit
 #define FURIOSA_SMI_THROTTLE_REASON_HW_BUS_LIMIT (1 << 5)
 
+/// Throttling from device-enforced power limit
 #define FURIOSA_SMI_THROTTLE_REASON_HW_POWER_CAP (1 << 6)
 
+/// Throttling due to other undefined reasons
 #define FURIOSA_SMI_THROTTLE_REASON_OTHER_REASON (1 << 7)
 
 /// @defgroup Initialize Initialize
