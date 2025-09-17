@@ -23,6 +23,22 @@ const (
 	FuriosaSmiMaxDeviceHandleSize = 64
 	// FuriosaSmiMaxCstrSize as defined in smi/furiosa_smi.h:19
 	FuriosaSmiMaxCstrSize = 96
+	// FuriosaSmiThrottleReasonIdle as defined in smi/furiosa_smi.h:248
+	FuriosaSmiThrottleReasonIdle = (1 << 0)
+	// FuriosaSmiThrottleReasonThermalSlowdown as defined in smi/furiosa_smi.h:250
+	FuriosaSmiThrottleReasonThermalSlowdown = (1 << 1)
+	// FuriosaSmiThrottleReasonAppPowerCap as defined in smi/furiosa_smi.h:252
+	FuriosaSmiThrottleReasonAppPowerCap = (1 << 2)
+	// FuriosaSmiThrottleReasonAppClockCap as defined in smi/furiosa_smi.h:254
+	FuriosaSmiThrottleReasonAppClockCap = (1 << 3)
+	// FuriosaSmiThrottleReasonHwClockCap as defined in smi/furiosa_smi.h:256
+	FuriosaSmiThrottleReasonHwClockCap = (1 << 4)
+	// FuriosaSmiThrottleReasonHwBusLimit as defined in smi/furiosa_smi.h:258
+	FuriosaSmiThrottleReasonHwBusLimit = (1 << 5)
+	// FuriosaSmiThrottleReasonHwPowerCap as defined in smi/furiosa_smi.h:260
+	FuriosaSmiThrottleReasonHwPowerCap = (1 << 6)
+	// FuriosaSmiThrottleReasonOtherReason as defined in smi/furiosa_smi.h:262
+	FuriosaSmiThrottleReasonOtherReason = (1 << 7)
 )
 
 // FuriosaSmiArch as declared in smi/furiosa_smi.h:31
@@ -89,19 +105,4 @@ const (
 	FuriosaSmiReturnCodeUninitializedError       FuriosaSmiReturnCode = 15
 	FuriosaSmiReturnCodeContextError             FuriosaSmiReturnCode = 16
 	FuriosaSmiReturnCodeNotSupportedError        FuriosaSmiReturnCode = 17
-)
-
-// FuriosaSmiThrottleReason as declared in smi/furiosa_smi.h:113
-type FuriosaSmiThrottleReason int32
-
-// FuriosaSmiThrottleReason enumeration from smi/furiosa_smi.h:113
-const (
-	FuriosaSmiThrottleReasonIdle            FuriosaSmiThrottleReason = 1
-	FuriosaSmiThrottleReasonThermalSlowdown FuriosaSmiThrottleReason = 2
-	FuriosaSmiThrottleReasonAppPowerCap     FuriosaSmiThrottleReason = 4
-	FuriosaSmiThrottleReasonAppClockCap     FuriosaSmiThrottleReason = 8
-	FuriosaSmiThrottleReasonHwClockCap      FuriosaSmiThrottleReason = 16
-	FuriosaSmiThrottleReasonHwBusLimit      FuriosaSmiThrottleReason = 32
-	FuriosaSmiThrottleReasonHwPowerCap      FuriosaSmiThrottleReason = 64
-	FuriosaSmiThrottleReasonOtherReason     FuriosaSmiThrottleReason = 128
 )

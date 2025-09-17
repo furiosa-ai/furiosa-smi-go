@@ -100,18 +100,6 @@ typedef enum {
   FURIOSA_SMI_RETURN_CODE_NOT_SUPPORTED_ERROR,
 } FuriosaSmiReturnCode;
 
-/// \brief Represent a reason for throttling
-typedef enum {
-  FURIOSA_SMI_THROTTLE_REASON_IDLE = 1,
-  FURIOSA_SMI_THROTTLE_REASON_THERMAL_SLOWDOWN = 2,
-  FURIOSA_SMI_THROTTLE_REASON_APP_POWER_CAP = 4,
-  FURIOSA_SMI_THROTTLE_REASON_APP_CLOCK_CAP = 8,
-  FURIOSA_SMI_THROTTLE_REASON_HW_CLOCK_CAP = 16,
-  FURIOSA_SMI_THROTTLE_REASON_HW_BUS_LIMIT = 32,
-  FURIOSA_SMI_THROTTLE_REASON_HW_POWER_CAP = 64,
-  FURIOSA_SMI_THROTTLE_REASON_OTHER_REASON = 128,
-} FuriosaSmiThrottleReason;
-
 typedef uint32_t FuriosaSmiDeviceHandle;
 
 /// \brief Represent a device handle list in the system.
@@ -253,6 +241,25 @@ typedef struct {
   uint8_t device;
   uint8_t function;
 } FuriosaSmiPcieSwitchInfo;
+
+/// \brief Represent a reason for throttling
+typedef uint32_t FuriosaSmiThrottleReason;
+
+#define FURIOSA_SMI_THROTTLE_REASON_IDLE (1 << 0)
+
+#define FURIOSA_SMI_THROTTLE_REASON_THERMAL_SLOWDOWN (1 << 1)
+
+#define FURIOSA_SMI_THROTTLE_REASON_APP_POWER_CAP (1 << 2)
+
+#define FURIOSA_SMI_THROTTLE_REASON_APP_CLOCK_CAP (1 << 3)
+
+#define FURIOSA_SMI_THROTTLE_REASON_HW_CLOCK_CAP (1 << 4)
+
+#define FURIOSA_SMI_THROTTLE_REASON_HW_BUS_LIMIT (1 << 5)
+
+#define FURIOSA_SMI_THROTTLE_REASON_HW_POWER_CAP (1 << 6)
+
+#define FURIOSA_SMI_THROTTLE_REASON_OTHER_REASON (1 << 7)
 
 /// @defgroup Initialize Initialize
 /// @brief Initialize module for Furiosa smi.
@@ -490,7 +497,7 @@ FuriosaSmiReturnCode furiosa_smi_get_pcie_switch_info(FuriosaSmiDeviceHandle han
 /// @param[out] out_throttle_reason output buffer for pointer to FuriosaSmiThrottleReason.
 /// @return FURIOSA_SMI_RETURN_CODE_OK if successful, see `FuriosaSmiReturnCode` for error cases.
 FuriosaSmiReturnCode furiosa_smi_get_throttle_reason(FuriosaSmiDeviceHandle handle,
-                                                     uint32_t *out_throttle_reason);
+                                                     FuriosaSmiThrottleReason *out_throttle_reason);
 
 /// @}
 
