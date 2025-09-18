@@ -120,6 +120,7 @@ type Device interface {
 	SetGovernorProfile(governorProfile GovernorProfile) error
 	// PcieInfo returns a PCIe information of the device.
 	PcieInfo() (PcieInfo, error)
+	// ThrottleReason returns a throttle reason of the device.
 	ThrottleReason() (ThrottleReason, error)
 }
 
