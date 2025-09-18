@@ -131,3 +131,5 @@ type FuriosaSmiPcieSwitchInfo struct {
 	Device   byte
 	Function byte
 }
+
+type FuriosaSmiThrottleReason uint32

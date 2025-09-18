@@ -338,3 +338,27 @@ func safeUsizeDivide(fst, snd uint64) float64 {
 	}
 	return float64(fst) / float64(snd)
 }
+
+// A type for representing a throttle reason
+type ThrottleReason uint32
+
+const (
+	// Throttling not active
+	ThrottleReasonNone = ThrottleReason(binding.FuriosaSmiThrottleReasonNone)
+	// Throttling in idle or unused state
+	ThrottleReasonIdle = ThrottleReason(binding.FuriosaSmiThrottleReasonIdle)
+	// Throttling triggered by high temperature
+	ThrottleReasonThermalSlowdown = ThrottleReason(binding.FuriosaSmiThrottleReasonThermalSlowdown)
+	// Throttling due to host-defined power limit
+	ThrottleReasonAppPowerCap = ThrottleReason(binding.FuriosaSmiThrottleReasonAppPowerCap)
+	// Throttling due to host-defined clock limit
+	ThrottleReasonAppClockCap = ThrottleReason(binding.FuriosaSmiThrottleReasonAppClockCap)
+	// Throttling from device-internal clock limit
+	ThrottleReasonHwClockCap = ThrottleReason(binding.FuriosaSmiThrottleReasonHwClockCap)
+	// Throttling from internal bus/NoC bandwidth limit
+	ThrottleReasonHwBusLimit = ThrottleReason(binding.FuriosaSmiThrottleReasonHwBusLimit)
+	// Throttling from device-enforced power limit
+	ThrottleReasonHwPowerCap = ThrottleReason(binding.FuriosaSmiThrottleReasonHwPowerCap)
+	// Throttling due to other undefined reasons
+	ThrottleReasonOtherReason = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
+)
