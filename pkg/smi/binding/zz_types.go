@@ -36,7 +36,6 @@ type FuriosaSmiDeviceInfo struct {
 	Major           uint16
 	Minor           uint16
 	FirmwareVersion FuriosaSmiVersion
-	PertVersion     FuriosaSmiVersion
 }
 
 type FuriosaSmiDeviceFile struct {
@@ -132,3 +131,5 @@ type FuriosaSmiPcieSwitchInfo struct {
 	Device   byte
 	Function byte
 }
+
+type FuriosaSmiThrottleReason uint32

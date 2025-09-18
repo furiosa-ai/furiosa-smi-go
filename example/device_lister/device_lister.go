@@ -7,6 +7,38 @@ import (
 	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
 )
 
+func printThrottleReason(reason smi.ThrottleReason) {
+	if reason == smi.ThrottleReasonNone {
+		fmt.Println("  None")
+		return
+	}
+	fmt.Println("Throttling Reasons:")
+	if reason&smi.ThrottleReasonIdle != 0 {
+		fmt.Println("  Idle")
+	}
+	if reason&smi.ThrottleReasonThermalSlowdown != 0 {
+		fmt.Println("  Thermal Slowdown")
+	}
+	if reason&smi.ThrottleReasonAppPowerCap != 0 {
+		fmt.Println("  App Power Cap")
+	}
+	if reason&smi.ThrottleReasonAppClockCap != 0 {
+		fmt.Println("  App Clock Cap")
+	}
+	if reason&smi.ThrottleReasonHwClockCap != 0 {
+		fmt.Println("  Hw Clock Cap")
+	}
+	if reason&smi.ThrottleReasonHwBusLimit != 0 {
+		fmt.Println("  Hw Bus Limit")
+	}
+	if reason&smi.ThrottleReasonHwPowerCap != 0 {
+		fmt.Println("  Hw Power Cap")
+	}
+	if reason&smi.ThrottleReasonOtherReason != 0 {
+		fmt.Println("  Other Reason")
+	}
+}
+
 func main() {
 	if err := smi.Init(); err != nil {
 		fmt.Printf("%s\n", err.Error())
@@ -208,5 +240,13 @@ func main() {
 		for _, peUtilization := range utilization {
 			fmt.Printf("  Core %d: %.2f%%\n", peUtilization.Core, peUtilization.PeUsagePercentage)
 		}
+
+		throttleReason, err := device.ThrottleReason()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		fmt.Printf("Throttle Reason:\n")
+		printThrottleReason(throttleReason)
 	}
 }
