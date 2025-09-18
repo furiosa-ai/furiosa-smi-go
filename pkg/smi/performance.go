@@ -342,6 +342,7 @@ func safeUsizeDivide(fst, snd uint64) float64 {
 type ThrottleReason uint32
 
 const (
+	None            = ThrottleReason(binding.FuriosaSmiThrottleReasonNone)
 	Idle            = ThrottleReason(binding.FuriosaSmiThrottleReasonIdle)
 	ThermalSlowdown = ThrottleReason(binding.FuriosaSmiThrottleReasonThermalSlowdown)
 	AppPowerCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppPowerCap)
