@@ -351,32 +351,3 @@ const (
 	HwPowerCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwPowerCap)
 	OtherReason     = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
 )
-
-func FromBitmaskToSlice(value uint32) []ThrottleReason {
-	var reasons []ThrottleReason
-	if value&(1<<0) != 0 {
-		reasons = append(reasons, Idle)
-	}
-	if value&(1<<1) != 0 {
-		reasons = append(reasons, ThermalSlowdown)
-	}
-	if value&(1<<2) != 0 {
-		reasons = append(reasons, AppPowerCap)
-	}
-	if value&(1<<3) != 0 {
-		reasons = append(reasons, AppClockCap)
-	}
-	if value&(1<<4) != 0 {
-		reasons = append(reasons, HwClockCap)
-	}
-	if value&(1<<5) != 0 {
-		reasons = append(reasons, HwBusLimit)
-	}
-	if value&(1<<6) != 0 {
-		reasons = append(reasons, HwPowerCap)
-	}
-	if value&(1<<7) != 0 {
-		reasons = append(reasons, OtherReason)
-	}
-	return reasons
-}
