@@ -344,21 +344,21 @@ type ThrottleReason uint32
 
 const (
 	// Throttling not active
-	None            = ThrottleReason(binding.FuriosaSmiThrottleReasonNone)
+	ThrottleReasonNone            = ThrottleReason(binding.FuriosaSmiThrottleReasonNone)
 	// Throttling in idle or unused state
-	Idle            = ThrottleReason(binding.FuriosaSmiThrottleReasonIdle)
+	ThrottleReasonIdle            = ThrottleReason(binding.FuriosaSmiThrottleReasonIdle)
 	// Throttling triggered by high temperature
-	ThermalSlowdown = ThrottleReason(binding.FuriosaSmiThrottleReasonThermalSlowdown)
+	ThrottleReasonThermalSlowdown = ThrottleReason(binding.FuriosaSmiThrottleReasonThermalSlowdown)
 	// Throttling due to host-defined power limit
-	AppPowerCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppPowerCap)
+	ThrottleReasonAppPowerCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppPowerCap)
 	// Throttling due to host-defined clock limit
-	AppClockCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppClockCap)
+	ThrottleReasonAppClockCap     = ThrottleReason(binding.FuriosaSmiThrottleReasonAppClockCap)
 	// Throttling from device-internal clock limit
-	HwClockCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwClockCap)
+	ThrottleReasonHwClockCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwClockCap)
 	// Throttling from internal bus/NoC bandwidth limit
-	HwBusLimit      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwBusLimit)
+	ThrottleReasonHwBusLimit      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwBusLimit)
 	// Throttling from device-enforced power limit
-	HwPowerCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwPowerCap)
+	ThrottleReasonHwPowerCap      = ThrottleReason(binding.FuriosaSmiThrottleReasonHwPowerCap)
 	// Throttling due to other undefined reasons
-	OtherReason     = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
+	ThrottleReasonOtherReason     = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
 )
