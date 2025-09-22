@@ -182,6 +182,7 @@ type observer struct {
 
 var _ Observer = new(observer)
 
+// Observer represents an observer instance to collect device information.
 type Observer interface {
 	// GetCoreUtilization returns the core utilization for the given device.
 	GetCoreUtilization(device Device) ([]CoreUtilization, error)
@@ -281,6 +282,7 @@ func (o *observer) updateUtilization(devices []Device) {
 	}
 }
 
+// CoreUtilization represents a core utilization information.
 type CoreUtilization interface {
 	// Core returns a core index.
 	Core() uint32
