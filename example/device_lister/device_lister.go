@@ -238,7 +238,7 @@ func main() {
 
 		fmt.Printf("Core Utilization:\n")
 		for _, peUtilization := range utilization {
-			fmt.Printf("  Core %d: %.2f%%\n", peUtilization.Core, peUtilization.PeUsagePercentage)
+			fmt.Printf("  Core %d: %.2f%%\n", peUtilization.Core(), peUtilization.PeUsagePercentage())
 		}
 
 		throttleReason, err := device.ThrottleReason()
