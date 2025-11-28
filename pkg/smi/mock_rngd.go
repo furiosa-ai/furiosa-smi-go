@@ -171,8 +171,8 @@ func (m *staticRngdMockDeviceInfo) CoreNum() uint32 {
 	return 8
 }
 
-func (m *staticRngdMockDeviceInfo) NumaNode() uint32 {
-	return uint32(staticMockHintMap[m.nodeIdx].numaNode)
+func (m *staticRngdMockDeviceInfo) NumaNode() int32 {
+	return int32(staticMockHintMap[m.nodeIdx].numaNode)
 }
 
 func (m *staticRngdMockDeviceInfo) Name() string {

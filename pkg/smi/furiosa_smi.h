@@ -122,7 +122,7 @@ typedef struct {
   uint32_t index;
   FuriosaSmiArch arch;
   uint32_t core_num;
-  uint32_t numa_node;
+  int32_t numa_node;
   char name[FURIOSA_SMI_MAX_CSTR_SIZE];
   char serial[FURIOSA_SMI_MAX_CSTR_SIZE];
   char uuid[FURIOSA_SMI_MAX_CSTR_SIZE];
