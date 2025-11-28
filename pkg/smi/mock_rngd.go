@@ -201,7 +201,7 @@ func (m *staticRngdMockDeviceInfo) Minor() uint16 {
 
 // FirmwareVersion e.g. version: 1.6.0, c1bebfd
 func (m *staticRngdMockDeviceInfo) FirmwareVersion() VersionInfo {
-	return newStaticMockVersionInfo(1, 6, 0, "c1bebfd")
+	return newStaticMockVersionInfo(1, 6, 0, "c1bebfd", "dev0")
 }
 
 func (m *staticRngdMockDevice) PcieInfo() (PcieInfo, error) {

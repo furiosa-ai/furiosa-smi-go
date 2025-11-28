@@ -23,23 +23,23 @@ const (
 	FuriosaSmiMaxDeviceHandleSize = 64
 	// FuriosaSmiMaxCstrSize as defined in smi/furiosa_smi.h:19
 	FuriosaSmiMaxCstrSize = 96
-	// FuriosaSmiThrottleReasonNone as defined in smi/furiosa_smi.h:249
+	// FuriosaSmiThrottleReasonNone as defined in smi/furiosa_smi.h:250
 	FuriosaSmiThrottleReasonNone = 0
-	// FuriosaSmiThrottleReasonIdle as defined in smi/furiosa_smi.h:252
+	// FuriosaSmiThrottleReasonIdle as defined in smi/furiosa_smi.h:253
 	FuriosaSmiThrottleReasonIdle = (1 << 0)
-	// FuriosaSmiThrottleReasonThermalSlowdown as defined in smi/furiosa_smi.h:255
+	// FuriosaSmiThrottleReasonThermalSlowdown as defined in smi/furiosa_smi.h:256
 	FuriosaSmiThrottleReasonThermalSlowdown = (1 << 1)
-	// FuriosaSmiThrottleReasonAppPowerCap as defined in smi/furiosa_smi.h:258
+	// FuriosaSmiThrottleReasonAppPowerCap as defined in smi/furiosa_smi.h:259
 	FuriosaSmiThrottleReasonAppPowerCap = (1 << 2)
-	// FuriosaSmiThrottleReasonAppClockCap as defined in smi/furiosa_smi.h:261
+	// FuriosaSmiThrottleReasonAppClockCap as defined in smi/furiosa_smi.h:262
 	FuriosaSmiThrottleReasonAppClockCap = (1 << 3)
-	// FuriosaSmiThrottleReasonHwClockCap as defined in smi/furiosa_smi.h:264
+	// FuriosaSmiThrottleReasonHwClockCap as defined in smi/furiosa_smi.h:265
 	FuriosaSmiThrottleReasonHwClockCap = (1 << 4)
-	// FuriosaSmiThrottleReasonHwBusLimit as defined in smi/furiosa_smi.h:267
+	// FuriosaSmiThrottleReasonHwBusLimit as defined in smi/furiosa_smi.h:268
 	FuriosaSmiThrottleReasonHwBusLimit = (1 << 5)
-	// FuriosaSmiThrottleReasonHwPowerCap as defined in smi/furiosa_smi.h:270
+	// FuriosaSmiThrottleReasonHwPowerCap as defined in smi/furiosa_smi.h:271
 	FuriosaSmiThrottleReasonHwPowerCap = (1 << 6)
-	// FuriosaSmiThrottleReasonOtherReason as defined in smi/furiosa_smi.h:273
+	// FuriosaSmiThrottleReasonOtherReason as defined in smi/furiosa_smi.h:274
 	FuriosaSmiThrottleReasonOtherReason = (1 << 7)
 )
 

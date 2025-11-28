@@ -114,6 +114,7 @@ typedef struct {
   uint32_t minor;
   uint32_t patch;
   char metadata[FURIOSA_SMI_MAX_CSTR_SIZE];
+  char prerelease[FURIOSA_SMI_MAX_CSTR_SIZE];
 } FuriosaSmiVersion;
 
 /// \brief Represent a device information
