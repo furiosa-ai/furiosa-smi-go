@@ -29,7 +29,7 @@ type FuriosaSmiDeviceInfo struct {
 	Index           uint32
 	Arch            FuriosaSmiArch
 	CoreNum         uint32
-	NumaNode        uint32
+	NumaNode        int32
 	Name            [96]byte
 	Serial          [96]byte
 	Uuid            [96]byte
