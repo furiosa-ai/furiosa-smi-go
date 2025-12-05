@@ -241,6 +241,24 @@ func main() {
 			fmt.Printf("  Core %d: %.2f%%\n", peUtilization.Core(), peUtilization.PeUsagePercentage())
 		}
 
+		memUtilization, err := device.MemoryUtilization()
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Printf("Memory Utilization:\n")
+		for _, memBlock := range memUtilization.Dram().Memory() {
+			cores := memBlock.Core()
+			fmt.Printf("  Core:")
+			for _, core := range cores {
+				fmt.Printf(" %d", core)
+			}
+			fmt.Printf("\n")
+
+			fmt.Printf("    dram: %.2f GB / %.2f GB\n", float64(memBlock.InUseBytes())/1024/1024/1024, float64(memBlock.TotalBytes())/1024/1024/1024)
+		}
+
 		throttleReason, err := device.ThrottleReason()
 		if err != nil {
 			fmt.Println(err.Error())

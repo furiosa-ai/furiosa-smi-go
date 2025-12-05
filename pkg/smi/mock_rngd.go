@@ -215,3 +215,7 @@ func (staticRngdMockDevice) CoreUtilization(observer Observer) ([]CoreUtilizatio
 func (staticRngdMockDevice) ThrottleReason() (ThrottleReason, error) {
 	return 0, nil
 }
+
+func (staticRngdMockDevice) MemoryUtilization() (MemoryUtilization, error) {
+	return nil, nil
+}
