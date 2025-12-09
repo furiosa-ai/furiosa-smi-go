@@ -26,6 +26,7 @@ func testDeviceInfo(t *testing.T, arch Arch, expected DeviceInfo) {
 	assert.Equal(t, expected.FirmwareVersion().Minor(), devInfo.FirmwareVersion().Minor())
 	assert.Equal(t, expected.FirmwareVersion().Patch(), devInfo.FirmwareVersion().Patch())
 	assert.Equal(t, expected.FirmwareVersion().Metadata(), devInfo.FirmwareVersion().Metadata())
+	assert.Equal(t, expected.FirmwareVersion().Prerelease(), devInfo.FirmwareVersion().Prerelease())
 }
 
 func stringTo96ByteArray(str string) [96]byte {
@@ -55,10 +56,11 @@ func TestDeviceInfo(t *testing.T) {
 					Major:    234,
 					Minor:    0,
 					FirmwareVersion: binding.FuriosaSmiVersion{
-						Major:    1,
-						Minor:    6,
-						Patch:    0,
-						Metadata: stringTo96ByteArray("c1bebfd"),
+						Major:      1,
+						Minor:      6,
+						Patch:      0,
+						Metadata:   stringTo96ByteArray("c1bebfd"),
+						Prerelease: stringTo96ByteArray("dev0"),
 					},
 				},
 			),
