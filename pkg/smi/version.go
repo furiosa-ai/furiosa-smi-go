@@ -2,8 +2,6 @@ package smi
 
 import (
 	"fmt"
-
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 )
 
 // VersionInfo represents a version information.
@@ -22,37 +20,37 @@ type VersionInfo interface {
 	Prerelease() string
 }
 
-var _ VersionInfo = new(versionInfo)
+var _ VersionInfo = new(FuriosaSmiVersion)
 
-type versionInfo struct {
-	raw binding.FuriosaSmiVersion
+type FuriosaSmiVersion struct {
+	major      uint32
+	minor      uint32
+	patch      uint32
+	metadata   string
+	prerelease string
 }
 
-func newVersionInfo(raw binding.FuriosaSmiVersion) VersionInfo {
-	return &versionInfo{raw: raw}
+func (v *FuriosaSmiVersion) Major() uint32 {
+	return v.major
 }
 
-func (v *versionInfo) Major() uint32 {
-	return v.raw.Major
+func (v *FuriosaSmiVersion) Minor() uint32 {
+	return v.minor
 }
 
-func (v *versionInfo) Minor() uint32 {
-	return v.raw.Minor
+func (v *FuriosaSmiVersion) Patch() uint32 {
+	return v.patch
 }
 
-func (v *versionInfo) Patch() uint32 {
-	return v.raw.Patch
+func (v *FuriosaSmiVersion) Metadata() string {
+	return v.metadata
 }
 
-func (v *versionInfo) Metadata() string {
-	return byteBufferToString(v.raw.Metadata[:])
+func (v *FuriosaSmiVersion) Prerelease() string {
+	return v.prerelease
 }
 
-func (v *versionInfo) Prerelease() string {
-	return byteBufferToString(v.raw.Prerelease[:])
-}
-
-func (v *versionInfo) String() string {
+func (v *FuriosaSmiVersion) String() string {
 	prerelease := v.Prerelease()
 
 	if prerelease == "" {

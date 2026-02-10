@@ -5,8 +5,6 @@ import (
 	"runtime"
 	"sync"
 	"time"
-
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 )
 
 // DeviceTemperature represents a temperature information of the device.
@@ -17,24 +15,19 @@ type DeviceTemperature interface {
 	Ambient() float64
 }
 
-var _ DeviceTemperature = new(deviceTemperature)
+var _ DeviceTemperature = new(FuriosaSmiDeviceTemperature)
 
-type deviceTemperature struct {
-	raw binding.FuriosaSmiDeviceTemperature
+type FuriosaSmiDeviceTemperature struct {
+	socPeak float64
+	ambient float64
 }
 
-func newDeviceTemperature(raw binding.FuriosaSmiDeviceTemperature) DeviceTemperature {
-	return &deviceTemperature{
-		raw: raw,
-	}
+func (d *FuriosaSmiDeviceTemperature) SocPeak() float64 {
+	return d.socPeak
 }
 
-func (d *deviceTemperature) SocPeak() float64 {
-	return d.raw.SocPeak
-}
-
-func (d *deviceTemperature) Ambient() float64 {
-	return d.raw.Ambient
+func (d *FuriosaSmiDeviceTemperature) Ambient() float64 {
+	return d.ambient
 }
 
 // DevicePerformanceCounter represents a device performance counter.
@@ -42,24 +35,17 @@ type DevicePerformanceCounter interface {
 	// PerformanceCounter returns a list of performance counters.
 	PerformanceCounter() []PerformanceCounter
 }
-
-var _ DevicePerformanceCounter = new(devicePerformanceCounter)
-
-type devicePerformanceCounter struct {
-	raw binding.FuriosaSmiDevicePerformanceCounter
+type FuriosaSmiDevicePerformanceCounter struct {
+	PePerformanceCounters []FuriosaSmiPePerformanceCounter
 }
 
-func newDevicePerformanceCounter(raw binding.FuriosaSmiDevicePerformanceCounter) DevicePerformanceCounter {
-	return &devicePerformanceCounter{
-		raw: raw,
-	}
-}
+var _ DevicePerformanceCounter = new(FuriosaSmiDevicePerformanceCounter)
 
-func (d *devicePerformanceCounter) PerformanceCounter() []PerformanceCounter {
+func (d *FuriosaSmiDevicePerformanceCounter) PerformanceCounter() []PerformanceCounter {
 	var ret []PerformanceCounter
 
-	for i := uint32(0); i < d.raw.PeCount; i++ {
-		ret = append(ret, newPerformanceCounter(d.raw.PePerformanceCounters[i]))
+	for i := 0; i < len(d.PePerformanceCounters); i++ {
+		ret = append(ret, &d.PePerformanceCounters[i])
 	}
 
 	return ret
@@ -77,70 +63,65 @@ type PerformanceCounter interface {
 	TaskExecutionCycle() uint64
 }
 
-var _ PerformanceCounter = new(performanceCounter)
+var _ PerformanceCounter = new(FuriosaSmiPePerformanceCounter)
 
-type performanceCounter struct {
-	raw binding.FuriosaSmiPePerformanceCounter
+type FuriosaSmiPePerformanceCounter struct {
+	timestamp          int64
+	core               uint32
+	cycleCount         uint64
+	taskExecutionCycle uint64
 }
 
-func newPerformanceCounter(raw binding.FuriosaSmiPePerformanceCounter) PerformanceCounter {
-	return &performanceCounter{
-		raw: raw,
-	}
+func (p *FuriosaSmiPePerformanceCounter) Timestamp() time.Time {
+	return time.Unix(p.timestamp, 0)
 }
 
-func (p *performanceCounter) Timestamp() time.Time {
-	return time.Unix(p.raw.Timestamp, 0)
+func (p *FuriosaSmiPePerformanceCounter) Core() uint32 {
+	return p.core
 }
 
-func (p *performanceCounter) Core() uint32 {
-	return p.raw.Core
+func (p *FuriosaSmiPePerformanceCounter) CycleCount() uint64 {
+	return p.cycleCount
 }
 
-func (p *performanceCounter) CycleCount() uint64 {
-	return p.raw.CycleCount
-}
-
-func (p *performanceCounter) TaskExecutionCycle() uint64 {
-	return p.raw.TaskExecutionCycle
-}
-
-func newGovernorProfile(profile binding.FuriosaSmiGovernorProfile) GovernorProfile {
-	switch profile {
-	case binding.FuriosaSmiGovernorProfilePerformance:
-		return GovernorProfilePerformance
-
-	case binding.FuriosaSmiGovernorProfilePowerSave:
-		return GovernorProfilePowerSave
-
-	default:
-		return GovernorProfilePerformance
-	}
+func (p *FuriosaSmiPePerformanceCounter) TaskExecutionCycle() uint64 {
+	return p.taskExecutionCycle
 }
 
 type performanceCounterMap struct {
 	mu   sync.RWMutex
-	data map[binding.FuriosaSmiDeviceHandle]performanceCounterInfo
-}
-
-func newPerformanceCounterMap() performanceCounterMap {
-	return performanceCounterMap{
-		data: make(map[binding.FuriosaSmiDeviceHandle]performanceCounterInfo),
-	}
+	data map[string]performanceCounterInfo
 }
 
 func (pcm *performanceCounterMap) get(dev Device) (performanceCounterInfo, bool) {
 	pcm.mu.RLock()
 	defer pcm.mu.RUnlock()
 
-	info, exists := pcm.data[dev.(*device).handle]
+	deviceInfo, err := dev.DeviceInfo()
+	if err != nil {
+		return performanceCounterInfo{}, false
+	}
+
+	info, exists := pcm.data[deviceInfo.UUID()]
 	return info, exists
 }
 
 func (pcm *performanceCounterMap) set(dev Device, info performanceCounterInfo) {
 	pcm.mu.Lock()
 	defer pcm.mu.Unlock()
-	pcm.data[dev.(*device).handle] = info
+
+	deviceInfo, err := dev.DeviceInfo()
+	if err != nil {
+		return
+	}
+	pcm.data[deviceInfo.UUID()] = info
+}
+
+func newPerformanceCounterMap() performanceCounterMap {
+	return performanceCounterMap{
+		mu:   sync.RWMutex{},
+		data: make(map[string]performanceCounterInfo),
+	}
 }
 
 type performanceCounterInfo struct {
@@ -364,57 +345,46 @@ type MemoryUtilization interface {
 	Sram() Memory
 	Instruction() Memory
 }
-
-var _ MemoryUtilization = new(memoryUtilization)
-
-type memoryUtilization struct {
-	raw binding.FuriosaSmiMemoryUtilization
+type FuriosaSmiMemoryUtilization struct {
+	dram        FuriosaSmiMemory
+	ramShared   FuriosaSmiMemory
+	sram        FuriosaSmiMemory
+	instruction FuriosaSmiMemory
 }
 
-func newMemoryUtilization(raw binding.FuriosaSmiMemoryUtilization) MemoryUtilization {
-	return &memoryUtilization{
-		raw: raw,
-	}
+var _ MemoryUtilization = new(FuriosaSmiMemoryUtilization)
+
+func (m *FuriosaSmiMemoryUtilization) Dram() Memory {
+	return &m.dram
 }
 
-func (m *memoryUtilization) Dram() Memory {
-	return newMemory(m.raw.Dram)
+func (m *FuriosaSmiMemoryUtilization) DramShared() Memory {
+	return &m.ramShared
 }
 
-func (m *memoryUtilization) DramShared() Memory {
-	return newMemory(m.raw.DramShared)
+func (m *FuriosaSmiMemoryUtilization) Sram() Memory {
+	return &m.sram
 }
 
-func (m *memoryUtilization) Sram() Memory {
-	return newMemory(m.raw.Sram)
-}
-
-func (m *memoryUtilization) Instruction() Memory {
-	return newMemory(m.raw.Instruction)
+func (m *FuriosaSmiMemoryUtilization) Instruction() Memory {
+	return &m.instruction
 }
 
 // Memory represent a total memory information.
 type Memory interface {
 	Memory() []MemoryBlock
 }
-
-var _ Memory = new(memory)
-
-type memory struct {
-	raw binding.FuriosaSmiMemory
+type FuriosaSmiMemory struct {
+	memory []FuriosaSmiMemoryBlock
 }
 
-func newMemory(raw binding.FuriosaSmiMemory) Memory {
-	return &memory{
-		raw: raw,
-	}
-}
+var _ Memory = new(FuriosaSmiMemory)
 
-func (m *memory) Memory() []MemoryBlock {
+func (m *FuriosaSmiMemory) Memory() []MemoryBlock {
 	var ret []MemoryBlock
 
-	for i := uint32(0); i < m.raw.Count; i++ {
-		ret = append(ret, newMemoryBlock(m.raw.Memory[i]))
+	for i := 0; i < len(m.memory); i++ {
+		ret = append(ret, &m.memory[i])
 	}
 
 	return ret
@@ -427,32 +397,28 @@ type MemoryBlock interface {
 	InUseBytes() uint64
 }
 
-var _ MemoryBlock = new(memoryBlock)
-
-type memoryBlock struct {
-	raw binding.FuriosaSmiMemoryBlock
+type FuriosaSmiMemoryBlock struct {
+	core       []uint32
+	totalBytes uint64
+	inUseBytes uint64
 }
 
-func newMemoryBlock(raw binding.FuriosaSmiMemoryBlock) MemoryBlock {
-	return &memoryBlock{
-		raw: raw,
-	}
-}
+var _ MemoryBlock = new(FuriosaSmiMemoryBlock)
 
-func (m *memoryBlock) Core() []uint32 {
+func (m *FuriosaSmiMemoryBlock) Core() []uint32 {
 	var ret []uint32
-	for i := uint32(0); i < m.raw.Count; i++ {
-		ret = append(ret, m.raw.Core[i])
+	for i := 0; i < len(m.core); i++ {
+		ret = append(ret, m.core[i])
 	}
 	return ret
 }
 
-func (m *memoryBlock) TotalBytes() uint64 {
-	return m.raw.TotalBytes
+func (m *FuriosaSmiMemoryBlock) TotalBytes() uint64 {
+	return m.totalBytes
 }
 
-func (m *memoryBlock) InUseBytes() uint64 {
-	return m.raw.InUseBytes
+func (m *FuriosaSmiMemoryBlock) InUseBytes() uint64 {
+	return m.inUseBytes
 }
 
 func safeUsizeDivide(fst, snd uint64) float64 {
@@ -467,21 +433,21 @@ type ThrottleReason uint32
 
 const (
 	// Throttling not active
-	ThrottleReasonNone = ThrottleReason(binding.FuriosaSmiThrottleReasonNone)
+	FuriosaSmiThrottleReasonNone = 0
 	// Throttling in idle or unused state
-	ThrottleReasonIdle = ThrottleReason(binding.FuriosaSmiThrottleReasonIdle)
+	FuriosaSmiThrottleReasonIdle = (1 << 0)
 	// Throttling triggered by high temperature
-	ThrottleReasonThermalSlowdown = ThrottleReason(binding.FuriosaSmiThrottleReasonThermalSlowdown)
-	// Throttling due to host-defined power limit
-	ThrottleReasonAppPowerCap = ThrottleReason(binding.FuriosaSmiThrottleReasonAppPowerCap)
-	// Throttling due to host-defined clock limit
-	ThrottleReasonAppClockCap = ThrottleReason(binding.FuriosaSmiThrottleReasonAppClockCap)
-	// Throttling from device-internal clock limit
-	ThrottleReasonHwClockCap = ThrottleReason(binding.FuriosaSmiThrottleReasonHwClockCap)
-	// Throttling from internal bus/NoC bandwidth limit
-	ThrottleReasonHwBusLimit = ThrottleReason(binding.FuriosaSmiThrottleReasonHwBusLimit)
-	// Throttling from device-enforced power limit
-	ThrottleReasonHwPowerCap = ThrottleReason(binding.FuriosaSmiThrottleReasonHwPowerCap)
-	// Throttling due to other undefined reasons
-	ThrottleReasonOtherReason = ThrottleReason(binding.FuriosaSmiThrottleReasonOtherReason)
+	FuriosaSmiThrottleReasonThermalSlowdown = (1 << 1)
+	// FuriosaSmiThrottleReasonAppPowerCap as defined in smi/furiosa_smi.h:281
+	FuriosaSmiThrottleReasonAppPowerCap = (1 << 2)
+	// FuriosaSmiThrottleReasonAppClockCap as defined in smi/furiosa_smi.h:284
+	FuriosaSmiThrottleReasonAppClockCap = (1 << 3)
+	// FuriosaSmiThrottleReasonHwClockCap as defined in smi/furiosa_smi.h:287
+	FuriosaSmiThrottleReasonHwClockCap = (1 << 4)
+	// FuriosaSmiThrottleReasonHwBusLimit as defined in smi/furiosa_smi.h:290
+	FuriosaSmiThrottleReasonHwBusLimit = (1 << 5)
+	// FuriosaSmiThrottleReasonHwPowerCap as defined in smi/furiosa_smi.h:293
+	FuriosaSmiThrottleReasonHwPowerCap = (1 << 6)
+	// FuriosaSmiThrottleReasonOtherReason as defined in smi/furiosa_smi.h:296
+	FuriosaSmiThrottleReasonOtherReason = (1 << 7)
 )

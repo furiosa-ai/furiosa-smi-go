@@ -61,13 +61,13 @@ func main() {
 
 func linkTypeToString(linkType smi.LinkType) string {
 	switch linkType {
-	case smi.LinkTypeInterconnect:
+	case smi.FuriosaSmiLinkTypeInterconnect:
 		return "Interconnect"
-	case smi.LinkTypeCpu:
+	case smi.FuriosaSmiLinkTypeCpu:
 		return "CPU"
-	case smi.LinkTypeHostBridge:
+	case smi.FuriosaSmiLinkTypeHostBridge:
 		return "Host Bridge"
-	case smi.LinkTypeNoc:
+	case smi.FuriosaSmiLinkTypeNoc:
 		return "NoC"
 	default:
 		return "Unknown"

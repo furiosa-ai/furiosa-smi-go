@@ -1,57 +1,57 @@
 package smi
 
-import (
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
-)
-
 // Arch represents NPU architecture.
 type Arch uint32
 
 const (
-	// ArchRngd represents RNGD architecture.
-	ArchRngd = Arch(binding.FuriosaSmiArchRngd)
-	// ArchRngdMax represents RNGD-Max architecture.
-	ArchRngdMax = Arch(binding.FuriosaSmiArchRngdMax)
-	// ArchRngdS represents RNGD-S architecture.
-	ArchRngdS = Arch(binding.FuriosaSmiArchRngdS)
+	FuriosaSmiArchWarboy  Arch = iota
+	FuriosaSmiArchRngd    Arch = 1
+	FuriosaSmiArchRngdMax Arch = 2
+	FuriosaSmiArchRngdS   Arch = 3
 )
 
 // ToString converts given arch into the string representation.
 func (a Arch) ToString() string {
 	switch a {
-	case ArchRngd:
+	case FuriosaSmiArchRngd:
 		return "rngd"
-	case ArchRngdMax:
+	case FuriosaSmiArchRngdMax:
 		return "rngd-max"
-	case ArchRngdS:
+	case FuriosaSmiArchRngdS:
 		return "rngd-s"
 	default:
 		return "unknown"
 	}
 }
 
+type FuriosaSmiCoreStatus int32
+
+const (
+	FuriosaSmiCoreStatusAvailable FuriosaSmiCoreStatus = iota
+	FuriosaSmiCoreStatusOccupied  FuriosaSmiCoreStatus = 1
+)
+
 type CoreStatuses interface {
 	// PeStatus returns a core status of the device.
 	PeStatus() []PeStatus
 }
 
-var _ CoreStatuses = new(coreStatuses)
-
-type coreStatuses struct {
-	raw binding.FuriosaSmiCoreStatuses
+type FuriosaSmiPeStatus struct {
+	core   uint32
+	status FuriosaSmiCoreStatus
 }
 
-func newCoreStatuses(raw binding.FuriosaSmiCoreStatuses) CoreStatuses {
-	return &coreStatuses{
-		raw: raw,
-	}
+type FuriosaSmiCoreStatuses struct {
+	coreStatuses []FuriosaSmiPeStatus
 }
 
-func (c *coreStatuses) PeStatus() (ret []PeStatus) {
-	for i := uint32(0); i < c.raw.Count; i++ {
-		ret = append(ret, newPeStatus(c.raw.CoreStatus[i]))
-	}
+var _ CoreStatuses = new(FuriosaSmiCoreStatuses)
 
+func (c *FuriosaSmiCoreStatuses) PeStatus() (ret []PeStatus) {
+	ret = make([]PeStatus, len(c.coreStatuses))
+	for i := range c.coreStatuses {
+		ret[i] = &c.coreStatuses[i]
+	}
 	return
 }
 
@@ -60,101 +60,68 @@ type PeStatus interface {
 	// Core returns a core index.
 	Core() uint32
 	// Status returns a core status.
-	Status() CoreStatus
+	Status() FuriosaSmiCoreStatus
 }
 
-var _ PeStatus = new(peStatus)
+var _ PeStatus = new(FuriosaSmiPeStatus)
 
-type peStatus struct {
-	raw binding.FuriosaSmiPeStatus
+func (p *FuriosaSmiPeStatus) Core() uint32 {
+	return p.core
 }
 
-func newPeStatus(raw binding.FuriosaSmiPeStatus) PeStatus {
-	return &peStatus{
-		raw: raw,
-	}
+func (p *FuriosaSmiPeStatus) Status() FuriosaSmiCoreStatus {
+	return p.status
 }
-
-func (p *peStatus) Core() uint32 {
-	return p.raw.Core
-}
-
-func (p *peStatus) Status() CoreStatus {
-	return CoreStatus(p.raw.Status)
-}
-
-// CoreStatus represents a device core status
-type CoreStatus uint32
-
-const (
-	// CoreStatusAvailable represents core is available.
-	CoreStatusAvailable = CoreStatus(binding.FuriosaSmiCoreStatusAvailable)
-	// CoreStatusOccupied represents core is occupied.
-	CoreStatusOccupied = CoreStatus(binding.FuriosaSmiCoreStatusOccupied)
-)
 
 // LinkType represents a topology link type between 2 NPU devices.
-type LinkType uint32
+type LinkType int32
 
 const (
-	// LinkTypeUnknown means unknown link type.
-	LinkTypeUnknown = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeUnknown)
-	// LinkTypeInterconnect represents link type under same machine.
-	LinkTypeInterconnect = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeInterconnect)
-	// LinkTypeCpu represents link type under same cpu.
-	LinkTypeCpu = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeCpu)
-	// LinkTypeHostBridge represents link type under same switch.
-	LinkTypeHostBridge = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeBridge)
-	// LinkTypeNoc represents link type under same socket.
-	LinkTypeNoc = LinkType(binding.FuriosaSmiDeviceToDeviceLinkTypeNoc)
+	FuriosaSmiLinkTypeUnknown      LinkType = iota
+	FuriosaSmiLinkTypeInterconnect LinkType = 10
+	FuriosaSmiLinkTypeCpu          LinkType = 20
+	FuriosaSmiLinkTypeHostBridge   LinkType = 30
+	FuriosaSmiLinkTypeNoc          LinkType = 70
 )
+
+type FuriosaSmiPeFrequency struct {
+	core      uint32
+	frequency uint32
+}
+
+type FuriosaSmiCoreFrequency struct {
+	pe []FuriosaSmiPeFrequency
+}
+
+type FuriosaSmiMemoryFrequency struct {
+	frequency uint32
+}
 
 type PeFrequency interface {
 	Core() uint32
 	Frequency() uint32
 }
 
-var _ PeFrequency = new(peFrequency)
+var _ PeFrequency = new(FuriosaSmiPeFrequency)
 
-type peFrequency struct {
-	raw binding.FuriosaSmiPeFrequency
+func (p *FuriosaSmiPeFrequency) Core() uint32 {
+	return p.core
 }
 
-func newPeFrequency(raw binding.FuriosaSmiPeFrequency) PeFrequency {
-	return &peFrequency{
-		raw: raw,
-	}
-}
-
-func (p *peFrequency) Core() uint32 {
-	return p.raw.Core
-}
-
-func (p *peFrequency) Frequency() uint32 {
-	return p.raw.Frequency
+func (p *FuriosaSmiPeFrequency) Frequency() uint32 {
+	return p.frequency
 }
 
 type CoreFrequency interface {
 	PeFrequency() []PeFrequency
 }
 
-var _ CoreFrequency = new(coreFrequency)
+var _ CoreFrequency = new(FuriosaSmiCoreFrequency)
 
-type coreFrequency struct {
-	raw binding.FuriosaSmiCoreFrequency
-}
-
-func newCoreFrequency(raw binding.FuriosaSmiCoreFrequency) CoreFrequency {
-	return &coreFrequency{
-		raw: raw,
+func (c *FuriosaSmiCoreFrequency) PeFrequency() (ret []PeFrequency) {
+	for i := 0; i < len(c.pe); i++ {
+		ret = append(ret, &c.pe[i])
 	}
-}
-
-func (c *coreFrequency) PeFrequency() (ret []PeFrequency) {
-	for i := uint32(0); i < c.raw.PeCount; i++ {
-		ret = append(ret, newPeFrequency(c.raw.Pe[i]))
-	}
-
 	return
 }
 
@@ -162,38 +129,26 @@ type MemoryFrequency interface {
 	Frequency() uint32
 }
 
-var _ MemoryFrequency = new(memoryFrequency)
+var _ MemoryFrequency = new(FuriosaSmiMemoryFrequency)
 
-type memoryFrequency struct {
-	raw binding.FuriosaSmiMemoryFrequency
-}
-
-func newMemoryFrequency(raw binding.FuriosaSmiMemoryFrequency) MemoryFrequency {
-	return &memoryFrequency{
-		raw: raw,
-	}
-}
-
-func (m *memoryFrequency) Frequency() uint32 {
-	return m.raw.Frequency
+func (m *FuriosaSmiMemoryFrequency) Frequency() uint32 {
+	return m.frequency
 }
 
 // GovernorProfile Represents a governor profile
 type GovernorProfile uint32
 
 const (
-	// GovernorProfilePerformance governor profile
-	GovernorProfilePerformance = GovernorProfile(binding.FuriosaSmiGovernorProfilePerformance)
-	// GovernorProfilePowerSave governor profile
-	GovernorProfilePowerSave = GovernorProfile(binding.FuriosaSmiGovernorProfilePowerSave)
+	FuriosaSmiGovernorProfilePerformance GovernorProfile = iota
+	FuriosaSmiGovernorProfilePowerSave   GovernorProfile = 1
 )
 
 func (p GovernorProfile) String() string {
 	switch p {
-	case GovernorProfilePerformance:
+	case FuriosaSmiGovernorProfilePerformance:
 		return "Performance"
 
-	case GovernorProfilePowerSave:
+	case FuriosaSmiGovernorProfilePowerSave:
 		return "PowerSave"
 
 	default: // should not reach here!

@@ -2,9 +2,6 @@ package smi
 
 import (
 	"fmt"
-	"math"
-
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 )
 
 type PcieInfo interface {
@@ -19,9 +16,6 @@ type PcieInfo interface {
 	// SwitchInfo returns PCIe switch information if available.
 	SwitchInfo() PcieSwitchInfo
 }
-
-var _ PcieInfo = new(pcieInfo)
-
 type pcieInfo struct {
 	pcieDeviceInfo      PcieDeviceInfo
 	pcieLinkInfo        PcieLinkInfo
@@ -82,40 +76,39 @@ type PcieDeviceInfo interface {
 	SubClassId() uint8
 }
 
-var _ PcieDeviceInfo = new(pcieDeviceInfo)
+var _ PcieDeviceInfo = new(FuriosaSmiPcieDeviceInfo)
 
-type pcieDeviceInfo struct {
-	raw binding.FuriosaSmiPcieDeviceInfo
+type FuriosaSmiPcieDeviceInfo struct {
+	deviceId          uint16
+	subsystemVendorId uint16
+	subsystemDeviceId uint16
+	revisionId        byte
+	classId           byte
+	subClassId        byte
 }
 
-func newPcieDeviceInfo(raw binding.FuriosaSmiPcieDeviceInfo) PcieDeviceInfo {
-	return &pcieDeviceInfo{
-		raw: raw,
-	}
+func (p *FuriosaSmiPcieDeviceInfo) DeviceId() uint16 {
+	return p.deviceId
 }
 
-func (p *pcieDeviceInfo) DeviceId() uint16 {
-	return p.raw.DeviceId
+func (p *FuriosaSmiPcieDeviceInfo) VendorId() uint16 {
+	return p.subsystemVendorId
 }
 
-func (p *pcieDeviceInfo) VendorId() uint16 {
-	return p.raw.SubsystemVendorId
+func (p *FuriosaSmiPcieDeviceInfo) SubsystemId() uint16 {
+	return p.subsystemDeviceId
 }
 
-func (p *pcieDeviceInfo) SubsystemId() uint16 {
-	return p.raw.SubsystemDeviceId
+func (p *FuriosaSmiPcieDeviceInfo) RevisionId() uint8 {
+	return p.revisionId
 }
 
-func (p *pcieDeviceInfo) RevisionId() uint8 {
-	return p.raw.RevisionId
+func (p *FuriosaSmiPcieDeviceInfo) ClassId() uint8 {
+	return p.classId
 }
 
-func (p *pcieDeviceInfo) ClassId() uint8 {
-	return p.raw.ClassId
-}
-
-func (p *pcieDeviceInfo) SubClassId() uint8 {
-	return p.raw.SubClassId
+func (p *FuriosaSmiPcieDeviceInfo) SubClassId() uint8 {
+	return p.subClassId
 }
 
 type PcieLinkInfo interface {
@@ -131,36 +124,34 @@ type PcieLinkInfo interface {
 	MaxLinkSpeedCapability() float64
 }
 
-var _ PcieLinkInfo = new(pcieLinkInfo)
-
-type pcieLinkInfo struct {
-	raw binding.FuriosaSmiPcieLinkInfo
+type FuriosaSmiPcieLinkInfo struct {
+	pcieGenStatus          byte
+	linkWidthStatus        uint32
+	linkSpeedStatus        float64
+	maxLinkWidthCapability uint32
+	maxLinkSpeedCapability float64
 }
 
-func newPcieLinkInfo(raw binding.FuriosaSmiPcieLinkInfo) PcieLinkInfo {
-	return &pcieLinkInfo{
-		raw: raw,
-	}
+var _ PcieLinkInfo = new(FuriosaSmiPcieLinkInfo)
+
+func (p *FuriosaSmiPcieLinkInfo) PcieGenStatus() uint8 {
+	return p.pcieGenStatus
 }
 
-func (p *pcieLinkInfo) PcieGenStatus() uint8 {
-	return p.raw.PcieGenStatus
+func (p *FuriosaSmiPcieLinkInfo) LinkWidthStatus() uint32 {
+	return p.linkWidthStatus
 }
 
-func (p *pcieLinkInfo) LinkWidthStatus() uint32 {
-	return p.raw.LinkWidthStatus
+func (p *FuriosaSmiPcieLinkInfo) LinkSpeedStatus() float64 {
+	return p.linkSpeedStatus
 }
 
-func (p *pcieLinkInfo) LinkSpeedStatus() float64 {
-	return p.raw.LinkSpeedStatus
+func (p *FuriosaSmiPcieLinkInfo) MaxLinkWidthCapability() uint32 {
+	return p.maxLinkWidthCapability
 }
 
-func (p *pcieLinkInfo) MaxLinkWidthCapability() uint32 {
-	return p.raw.MaxLinkWidthCapability
-}
-
-func (p *pcieLinkInfo) MaxLinkSpeedCapability() float64 {
-	return p.raw.MaxLinkSpeedCapability
+func (p *FuriosaSmiPcieLinkInfo) MaxLinkSpeedCapability() float64 {
+	return p.maxLinkSpeedCapability
 }
 
 type SriovInfo interface {
@@ -170,24 +161,19 @@ type SriovInfo interface {
 	SriovEnabledVfs() uint32
 }
 
-var _ SriovInfo = new(sriovInfo)
-
-type sriovInfo struct {
-	raw binding.FuriosaSmiSriovInfo
+type FuriosaSmiSriovInfo struct {
+	sriovTotalVfs   uint32
+	sriovEnabledVfs uint32
 }
 
-func newSriovInfo(raw binding.FuriosaSmiSriovInfo) SriovInfo {
-	return &sriovInfo{
-		raw: raw,
-	}
+var _ SriovInfo = new(FuriosaSmiSriovInfo)
+
+func (s *FuriosaSmiSriovInfo) SriovTotalVfs() uint32 {
+	return s.sriovTotalVfs
 }
 
-func (s *sriovInfo) SriovTotalVfs() uint32 {
-	return s.raw.SriovTotalVfs
-}
-
-func (s *sriovInfo) SriovEnabledVfs() uint32 {
-	return s.raw.SriovEnabledVfs
+func (s *FuriosaSmiSriovInfo) SriovEnabledVfs() uint32 {
+	return s.sriovEnabledVfs
 }
 
 type PcieRootComplexInfo interface {
@@ -198,28 +184,22 @@ type PcieRootComplexInfo interface {
 	// String returns a string representation of the PCIe root complex information in BDF format.
 	String() string
 }
-
-var _ PcieRootComplexInfo = new(pcieRootComplexInfo)
-
-type pcieRootComplexInfo struct {
-	raw binding.FuriosaSmiPcieRootComplexInfo
+type FuriosaSmiPcieRootComplexInfo struct {
+	domain uint16
+	bus    byte
 }
 
-func newPcieRootComplexInfo(raw binding.FuriosaSmiPcieRootComplexInfo) PcieRootComplexInfo {
-	return &pcieRootComplexInfo{
-		raw: raw,
-	}
+var _ PcieRootComplexInfo = new(FuriosaSmiPcieRootComplexInfo)
+
+func (p *FuriosaSmiPcieRootComplexInfo) Domain() uint16 {
+	return p.domain
 }
 
-func (p *pcieRootComplexInfo) Domain() uint16 {
-	return p.raw.Domain
+func (p *FuriosaSmiPcieRootComplexInfo) Bus() uint8 {
+	return p.bus
 }
 
-func (p *pcieRootComplexInfo) Bus() uint8 {
-	return p.raw.Bus
-}
-
-func (p *pcieRootComplexInfo) String() string {
+func (p *FuriosaSmiPcieRootComplexInfo) String() string {
 	return fmt.Sprintf("%04x:%02x", p.Domain(), p.Bus())
 }
 
@@ -235,44 +215,61 @@ type PcieSwitchInfo interface {
 	// String returns a string representation of the PCIe switch information in BDF format.
 	String() string
 }
-
-var _ PcieSwitchInfo = new(pcieSwitchInfo)
-
-type pcieSwitchInfo struct {
-	raw binding.FuriosaSmiPcieSwitchInfo
+type FuriosaSmiPcieSwitchInfo struct {
+	domain   uint16
+	bus      byte
+	device   byte
+	function byte
 }
 
-func newPcieSwitchInfo(raw binding.FuriosaSmiPcieSwitchInfo) PcieSwitchInfo {
-	if raw.Domain == math.MaxUint16 && raw.Bus == math.MaxUint8 && raw.Device == math.MaxUint8 && raw.Function == math.MaxUint8 {
-		return nil
-	} else {
-		return &pcieSwitchInfo{
-			raw: raw,
-		}
-	}
+var _ PcieSwitchInfo = new(FuriosaSmiPcieSwitchInfo)
+
+func (p *FuriosaSmiPcieSwitchInfo) Domain() uint16 {
+	return p.domain
 }
 
-func (p *pcieSwitchInfo) Domain() uint16 {
-	return p.raw.Domain
+func (p *FuriosaSmiPcieSwitchInfo) Bus() uint8 {
+	return p.bus
 }
 
-func (p *pcieSwitchInfo) Bus() uint8 {
-	return p.raw.Bus
+func (p *FuriosaSmiPcieSwitchInfo) Device() uint8 {
+	return p.device
 }
 
-func (p *pcieSwitchInfo) Device() uint8 {
-	return p.raw.Device
+func (p *FuriosaSmiPcieSwitchInfo) Function() uint8 {
+	return p.function
 }
 
-func (p *pcieSwitchInfo) Function() uint8 {
-	return p.raw.Function
-}
-
-func (p *pcieSwitchInfo) String() string {
+func (p *FuriosaSmiPcieSwitchInfo) String() string {
 	return fmt.Sprintf("%04x:%02x:%02x.%d",
 		p.Domain(),
 		p.Bus(),
 		p.Device(),
 		p.Function(),
 	)
+}
+
+func FuriosaSmiGetPcieDeviceInfo(device Device, outPcieDeviceInfo *FuriosaSmiPcieDeviceInfo) error {
+	// TODO: Implement this function
+	return nil
+}
+
+func FuriosaSmiGetPcieLinkInfo(device Device, outPcieLinkInfo *FuriosaSmiPcieLinkInfo) error {
+	// TODO: Implement this function
+	return nil
+}
+
+func FuriosaSmiGetPcieRootComplexInfo(device Device, outRootComplexInfo *FuriosaSmiPcieRootComplexInfo) error {
+	// TODO: Implement this function
+	return nil
+}
+
+func FuriosaSmiGetPcieSwitchInfo(device Device, outPcieSwitchInfo *FuriosaSmiPcieSwitchInfo) error {
+	// TODO: Implement this function
+	return nil
+}
+
+func FuriosaSmiGetSriovInfo(devic Device, outSriovInfo *FuriosaSmiSriovInfo) error {
+	// TODO: Implement this function
+	return nil
 }

@@ -81,14 +81,14 @@ func (m *staticRngdMockDevice) DeviceFiles() ([]DeviceFile, error) {
 func (m *staticRngdMockDevice) CoreStatus() (CoreStatuses, error) {
 	return staticMockCoreStatuses{
 		coreStatus: []PeStatus{
-			&staticMockPeStatus{core: 0, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 1, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 2, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 3, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 4, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 5, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 6, status: CoreStatusAvailable},
-			&staticMockPeStatus{core: 7, status: CoreStatusAvailable},
+			&staticMockPeStatus{core: 0, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 1, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 2, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 3, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 4, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 5, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 6, status: FuriosaSmiCoreStatusAvailable},
+			&staticMockPeStatus{core: 7, status: FuriosaSmiCoreStatusAvailable},
 		},
 	}, nil
 }
@@ -138,7 +138,7 @@ func (m *staticRngdMockDevice) DevicePerformanceCounter() (DevicePerformanceCoun
 }
 
 func (m *staticRngdMockDevice) GovernorProfile() (GovernorProfile, error) {
-	return GovernorProfilePerformance, nil
+	return FuriosaSmiGovernorProfilePerformance, nil
 }
 
 func (m *staticRngdMockDevice) SetGovernorProfile(profile GovernorProfile) error {
@@ -164,7 +164,7 @@ func (m *staticRngdMockDeviceInfo) Index() uint32 {
 }
 
 func (m *staticRngdMockDeviceInfo) Arch() Arch {
-	return ArchRngd
+	return FuriosaSmiArchRngd
 }
 
 func (m *staticRngdMockDeviceInfo) CoreNum() uint32 {

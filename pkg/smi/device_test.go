@@ -3,7 +3,6 @@ package smi
 import (
 	"testing"
 
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,7 +14,7 @@ func testCoreStatus(t *testing.T, arch Arch) {
 
 	for i, peStat := range coreStat.PeStatus() {
 		assert.Equal(t, uint32(i), peStat.Core())
-		assert.Equal(t, CoreStatusAvailable, peStat.Status())
+		assert.Equal(t, FuriosaSmiCoreStatusAvailable, peStat.Status())
 	}
 }
 
@@ -23,11 +22,11 @@ func TestCoreStatus(t *testing.T) {
 	tests := []struct {
 		description string
 		arch        Arch
-		expected    map[uint32]CoreStatus
+		expected    map[uint32]FuriosaSmiCoreStatus
 	}{
 		{
 			description: "Test RNGD Core Status",
-			arch:        ArchRngd,
+			arch:        FuriosaSmiArchRngd,
 		},
 	}
 
@@ -55,7 +54,7 @@ func TestLiveness(t *testing.T) {
 	}{
 		{
 			description: "Test RNGD Liveness",
-			arch:        ArchRngd,
+			arch:        FuriosaSmiArchRngd,
 			expected:    true,
 		},
 	}
@@ -91,7 +90,7 @@ func TestDeviceToDeviceLinkType(t *testing.T) {
 	}{
 		{
 			description: "Test RNGD DeviceToDeviceLinkType",
-			arch:        ArchRngd,
+			arch:        FuriosaSmiArchRngd,
 		},
 	}
 
@@ -102,15 +101,16 @@ func TestDeviceToDeviceLinkType(t *testing.T) {
 	}
 }
 
-func testCoreFrequency(t *testing.T, arch Arch, expected coreFrequency) {
+func testCoreFrequency(t *testing.T, arch Arch, expected FuriosaSmiCoreFrequency) {
 	mockDevice := GetStaticMockDevice(arch, 0)
 
 	freq, err := mockDevice.CoreFrequency()
 	assert.NoError(t, err)
 
-	for i := 0; i < int(expected.raw.PeCount); i++ {
-		assert.Equal(t, expected.raw.Pe[i].Core, freq.PeFrequency()[i].Core())
-		assert.Equal(t, expected.raw.Pe[i].Frequency, freq.PeFrequency()[i].Frequency())
+	assert.Equal(t, len(expected.pe), len(freq.PeFrequency()))
+	for i := 0; i < len(expected.pe); i++ {
+		assert.Equal(t, expected.pe[i].Core, freq.PeFrequency()[i].Core())
+		assert.Equal(t, expected.pe[i].Frequency, freq.PeFrequency()[i].Frequency())
 	}
 }
 
@@ -118,15 +118,15 @@ func TestCoreFrequency(t *testing.T) {
 	tests := []struct {
 		description string
 		arch        Arch
-		expected    coreFrequency
+		expected    FuriosaSmiCoreFrequency
 	}{
 		{
 			description: "Test RNGD Core Frequency",
-			arch:        ArchRngd,
-			expected: func() coreFrequency {
-				exp := coreFrequency{binding.FuriosaSmiCoreFrequency{PeCount: 8, Pe: [64]binding.FuriosaSmiPeFrequency{}}}
+			arch:        FuriosaSmiArchRngd,
+			expected: func() FuriosaSmiCoreFrequency {
+				exp := FuriosaSmiCoreFrequency{pe: []FuriosaSmiPeFrequency{}}
 				for i := 0; i < 8; i++ {
-					exp.raw.Pe[i] = binding.FuriosaSmiPeFrequency{Core: uint32(i), Frequency: 500}
+					exp.pe[i] = FuriosaSmiPeFrequency{core: uint32(i), frequency: 500}
 				}
 
 				return exp
@@ -158,7 +158,7 @@ func TestMemoryFrequency(t *testing.T) {
 	}{
 		{
 			description: "Test RNGD Memory Frequency",
-			arch:        ArchRngd,
+			arch:        FuriosaSmiArchRngd,
 			expected:    6000,
 		},
 	}

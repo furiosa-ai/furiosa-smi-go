@@ -3,7 +3,6 @@ package smi
 import (
 	"testing"
 
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -43,27 +42,25 @@ func TestDeviceInfo(t *testing.T) {
 	}{
 		{
 			description: "Test RNGD Device Info",
-			arch:        ArchRngd,
-			expected: newDeviceInfo(
-				binding.FuriosaSmiDeviceInfo{
-					Arch:     binding.FuriosaSmiArchRngd,
-					CoreNum:  8,
-					NumaNode: 0,
-					Name:     stringTo96ByteArray("npu0"),
-					Serial:   stringTo96ByteArray("TEST0236FH505KRE0"),
-					Uuid:     stringTo96ByteArray("A76AAD68-6855-40B1-9E86-D080852D1C80"),
-					Bdf:      stringTo96ByteArray("0000:27:00.0"),
-					Major:    234,
-					Minor:    0,
-					FirmwareVersion: binding.FuriosaSmiVersion{
-						Major:      1,
-						Minor:      6,
-						Patch:      0,
-						Metadata:   stringTo96ByteArray("c1bebfd"),
-						Prerelease: stringTo96ByteArray("dev0"),
-					},
+			arch:        FuriosaSmiArchRngd,
+			expected: &FuriosaSmiDeviceInfo{
+				arch:     FuriosaSmiArchRngd,
+				coreNum:  8,
+				numaNode: 0,
+				name:     "npu0",
+				serial:   "TEST0236FH505KRE0",
+				uuid:     "A76AAD68-6855-40B1-9E86-D080852D1C80",
+				bdf:      "0000:27:00.0",
+				major:    234,
+				minor:    0,
+				firmwareVersion: &FuriosaSmiVersion{
+					major:      1,
+					minor:      6,
+					patch:      0,
+					metadata:   "c1bebfd",
+					prerelease: "dev0",
 				},
-			),
+			},
 		},
 	}
 

@@ -3,11 +3,10 @@ package smi
 import (
 	"testing"
 
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
 	"github.com/stretchr/testify/assert"
 )
 
-func testDeviceTemperature(t *testing.T, arch Arch, expected deviceTemperature) {
+func testDeviceTemperature(t *testing.T, arch Arch, expected FuriosaSmiDeviceTemperature) {
 	mockDevice := GetStaticMockDevice(arch, 0)
 
 	temperature, err := mockDevice.DeviceTemperature()
@@ -21,12 +20,12 @@ func TestDeviceTemperature(t *testing.T) {
 	tests := []struct {
 		description string
 		arch        Arch
-		expected    deviceTemperature
+		expected    FuriosaSmiDeviceTemperature
 	}{
 		{
 			description: "Test RNGD Device Temperature",
-			arch:        ArchRngd,
-			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
+			arch:        FuriosaSmiArchRngd,
+			expected:    FuriosaSmiDeviceTemperature{socPeak: 20.0, ambient: 10.0},
 		},
 	}
 
@@ -54,7 +53,7 @@ func TestPowerConsumption(t *testing.T) {
 	}{
 		{
 			description: "Test RNGD Device Power Consumption",
-			arch:        ArchRngd,
+			arch:        FuriosaSmiArchRngd,
 			expected:    100.0,
 		},
 	}

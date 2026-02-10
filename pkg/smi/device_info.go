@@ -1,7 +1,5 @@
 package smi
 
-import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
-
 // DeviceInfo represents a device information.
 type DeviceInfo interface {
 	// Index returns an index number of the device based on hardware topology.
@@ -28,58 +26,62 @@ type DeviceInfo interface {
 	FirmwareVersion() VersionInfo
 }
 
-var _ DeviceInfo = new(deviceInfo)
+var _ DeviceInfo = new(FuriosaSmiDeviceInfo)
 
-type deviceInfo struct {
-	raw binding.FuriosaSmiDeviceInfo
+type FuriosaSmiDeviceInfo struct {
+	index           uint32
+	arch            Arch
+	coreNum         uint32
+	numaNode        int32
+	name            string
+	serial          string
+	uuid            string
+	bdf             string
+	major           uint16
+	minor           uint16
+	firmwareVersion VersionInfo
 }
 
-func newDeviceInfo(raw binding.FuriosaSmiDeviceInfo) DeviceInfo {
-	return &deviceInfo{
-		raw: raw,
-	}
+func (d *FuriosaSmiDeviceInfo) Index() uint32 {
+	return d.index
 }
 
-func (d *deviceInfo) Index() uint32 {
-	return d.raw.Index
+func (d *FuriosaSmiDeviceInfo) Arch() Arch {
+	return Arch(d.arch)
 }
 
-func (d *deviceInfo) Arch() Arch {
-	return Arch(d.raw.Arch)
+func (d *FuriosaSmiDeviceInfo) CoreNum() uint32 {
+	return d.coreNum
 }
 
-func (d *deviceInfo) CoreNum() uint32 {
-	return d.raw.CoreNum
+func (d *FuriosaSmiDeviceInfo) NumaNode() int32 {
+	return d.numaNode
 }
 
-func (d *deviceInfo) NumaNode() int32 {
-	return d.raw.NumaNode
+func (d *FuriosaSmiDeviceInfo) Name() string {
+	return d.name
 }
 
-func (d *deviceInfo) Name() string {
-	return byteBufferToString(d.raw.Name[:])
+func (d *FuriosaSmiDeviceInfo) Serial() string {
+	return d.serial
 }
 
-func (d *deviceInfo) Serial() string {
-	return byteBufferToString(d.raw.Serial[:])
+func (d *FuriosaSmiDeviceInfo) UUID() string {
+	return d.uuid
 }
 
-func (d *deviceInfo) UUID() string {
-	return byteBufferToString(d.raw.Uuid[:])
+func (d *FuriosaSmiDeviceInfo) BDF() string {
+	return d.bdf
 }
 
-func (d *deviceInfo) BDF() string {
-	return byteBufferToString(d.raw.Bdf[:])
+func (d *FuriosaSmiDeviceInfo) Major() uint16 {
+	return d.major
 }
 
-func (d *deviceInfo) Major() uint16 {
-	return d.raw.Major
+func (d *FuriosaSmiDeviceInfo) Minor() uint16 {
+	return d.minor
 }
 
-func (d *deviceInfo) Minor() uint16 {
-	return d.raw.Minor
-}
-
-func (d *deviceInfo) FirmwareVersion() VersionInfo {
-	return newVersionInfo(d.raw.FirmwareVersion)
+func (d *FuriosaSmiDeviceInfo) FirmwareVersion() VersionInfo {
+	return d.firmwareVersion
 }

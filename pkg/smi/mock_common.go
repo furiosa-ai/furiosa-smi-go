@@ -49,14 +49,14 @@ var staticMockHintMap = map[int]mockHint{
 //	        ├── NPU6
 //	        └── NPU7
 var linkTypeHintMap = map[int]map[int]LinkType{
-	0: {0: LinkTypeNoc, 1: LinkTypeHostBridge, 2: LinkTypeCpu, 3: LinkTypeCpu, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	1: {1: LinkTypeNoc, 2: LinkTypeCpu, 3: LinkTypeCpu, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	2: {2: LinkTypeNoc, 3: LinkTypeHostBridge, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	3: {3: LinkTypeNoc, 4: LinkTypeInterconnect, 5: LinkTypeInterconnect, 6: LinkTypeInterconnect, 7: LinkTypeInterconnect},
-	4: {4: LinkTypeNoc, 5: LinkTypeHostBridge, 6: LinkTypeCpu, 7: LinkTypeCpu},
-	5: {5: LinkTypeNoc, 6: LinkTypeCpu, 7: LinkTypeCpu},
-	6: {6: LinkTypeNoc, 7: LinkTypeHostBridge},
-	7: {7: LinkTypeNoc},
+	0: {0: FuriosaSmiLinkTypeNoc, 1: FuriosaSmiLinkTypeHostBridge, 2: FuriosaSmiLinkTypeCpu, 3: FuriosaSmiLinkTypeCpu, 4: FuriosaSmiLinkTypeInterconnect, 5: FuriosaSmiLinkTypeInterconnect, 6: FuriosaSmiLinkTypeInterconnect, 7: FuriosaSmiLinkTypeInterconnect},
+	1: {1: FuriosaSmiLinkTypeNoc, 2: FuriosaSmiLinkTypeCpu, 3: FuriosaSmiLinkTypeCpu, 4: FuriosaSmiLinkTypeInterconnect, 5: FuriosaSmiLinkTypeInterconnect, 6: FuriosaSmiLinkTypeInterconnect, 7: FuriosaSmiLinkTypeInterconnect},
+	2: {2: FuriosaSmiLinkTypeNoc, 3: FuriosaSmiLinkTypeHostBridge, 4: FuriosaSmiLinkTypeInterconnect, 5: FuriosaSmiLinkTypeInterconnect, 6: FuriosaSmiLinkTypeInterconnect, 7: FuriosaSmiLinkTypeInterconnect},
+	3: {3: FuriosaSmiLinkTypeNoc, 4: FuriosaSmiLinkTypeInterconnect, 5: FuriosaSmiLinkTypeInterconnect, 6: FuriosaSmiLinkTypeInterconnect, 7: FuriosaSmiLinkTypeInterconnect},
+	4: {4: FuriosaSmiLinkTypeNoc, 5: FuriosaSmiLinkTypeHostBridge, 6: FuriosaSmiLinkTypeCpu, 7: FuriosaSmiLinkTypeCpu},
+	5: {5: FuriosaSmiLinkTypeNoc, 6: FuriosaSmiLinkTypeCpu, 7: FuriosaSmiLinkTypeCpu},
+	6: {6: FuriosaSmiLinkTypeNoc, 7: FuriosaSmiLinkTypeHostBridge},
+	7: {7: FuriosaSmiLinkTypeNoc},
 }
 
 // GetStaticMockDevices returns mock devices with given Arch for test purpose.
@@ -71,9 +71,9 @@ func GetStaticMockDevices(arch Arch) (mockDevices []Device) {
 // GetStaticMockDevice returns single mock device with given Arch and idx number for test purpose.
 func GetStaticMockDevice(arch Arch, nodeIdx int) Device {
 	switch arch {
-	case ArchRngd:
+	case FuriosaSmiArchRngd:
 		return &staticRngdMockDevice{
-			arch:    ArchRngd,
+			arch:    FuriosaSmiArchRngd,
 			nodeIdx: nodeIdx,
 		}
 		// TODO: add more arch
@@ -134,7 +134,7 @@ func (m staticMockCoreStatuses) PeStatus() []PeStatus {
 
 type staticMockPeStatus struct {
 	core   uint32
-	status CoreStatus
+	status FuriosaSmiCoreStatus
 }
 
 var _ PeStatus = new(staticMockPeStatus)
@@ -143,7 +143,7 @@ func (m *staticMockPeStatus) Core() uint32 {
 	return m.core
 }
 
-func (m *staticMockPeStatus) Status() CoreStatus {
+func (m *staticMockPeStatus) Status() FuriosaSmiCoreStatus {
 	return m.status
 }
 

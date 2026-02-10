@@ -1,7 +1,5 @@
 package smi
 
-import "github.com/furiosa-ai/furiosa-smi-go/pkg/smi/binding"
-
 // DeviceFile represents a device file.
 type DeviceFile interface {
 	// Cores returns a list of core for device file.
@@ -10,28 +8,46 @@ type DeviceFile interface {
 	Path() string
 }
 
-var _ DeviceFile = new(deviceFile)
-
-type deviceFile struct {
-	raw binding.FuriosaSmiDeviceFile
+type FuriosaSmiDeviceFiles struct {
+	count       uint32
+	deviceFiles []DeviceFile
 }
 
-func newDeviceFile(raw binding.FuriosaSmiDeviceFile) DeviceFile {
-	return &deviceFile{
-		raw: raw,
+var _ DeviceFile = new(FuriosaSmiDeviceFile)
+
+type FuriosaSmiDeviceFile struct {
+	coreStart uint32
+	coreEnd   uint32
+	path      string
+}
+
+func newDeviceFile(coreStart, coreEnd uint32, path string) DeviceFile {
+	return &FuriosaSmiDeviceFile{
+		coreStart: coreStart,
+		coreEnd:   coreEnd,
+		path:      path,
 	}
 }
 
-func (d *deviceFile) Cores() []uint32 {
+func (fdf *FuriosaSmiDeviceFile) Cores() []uint32 {
 	var cores []uint32
 
-	for i := d.raw.CoreStart; i <= d.raw.CoreEnd; i++ {
+	for i := fdf.coreStart; i <= fdf.coreEnd; i++ {
 		cores = append(cores, i)
 	}
 
 	return cores
 }
 
-func (d *deviceFile) Path() string {
-	return byteBufferToString(d.raw.Path[:])
+func (fdf *FuriosaSmiDeviceFile) Path() string {
+	return fdf.path
+}
+
+func FuriosaSmiGetDeviceFiles(device Device) (*FuriosaSmiDeviceFiles, error) {
+	// TODO: Implement this function
+	return nil, nil
+}
+
+func (f *FuriosaSmiDeviceFiles) DeviceFiles() []DeviceFile {
+	return f.deviceFiles
 }
