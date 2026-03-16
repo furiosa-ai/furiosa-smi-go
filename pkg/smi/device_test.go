@@ -109,8 +109,8 @@ func testCoreFrequency(t *testing.T, arch Arch, expected FuriosaSmiCoreFrequency
 
 	assert.Equal(t, len(expected.pe), len(freq.PeFrequency()))
 	for i := 0; i < len(expected.pe); i++ {
-		assert.Equal(t, expected.pe[i].Core, freq.PeFrequency()[i].Core())
-		assert.Equal(t, expected.pe[i].Frequency, freq.PeFrequency()[i].Frequency())
+		assert.Equal(t, expected.pe[i].Core(), freq.PeFrequency()[i].Core())
+		assert.Equal(t, expected.pe[i].Frequency(), freq.PeFrequency()[i].Frequency())
 	}
 }
 
@@ -124,7 +124,7 @@ func TestCoreFrequency(t *testing.T) {
 			description: "Test RNGD Core Frequency",
 			arch:        FuriosaSmiArchRngd,
 			expected: func() FuriosaSmiCoreFrequency {
-				exp := FuriosaSmiCoreFrequency{pe: []FuriosaSmiPeFrequency{}}
+				exp := FuriosaSmiCoreFrequency{pe: make([]FuriosaSmiPeFrequency, 8)}
 				for i := 0; i < 8; i++ {
 					exp.pe[i] = FuriosaSmiPeFrequency{core: uint32(i), frequency: 500}
 				}

@@ -101,13 +101,13 @@ func (d *FuriosaSmiDevice) DeviceInfo() (DeviceInfo, error) {
 }
 
 func (d *FuriosaSmiDevice) DeviceFiles() ([]DeviceFile, error) {
-	var out *FuriosaSmiDeviceFiles
-	var err error
-
-	if out, err = FuriosaSmiGetDeviceFiles(d); err != nil {
+	out, err := FuriosaSmiGetDeviceFiles(d)
+	if err != nil {
 		return nil, err
 	}
-
+	if out == nil {
+		return nil, nil
+	}
 	return out.DeviceFiles(), nil
 }
 
@@ -197,13 +197,7 @@ func (d *FuriosaSmiDevice) PcieInfo() (PcieInfo, error) {
 		return nil, err
 	}
 
-	pcieDeviceInfo := FuriosaSmiPcieDeviceInfo(outPcieDeviceInfo)
-	pcieLinkInfo := FuriosaSmiPcieLinkInfo{}
-	sriovInfo := FuriosaSmiSriovInfo{}
-	pcieRootComplexInfo := FuriosaSmiPcieRootComplexInfo{}
-	pcieSwitchInfo := FuriosaSmiPcieSwitchInfo{}
-
-	return newPcieInfo(&pcieDeviceInfo, &pcieLinkInfo, &sriovInfo, &pcieRootComplexInfo, &pcieSwitchInfo), nil
+	return newPcieInfo(&outPcieDeviceInfo, &outPcieLinkInfo, &outSriovInfo, &outPcieRootComplexInfo, &outPcieSwitchInfo), nil
 }
 
 func (d *FuriosaSmiDevice) ThrottleReason() (ThrottleReason, error) {
