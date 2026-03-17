@@ -4,10 +4,14 @@ package smi
 type Arch uint32
 
 const (
-	FuriosaSmiArchWarboy  Arch = iota
-	FuriosaSmiArchRngd    Arch = 1
-	FuriosaSmiArchRngdMax Arch = 2
-	FuriosaSmiArchRngdS   Arch = 3
+	ArchRngd Arch = iota + 1
+	ArchRngdMax
+	ArchRngdS
+
+	FuriosaSmiArchWarboy  Arch = 0
+	FuriosaSmiArchRngd         = ArchRngd
+	FuriosaSmiArchRngdMax      = ArchRngdMax
+	FuriosaSmiArchRngdS        = ArchRngdS
 )
 
 // ToString converts given arch into the string representation.
@@ -24,11 +28,16 @@ func (a Arch) ToString() string {
 	}
 }
 
-type FuriosaSmiCoreStatus int32
+type CoreStatus uint32
+
+type FuriosaSmiCoreStatus = CoreStatus
 
 const (
-	FuriosaSmiCoreStatusAvailable FuriosaSmiCoreStatus = iota
-	FuriosaSmiCoreStatusOccupied  FuriosaSmiCoreStatus = 1
+	CoreStatusAvailable CoreStatus = iota
+	CoreStatusOccupied
+
+	FuriosaSmiCoreStatusAvailable = CoreStatusAvailable
+	FuriosaSmiCoreStatusOccupied  = CoreStatusOccupied
 )
 
 type CoreStatuses interface {
@@ -38,7 +47,7 @@ type CoreStatuses interface {
 
 type FuriosaSmiPeStatus struct {
 	core   uint32
-	status FuriosaSmiCoreStatus
+	status CoreStatus
 }
 
 type FuriosaSmiCoreStatuses struct {
@@ -60,7 +69,7 @@ type PeStatus interface {
 	// Core returns a core index.
 	Core() uint32
 	// Status returns a core status.
-	Status() FuriosaSmiCoreStatus
+	Status() CoreStatus
 }
 
 var _ PeStatus = new(FuriosaSmiPeStatus)
@@ -69,19 +78,25 @@ func (p *FuriosaSmiPeStatus) Core() uint32 {
 	return p.core
 }
 
-func (p *FuriosaSmiPeStatus) Status() FuriosaSmiCoreStatus {
+func (p *FuriosaSmiPeStatus) Status() CoreStatus {
 	return p.status
 }
 
 // LinkType represents a topology link type between 2 NPU devices.
-type LinkType int32
+type LinkType uint32
 
 const (
-	FuriosaSmiLinkTypeUnknown      LinkType = iota
-	FuriosaSmiLinkTypeInterconnect LinkType = 10
-	FuriosaSmiLinkTypeCpu          LinkType = 20
-	FuriosaSmiLinkTypeHostBridge   LinkType = 30
-	FuriosaSmiLinkTypeNoc          LinkType = 70
+	LinkTypeUnknown      LinkType = iota
+	LinkTypeInterconnect LinkType = 10
+	LinkTypeCpu          LinkType = 20
+	LinkTypeHostBridge   LinkType = 30
+	LinkTypeNoc          LinkType = 70
+
+	FuriosaSmiLinkTypeUnknown      = LinkTypeUnknown
+	FuriosaSmiLinkTypeInterconnect = LinkTypeInterconnect
+	FuriosaSmiLinkTypeCpu          = LinkTypeCpu
+	FuriosaSmiLinkTypeHostBridge   = LinkTypeHostBridge
+	FuriosaSmiLinkTypeNoc          = LinkTypeNoc
 )
 
 type FuriosaSmiPeFrequency struct {
@@ -139,8 +154,11 @@ func (m *FuriosaSmiMemoryFrequency) Frequency() uint32 {
 type GovernorProfile uint32
 
 const (
-	FuriosaSmiGovernorProfilePerformance GovernorProfile = iota
-	FuriosaSmiGovernorProfilePowerSave   GovernorProfile = 1
+	GovernorProfilePerformance GovernorProfile = iota
+	GovernorProfilePowerSave
+
+	FuriosaSmiGovernorProfilePerformance = GovernorProfilePerformance
+	FuriosaSmiGovernorProfilePowerSave   = GovernorProfilePowerSave
 )
 
 func (p GovernorProfile) String() string {

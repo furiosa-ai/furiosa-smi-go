@@ -86,15 +86,14 @@ type Device interface {
 var _ Device = new(FuriosaSmiDevice)
 
 type FuriosaSmiDevice struct {
+	bdf  string
 	info FuriosaSmiDeviceInfo
 }
 
-/*
-func newDevice(handle impl.FuriosaSmiDeviceHandle) Device {
-	return &device{
-		handle: handle,
-	}
-}*/
+func newDevice(bdf string) Device {
+	// logic here
+	return &FuriosaSmiDevice{bdf: bdf}
+}
 
 func (d *FuriosaSmiDevice) DeviceInfo() (DeviceInfo, error) {
 	return &d.info, nil
@@ -112,61 +111,57 @@ func (d *FuriosaSmiDevice) DeviceFiles() ([]DeviceFile, error) {
 }
 
 func (d *FuriosaSmiDevice) CoreStatus() (CoreStatuses, error) {
-	//logic here
+	// logic here
 	return nil, nil
 }
+
 func (d *FuriosaSmiDevice) Liveness() (bool, error) {
-	//logic here
+	// logic here
 	return false, nil
 }
 
 func (d *FuriosaSmiDevice) CoreFrequency() (CoreFrequency, error) {
-	//logic here
+	// logic here
 	return nil, nil
 }
 
 func (d *FuriosaSmiDevice) MemoryFrequency() (MemoryFrequency, error) {
-	//logic here
-
+	// logic here
 	return nil, nil
 }
 
 func (d *FuriosaSmiDevice) PowerConsumption() (float64, error) {
-	//logic here
-
+	// logic here
 	return 0, nil
 }
 
 func (d *FuriosaSmiDevice) DeviceTemperature() (DeviceTemperature, error) {
-	//logic here
-
+	// logic here
 	return nil, nil
 }
 
 func (d *FuriosaSmiDevice) DeviceToDeviceLinkType(target Device) (LinkType, error) {
-	//logic here
-
-	return FuriosaSmiLinkTypeUnknown, nil
+	// logic here
+	return LinkTypeUnknown, nil
 }
 
 func (d *FuriosaSmiDevice) P2PAccessible(target Device) (bool, error) {
-	//logic here
-
+	// logic here
 	return false, nil
 }
 
 func (d *FuriosaSmiDevice) DevicePerformanceCounter() (DevicePerformanceCounter, error) {
-	//logic here
+	// logic here
 	return nil, nil
 }
 
 func (d *FuriosaSmiDevice) GovernorProfile() (GovernorProfile, error) {
-	//logic here
+	// logic here
 	return 0, nil
 }
 
 func (d *FuriosaSmiDevice) SetGovernorProfile(profile GovernorProfile) error {
-	//logic here
+	// logic here
 	return nil
 }
 
@@ -201,46 +196,12 @@ func (d *FuriosaSmiDevice) PcieInfo() (PcieInfo, error) {
 }
 
 func (d *FuriosaSmiDevice) ThrottleReason() (ThrottleReason, error) {
-	/*var out impl.FuriosaSmiThrottleReason
-
-	if err := impl.FuriosaSmiGetThrottleReason(d.handle, &out); err != nil {
-		return 0, err
-	}*/
-
+	// logic here
 	return 0, nil
 }
 
 func (d *FuriosaSmiDevice) MemoryUtilization() (MemoryUtilization, error) {
-	/*var out impl.FuriosaSmiMemoryUtilization
-
-	if err := impl.FuriosaSmiGetMemoryUtilization(d.handle, &out); err != nil {
-		return nil, err
-	}*/
-
+	// logic here
 	return nil, nil
 }
 
-func FuriosaSmiGetDeviceInfo(device Device, outDeviceInfo *FuriosaSmiDeviceInfo) error {
-	// TODO: Implement this function
-	return nil
-}
-
-func FuriosaSmiGetDeviceCoreStatus(device Device, outCoreStatus *FuriosaSmiCoreStatuses) error {
-	// TODO: Implement this function
-	return nil
-}
-
-func FuriosaSmiGetDeviceLiveness(device Device, outLiveness *bool) error {
-	// TODO: Implement this function
-	return nil
-}
-
-func FuriosaSmiGetDeviceToDeviceLinkType(device1 Device, device2 Device, outLinkType *LinkType) error {
-	// TODO: Implement this function
-	return nil
-}
-
-func FuriosaSmiGetP2pAccessible(device1 Device, device2 Device, outAccessible *bool) error {
-	// TODO: Implement this function
-	return nil
-}

@@ -269,7 +269,7 @@ func FuriosaSmiGetPcieSwitchInfo(device Device, outPcieSwitchInfo *FuriosaSmiPci
 	return nil
 }
 
-func FuriosaSmiGetSriovInfo(devic Device, outSriovInfo *FuriosaSmiSriovInfo) error {
+func FuriosaSmiGetSriovInfo(device Device, outSriovInfo *FuriosaSmiSriovInfo) error {
 	// TODO: Implement this function
 	return nil
 }

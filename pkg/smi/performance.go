@@ -433,21 +433,31 @@ type ThrottleReason uint32
 
 const (
 	// Throttling not active
-	FuriosaSmiThrottleReasonNone = 0
+	ThrottleReasonNone ThrottleReason = 0
 	// Throttling in idle or unused state
-	FuriosaSmiThrottleReasonIdle = (1 << 0)
+	ThrottleReasonIdle ThrottleReason = 1 << 0
 	// Throttling triggered by high temperature
-	FuriosaSmiThrottleReasonThermalSlowdown = (1 << 1)
+	ThrottleReasonThermalSlowdown ThrottleReason = 1 << 1
 	// FuriosaSmiThrottleReasonAppPowerCap as defined in smi/furiosa_smi.h:281
-	FuriosaSmiThrottleReasonAppPowerCap = (1 << 2)
+	ThrottleReasonAppPowerCap ThrottleReason = 1 << 2
 	// FuriosaSmiThrottleReasonAppClockCap as defined in smi/furiosa_smi.h:284
-	FuriosaSmiThrottleReasonAppClockCap = (1 << 3)
+	ThrottleReasonAppClockCap ThrottleReason = 1 << 3
 	// FuriosaSmiThrottleReasonHwClockCap as defined in smi/furiosa_smi.h:287
-	FuriosaSmiThrottleReasonHwClockCap = (1 << 4)
+	ThrottleReasonHwClockCap ThrottleReason = 1 << 4
 	// FuriosaSmiThrottleReasonHwBusLimit as defined in smi/furiosa_smi.h:290
-	FuriosaSmiThrottleReasonHwBusLimit = (1 << 5)
+	ThrottleReasonHwBusLimit ThrottleReason = 1 << 5
 	// FuriosaSmiThrottleReasonHwPowerCap as defined in smi/furiosa_smi.h:293
-	FuriosaSmiThrottleReasonHwPowerCap = (1 << 6)
+	ThrottleReasonHwPowerCap ThrottleReason = 1 << 6
 	// FuriosaSmiThrottleReasonOtherReason as defined in smi/furiosa_smi.h:296
-	FuriosaSmiThrottleReasonOtherReason = (1 << 7)
+	ThrottleReasonOtherReason ThrottleReason = 1 << 7
+
+	FuriosaSmiThrottleReasonNone            = ThrottleReasonNone
+	FuriosaSmiThrottleReasonIdle            = ThrottleReasonIdle
+	FuriosaSmiThrottleReasonThermalSlowdown = ThrottleReasonThermalSlowdown
+	FuriosaSmiThrottleReasonAppPowerCap     = ThrottleReasonAppPowerCap
+	FuriosaSmiThrottleReasonAppClockCap     = ThrottleReasonAppClockCap
+	FuriosaSmiThrottleReasonHwClockCap      = ThrottleReasonHwClockCap
+	FuriosaSmiThrottleReasonHwBusLimit      = ThrottleReasonHwBusLimit
+	FuriosaSmiThrottleReasonHwPowerCap      = ThrottleReasonHwPowerCap
+	FuriosaSmiThrottleReasonOtherReason     = ThrottleReasonOtherReason
 )
