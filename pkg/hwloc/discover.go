@@ -331,8 +331,14 @@ func findParentForHostBridge(hb *Object, root *Object, packagesByID map[int]*Obj
 }
 
 func firstPackageOrRoot(root *Object, packagesByID map[int]*Object) *Object {
-	for _, pkg := range packagesByID {
-		return pkg
+	minID := -1
+	for id := range packagesByID {
+		if minID == -1 || id < minID {
+			minID = id
+		}
+	}
+	if minID != -1 {
+		return packagesByID[minID]
 	}
 	return root
 }

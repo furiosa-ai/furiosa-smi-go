@@ -309,14 +309,26 @@ func (t *Topology) GetPCIDevByBusID(domain uint32, bus, dev, fn uint8) *Object {
 // by walking parent chains using depth to guide direction.
 // Equivalent to hwloc_get_common_ancestor_obj.
 func GetCommonAncestorObj(obj1, obj2 *Object) *Object {
+	if obj1 == nil || obj2 == nil {
+		return nil
+	}
 	for obj1 != obj2 {
 		for obj1.Depth > obj2.Depth {
+			if obj1.Parent == nil {
+				return nil
+			}
 			obj1 = obj1.Parent
 		}
 		for obj2.Depth > obj1.Depth {
+			if obj2.Parent == nil {
+				return nil
+			}
 			obj2 = obj2.Parent
 		}
 		if obj1 != obj2 && obj1.Depth == obj2.Depth {
+			if obj1.Parent == nil || obj2.Parent == nil {
+				return nil
+			}
 			obj1 = obj1.Parent
 			obj2 = obj2.Parent
 		}
