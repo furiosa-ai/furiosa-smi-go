@@ -1,10 +1,172 @@
 package smi
 
-// ListDevices lists all Furiosa NPU devices in the system.
-func ListDevices() ([]Device, error) {
-	//logic here
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+)
 
-	return nil, nil
+// ListDevices lists all Furiosa NPU devices in the system.
+//
+// This mirrors the discovery flow in furiosa-smi/src/initialize/mod.rs:
+//  1. Scan /dev/rngd for character device files matching npu{N}pe{S}[-{E}]
+//     to discover node indices and their accessible PE cores.
+//  2. For each node index (sorted ascending), read all device attributes from
+//     /sys/class/rngd_mgmt/rngd!npu{N}mgmt/ and build a fully-populated Device.
+//  3. Devices whose sysfs attributes are unreadable (e.g. unbound) are skipped,
+//     matching the Rust behaviour of filtering out invalid device contexts.
+func ListDevices() ([]Device, error) {
+	nodeMap, err := scanRngdDevFiles()
+	if err != nil {
+		return nil, err
+	}
+
+	nodeIndices := make([]uint32, 0, len(nodeMap))
+	for idx := range nodeMap {
+		nodeIndices = append(nodeIndices, idx)
+	}
+	sort.Slice(nodeIndices, func(i, j int) bool { return nodeIndices[i] < nodeIndices[j] })
+
+	devices := make([]Device, 0, len(nodeIndices))
+	for i, nodeIdx := range nodeIndices {
+		info, err := buildDeviceInfo(uint32(i), nodeIdx, nodeMap[nodeIdx])
+		if err != nil {
+			continue
+		}
+		devices = append(devices, &FuriosaSmiDevice{bdf: info.bdf, info: *info})
+	}
+
+	return devices, nil
+}
+
+// scanRngdDevFiles scans rngdDevRootPath for character device files matching
+// npu{N}pe{S}[-{E}] and returns a map of nodeIdx → sorted unique core list.
+// This mirrors search_furiosa_device + filter_dev_files in discovery.rs.
+func scanRngdDevFiles() (map[uint32][]uint32, error) {
+	entries, err := os.ReadDir(rngdDevRootPath())
+	if err != nil {
+		return nil, err
+	}
+
+	nodeCores := make(map[uint32]map[uint32]struct{})
+
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		info, err := e.Info()
+		if err != nil {
+			continue
+		}
+		if !isRngdDeviceFile(info) {
+			continue
+		}
+
+		parsed, ok := parseDeviceFilename(e.Name())
+		if !ok {
+			continue
+		}
+
+		if _, exists := nodeCores[parsed.nodeIdx]; !exists {
+			nodeCores[parsed.nodeIdx] = make(map[uint32]struct{})
+		}
+		for c := parsed.coreStart; c <= parsed.coreEnd; c++ {
+			nodeCores[parsed.nodeIdx][c] = struct{}{}
+		}
+	}
+
+	result := make(map[uint32][]uint32, len(nodeCores))
+	for nodeIdx, coreSet := range nodeCores {
+		cores := make([]uint32, 0, len(coreSet))
+		for c := range coreSet {
+			cores = append(cores, c)
+		}
+		sort.Slice(cores, func(i, j int) bool { return cores[i] < cores[j] })
+		result[nodeIdx] = cores
+	}
+
+	return result, nil
+}
+
+// buildDeviceInfo reads all sysfs attributes for device node nodeIdx and
+// constructs a FuriosaSmiDeviceInfo. index is the sequential position in the
+// sorted device list (matches DeviceContext.index in the Rust implementation).
+//
+// Attribute → sysfs file mapping (under rngd!npu{N}mgmt/):
+//
+//	bdf             ← busname
+//	uuid            ← device_uuid
+//	serial          ← device_sn
+//	major, minor    ← dev        ("235:0")
+//	firmwareVersion ← fw_version ("1.6.0, c1bebfd")
+//	numaNode        ← /sys/bus/pci/devices/{bdf}/numa_node
+func buildDeviceInfo(index, nodeIdx uint32, cores []uint32) (*FuriosaSmiDeviceInfo, error) {
+	mgmtDir := filepath.Join(rngdMgmtRoot(), fmt.Sprintf("rngd!npu%dmgmt", nodeIdx))
+
+	bdf, err := readMgmtAttr(mgmtDir, "busname")
+	if err != nil {
+		return nil, err
+	}
+	uuid, err := readMgmtAttr(mgmtDir, "device_uuid")
+	if err != nil {
+		return nil, err
+	}
+	serial, err := readMgmtAttr(mgmtDir, "device_sn")
+	if err != nil {
+		return nil, err
+	}
+	devStr, err := readMgmtAttr(mgmtDir, "dev")
+	if err != nil {
+		return nil, err
+	}
+	major, minor, err := parseMajorMinor(devStr)
+	if err != nil {
+		return nil, err
+	}
+	fwStr, err := readMgmtAttr(mgmtDir, "fw_version")
+	if err != nil {
+		return nil, err
+	}
+	fwVersion, err := parseVersionInfo(fwStr)
+	if err != nil {
+		return nil, err
+	}
+	numaNode, err := readNumaNode(bdf)
+	if err != nil {
+		return nil, err
+	}
+
+	return &FuriosaSmiDeviceInfo{
+		index:           index,
+		arch:            ArchRngd,
+		coreNum:         uint32(len(cores)),
+		numaNode:        numaNode,
+		name:            fmt.Sprintf("npu%d", nodeIdx),
+		serial:          serial,
+		uuid:            uuid,
+		bdf:             bdf,
+		major:           major,
+		minor:           minor,
+		firmwareVersion: fwVersion,
+	}, nil
+}
+
+// readNumaNode reads /sys/bus/pci/devices/{bdf}/numa_node.
+// Mirrors parse_numa_node in furiosa-smi/src/device/device_info.rs.
+func readNumaNode(bdf string) (int32, error) {
+	path := filepath.Join(pciDevicesRoot(), bdf, "numa_node")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return -1, err
+	}
+	n, err := strconv.ParseInt(strings.TrimSpace(string(data)), 10, 32)
+	if err != nil {
+		return -1, fmt.Errorf("%w: %v", ErrParse, err)
+	}
+	return int32(n), nil
 }
 
 // ListDisabledDevices lists all disabled Furiosa NPU devices in the system. It returns a list of BDF strings representing the disabled devices.
@@ -28,10 +190,33 @@ func DisableDevice(bdf string) error {
 	return nil
 }
 
-// DriverInfo return a driver information of the device.
+// DriverInfo returns the driver version by reading the "version" sysfs
+// attribute from the first reachable rngd management interface.
+//
+// This mirrors system/mod.rs:furiosa_smi_get_driver_info in furiosa-smi:
+// iterate over valid device contexts, read version from sysfs, parse and return
+// the first success. Returns ErrDeviceNotFound when no device is readable.
 func DriverInfo() (VersionInfo, error) {
-	//logic here
-	return nil, nil
+	dirs, err := findRngdMgmtDirs()
+	if err != nil || len(dirs) == 0 {
+		return nil, ErrDeviceNotFound
+	}
+
+	for _, dir := range dirs {
+		raw, err := readMgmtAttr(dir, "version")
+		if err != nil {
+			continue
+		}
+
+		v, err := parseVersionInfo(raw)
+		if err != nil {
+			continue
+		}
+
+		return v, nil
+	}
+
+	return nil, ErrDeviceNotFound
 }
 
 func CreateObserverWithOpt(opt ObserverOpt) (Observer, error) {
@@ -90,9 +275,8 @@ type FuriosaSmiDevice struct {
 	info FuriosaSmiDeviceInfo
 }
 
-func newDevice(bdf string) Device {
-	// logic here
-	return &FuriosaSmiDevice{bdf: bdf}
+func newDevice(bdf string, info FuriosaSmiDeviceInfo) Device {
+	return &FuriosaSmiDevice{bdf: bdf, info: info}
 }
 
 func (d *FuriosaSmiDevice) DeviceInfo() (DeviceInfo, error) {
@@ -204,4 +388,3 @@ func (d *FuriosaSmiDevice) MemoryUtilization() (MemoryUtilization, error) {
 	// logic here
 	return nil, nil
 }
-
