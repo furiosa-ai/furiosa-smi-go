@@ -59,7 +59,9 @@ func findRngdMgmtDirs() ([]string, error) {
 	var dirs []string
 	for _, e := range entries {
 		name := e.Name()
-		if e.IsDir() && strings.HasPrefix(name, "rngd!npu") && strings.HasSuffix(name, "mgmt") {
+		// Entries under /sys/class are symlinks to the real device directories;
+		// e.IsDir() returns false for symlinks, so filter only by name pattern.
+		if strings.HasPrefix(name, "rngd!npu") && strings.HasSuffix(name, "mgmt") {
 			dirs = append(dirs, filepath.Join(rngdMgmtRoot(), name))
 		}
 	}
