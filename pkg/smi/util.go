@@ -76,6 +76,20 @@ func parseMajorMinor(s string) (uint16, uint16, error) {
 	return uint16(maj), uint16(min), nil
 }
 
+// nodeIdxFromName extracts the hardware node index from a device name like "npu0".
+// Mirrors parse_name (device_info.rs) which formats names as "npu{dev_node_index}".
+func nodeIdxFromName(name string) (uint32, error) {
+	s := strings.TrimPrefix(name, "npu")
+	if s == name {
+		return 0, fmt.Errorf("%w: unexpected device name %q", ErrParse, name)
+	}
+	n, err := strconv.ParseUint(s, 10, 32)
+	if err != nil {
+		return 0, fmt.Errorf("%w: %v", ErrParse, err)
+	}
+	return uint32(n), nil
+}
+
 // parseVersionInfo parses a semver string of the form produced by the
 // furiosa kernel driver, e.g. "2025.1.0, 696efad" or "2025.4.0~dev0, 7e25130".
 //

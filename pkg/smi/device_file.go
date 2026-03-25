@@ -1,5 +1,12 @@
 package smi
 
+import (
+	"errors"
+	"os"
+	"path/filepath"
+	"sort"
+)
+
 // DeviceFile represents a device file.
 type DeviceFile interface {
 	// Cores returns a list of core for device file.
@@ -43,9 +50,49 @@ func (fdf *FuriosaSmiDeviceFile) Path() string {
 	return fdf.path
 }
 
+// FuriosaSmiGetDeviceFiles returns all device files accessible for the given
+// device by scanning /dev/rngd for character device files that match the
+// device's node index. Mirrors parse_device_files in device_info.rs.
 func FuriosaSmiGetDeviceFiles(device Device) (*FuriosaSmiDeviceFiles, error) {
-	// TODO: Implement this function
-	return nil, nil
+	info, err := device.DeviceInfo()
+	if err != nil {
+		return nil, err
+	}
+	nodeIdx, err := nodeIdxFromName(info.Name())
+	if err != nil {
+		return nil, err
+	}
+
+	entries, err := os.ReadDir(rngdDevRootPath())
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return &FuriosaSmiDeviceFiles{}, nil
+		}
+		return nil, err
+	}
+
+	var files []DeviceFile
+	for _, e := range entries {
+		fi, ferr := e.Info()
+		if e.IsDir() || ferr != nil || !isRngdDeviceFile(fi) {
+			continue
+		}
+		parsed, ok := parseDeviceFilename(e.Name())
+		if !ok || parsed.nodeIdx != nodeIdx {
+			continue
+		}
+		absPath := filepath.Join(rngdDevRootPath(), e.Name())
+		if real, eerr := filepath.EvalSymlinks(absPath); eerr == nil {
+			absPath = real
+		}
+		files = append(files, newDeviceFile(parsed.coreStart, parsed.coreEnd, absPath))
+	}
+
+	sort.Slice(files, func(i, j int) bool {
+		return filepath.Base(files[i].Path()) < filepath.Base(files[j].Path())
+	})
+
+	return &FuriosaSmiDeviceFiles{count: uint32(len(files)), deviceFiles: files}, nil
 }
 
 func (f *FuriosaSmiDeviceFiles) DeviceFiles() []DeviceFile {
