@@ -129,9 +129,17 @@ func buildDeviceInfo(index, nodeIdx uint32, cores []uint32) (*FuriosaSmiDeviceIn
 	if err != nil {
 		return nil, err
 	}
-	major, minor, err := parseMajorMinor(devStr)
+	parts := strings.SplitN(devStr, ":", 2)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("%w: %q", ErrParse, devStr)
+	}
+	maj, err := strconv.ParseUint(strings.TrimSpace(parts[0]), 10, 16)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", ErrParse, err)
+	}
+	min, err := strconv.ParseUint(strings.TrimSpace(parts[1]), 10, 16)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrParse, err)
 	}
 	fwStr, err := readMgmtAttr(mgmtDir, "fw_version")
 	if err != nil {
@@ -141,39 +149,28 @@ func buildDeviceInfo(index, nodeIdx uint32, cores []uint32) (*FuriosaSmiDeviceIn
 	if err != nil {
 		return nil, err
 	}
-	numaNode, err := readNumaNode(bdf)
+	numaData, err := os.ReadFile(filepath.Join(pciDevicesRoot(), bdf, "numa_node"))
 	if err != nil {
 		return nil, err
+	}
+	numaNode, err := strconv.ParseInt(strings.TrimSpace(string(numaData)), 10, 32)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrParse, err)
 	}
 
 	return &FuriosaSmiDeviceInfo{
 		index:           index,
 		arch:            ArchRngd,
 		coreNum:         uint32(len(cores)),
-		numaNode:        numaNode,
+		numaNode:        int32(numaNode),
 		name:            fmt.Sprintf("npu%d", nodeIdx),
 		serial:          serial,
 		uuid:            uuid,
 		bdf:             bdf,
-		major:           major,
-		minor:           minor,
+		major:           uint16(maj),
+		minor:           uint16(min),
 		firmwareVersion: fwVersion,
 	}, nil
-}
-
-// readNumaNode reads /sys/bus/pci/devices/{bdf}/numa_node.
-// Mirrors parse_numa_node in furiosa-smi/src/device/device_info.rs.
-func readNumaNode(bdf string) (int32, error) {
-	path := filepath.Join(pciDevicesRoot(), bdf, "numa_node")
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return -1, err
-	}
-	n, err := strconv.ParseInt(strings.TrimSpace(string(data)), 10, 32)
-	if err != nil {
-		return -1, fmt.Errorf("%w: %v", ErrParse, err)
-	}
-	return int32(n), nil
 }
 
 // ListDisabledDevices lists all disabled Furiosa NPU devices in the system. It returns a list of BDF strings representing the disabled devices.
@@ -204,23 +201,23 @@ func DisableDevice(bdf string) error {
 // iterate over valid device contexts, read version from sysfs, parse and return
 // the first success. Returns ErrDeviceNotFound when no device is readable.
 func DriverInfo() (VersionInfo, error) {
-	dirs, err := findRngdMgmtDirs()
-	if err != nil || len(dirs) == 0 {
+	entries, err := os.ReadDir(rngdMgmtRoot())
+	if err != nil || len(entries) == 0 {
 		return nil, ErrDeviceNotFound
 	}
 
-	for _, dir := range dirs {
-		raw, err := readMgmtAttr(dir, "version")
+	for _, e := range entries {
+		name := e.Name()
+		if !strings.HasPrefix(name, "rngd!npu") || !strings.HasSuffix(name, "mgmt") {
+			continue
+		}
+		raw, err := readMgmtAttr(filepath.Join(rngdMgmtRoot(), name), "version")
 		if err != nil {
 			continue
 		}
-
-		v, err := parseVersionInfo(raw)
-		if err != nil {
-			continue
+		if v, err := parseVersionInfo(raw); err == nil {
+			return v, nil
 		}
-
-		return v, nil
 	}
 
 	return nil, ErrDeviceNotFound

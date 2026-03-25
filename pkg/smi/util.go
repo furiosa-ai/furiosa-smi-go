@@ -1,21 +1,10 @@
 package smi
 
 import (
-	"bytes"
 	"fmt"
 	"regexp"
 	"strconv"
-	"strings"
 )
-
-func byteBufferToString(buffer []byte) string {
-	nullIndex := bytes.IndexByte(buffer, 0)
-	if nullIndex == -1 {
-		return string(buffer)
-	}
-
-	return string(buffer[:nullIndex])
-}
 
 // versionRe mirrors the Rust VERSION_PATTERN used in furiosa-smi:
 //
@@ -55,39 +44,6 @@ func parseDeviceFilename(name string) (parsedDevFile, bool) {
 		coreStart: uint32(coreStart),
 		coreEnd:   uint32(coreEnd),
 	}, true
-}
-
-// parseMajorMinor parses the "dev" sysfs attribute value (e.g. "235:0") into
-// separate major and minor device numbers, mirroring the split in
-// furiosa-smi/src/device/mod.rs:furiosa_smi_get_device_info.
-func parseMajorMinor(s string) (uint16, uint16, error) {
-	parts := strings.SplitN(s, ":", 2)
-	if len(parts) != 2 {
-		return 0, 0, fmt.Errorf("%w: %q", ErrParse, s)
-	}
-	maj, err := strconv.ParseUint(strings.TrimSpace(parts[0]), 10, 16)
-	if err != nil {
-		return 0, 0, fmt.Errorf("%w: %v", ErrParse, err)
-	}
-	min, err := strconv.ParseUint(strings.TrimSpace(parts[1]), 10, 16)
-	if err != nil {
-		return 0, 0, fmt.Errorf("%w: %v", ErrParse, err)
-	}
-	return uint16(maj), uint16(min), nil
-}
-
-// nodeIdxFromName extracts the hardware node index from a device name like "npu0".
-// Mirrors parse_name (device_info.rs) which formats names as "npu{dev_node_index}".
-func nodeIdxFromName(name string) (uint32, error) {
-	s := strings.TrimPrefix(name, "npu")
-	if s == name {
-		return 0, fmt.Errorf("%w: unexpected device name %q", ErrParse, name)
-	}
-	n, err := strconv.ParseUint(s, 10, 32)
-	if err != nil {
-		return 0, fmt.Errorf("%w: %v", ErrParse, err)
-	}
-	return uint32(n), nil
 }
 
 // parseVersionInfo parses a semver string of the form produced by the

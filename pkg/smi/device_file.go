@@ -2,9 +2,12 @@ package smi
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 // DeviceFile represents a device file.
@@ -58,10 +61,16 @@ func FuriosaSmiGetDeviceFiles(device Device) (*FuriosaSmiDeviceFiles, error) {
 	if err != nil {
 		return nil, err
 	}
-	nodeIdx, err := nodeIdxFromName(info.Name())
-	if err != nil {
-		return nil, err
+	name := info.Name()
+	s := strings.TrimPrefix(name, "npu")
+	if s == name {
+		return nil, fmt.Errorf("%w: unexpected device name %q", ErrParse, name)
 	}
+	nodeIdxU, err := strconv.ParseUint(s, 10, 32)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrParse, err)
+	}
+	nodeIdx := uint32(nodeIdxU)
 
 	entries, err := os.ReadDir(rngdDevRootPath())
 	if err != nil {
