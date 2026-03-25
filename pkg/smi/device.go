@@ -1,6 +1,7 @@
 package smi
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -45,9 +46,15 @@ func ListDevices() ([]Device, error) {
 // scanRngdDevFiles scans rngdDevRootPath for character device files matching
 // npu{N}pe{S}[-{E}] and returns a map of nodeIdx → sorted unique core list.
 // This mirrors search_furiosa_device + filter_dev_files in discovery.rs.
+// A missing /dev/rngd directory (ENOENT) is treated as "no devices present"
+// and returns an empty map — matching legacy ListDevices behaviour on systems
+// without Furiosa hardware.
 func scanRngdDevFiles() (map[uint32][]uint32, error) {
 	entries, err := os.ReadDir(rngdDevRootPath())
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return map[uint32][]uint32{}, nil
+		}
 		return nil, err
 	}
 
