@@ -1,5 +1,3 @@
-//go:build smi_parity && cgo
-
 package test
 
 import (
