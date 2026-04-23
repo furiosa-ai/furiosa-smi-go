@@ -65,6 +65,30 @@ func TestDeviceInfo(t *testing.T) {
 				},
 			),
 		},
+		{
+			description: "Test RNGD+ Device Info",
+			arch:        ArchRngdPlus,
+			expected: newDeviceInfo(
+				binding.FuriosaSmiDeviceInfo{
+					Arch:     binding.FuriosaSmiArchRngdPlus,
+					CoreNum:  8,
+					NumaNode: 0,
+					Name:     stringTo96ByteArray("npu0"),
+					Serial:   stringTo96ByteArray("TEST0236FH505KRE0"),
+					Uuid:     stringTo96ByteArray("A76AAD68-6855-40B1-9E86-D080852D1C80"),
+					Bdf:      stringTo96ByteArray("0000:27:00.0"),
+					Major:    234,
+					Minor:    0,
+					FirmwareVersion: binding.FuriosaSmiVersion{
+						Major:      1,
+						Minor:      6,
+						Patch:      0,
+						Metadata:   stringTo96ByteArray("c1bebfd"),
+						Prerelease: stringTo96ByteArray("dev0"),
+					},
+				},
+			),
+		},
 	}
 
 	for _, tc := range tests {

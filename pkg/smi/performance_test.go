@@ -28,6 +28,11 @@ func TestDeviceTemperature(t *testing.T) {
 			arch:        ArchRngd,
 			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
 		},
+		{
+			description: "Test RNGD+ Device Temperature",
+			arch:        ArchRngdPlus,
+			expected:    deviceTemperature{binding.FuriosaSmiDeviceTemperature{SocPeak: 20.0, Ambient: 10.0}},
+		},
 	}
 
 	for _, tc := range tests {
@@ -55,6 +60,11 @@ func TestPowerConsumption(t *testing.T) {
 		{
 			description: "Test RNGD Device Power Consumption",
 			arch:        ArchRngd,
+			expected:    100.0,
+		},
+		{
+			description: "Test RNGD+ Device Power Consumption",
+			arch:        ArchRngdPlus,
 			expected:    100.0,
 		},
 	}

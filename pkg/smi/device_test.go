@@ -29,6 +29,10 @@ func TestCoreStatus(t *testing.T) {
 			description: "Test RNGD Core Status",
 			arch:        ArchRngd,
 		},
+		{
+			description: "Test RNGD+ Core Status",
+			arch:        ArchRngdPlus,
+		},
 	}
 
 	for _, test := range tests {
@@ -56,6 +60,11 @@ func TestLiveness(t *testing.T) {
 		{
 			description: "Test RNGD Liveness",
 			arch:        ArchRngd,
+			expected:    true,
+		},
+		{
+			description: "Test RNGD+ Liveness",
+			arch:        ArchRngdPlus,
 			expected:    true,
 		},
 	}
@@ -92,6 +101,10 @@ func TestDeviceToDeviceLinkType(t *testing.T) {
 		{
 			description: "Test RNGD DeviceToDeviceLinkType",
 			arch:        ArchRngd,
+		},
+		{
+			description: "Test RNGD+ DeviceToDeviceLinkType",
+			arch:        ArchRngdPlus,
 		},
 	}
 
@@ -132,6 +145,18 @@ func TestCoreFrequency(t *testing.T) {
 				return exp
 			}(),
 		},
+		{
+			description: "Test RNGD+ Core Frequency",
+			arch:        ArchRngdPlus,
+			expected: func() coreFrequency {
+				exp := coreFrequency{binding.FuriosaSmiCoreFrequency{PeCount: 8, Pe: [64]binding.FuriosaSmiPeFrequency{}}}
+				for i := 0; i < 8; i++ {
+					exp.raw.Pe[i] = binding.FuriosaSmiPeFrequency{Core: uint32(i), Frequency: 500}
+				}
+
+				return exp
+			}(),
+		},
 	}
 
 	for _, tc := range tests {
@@ -159,6 +184,11 @@ func TestMemoryFrequency(t *testing.T) {
 		{
 			description: "Test RNGD Memory Frequency",
 			arch:        ArchRngd,
+			expected:    6000,
+		},
+		{
+			description: "Test RNGD+ Memory Frequency",
+			arch:        ArchRngdPlus,
 			expected:    6000,
 		},
 	}
