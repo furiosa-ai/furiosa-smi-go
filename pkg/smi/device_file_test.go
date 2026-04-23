@@ -68,6 +68,40 @@ func TestDeviceFiles(t *testing.T) {
 					CoreStart: 4, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-7")}),
 			},
 		},
+		{
+			description: "Test RNGD+ Device Files",
+			arch:        ArchRngdPlus,
+			expected: []DeviceFile{
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 0, Path: stringTo256ByteArray("/dev/rngd/npu0pe0")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 1, CoreEnd: 1, Path: stringTo256ByteArray("/dev/rngd/npu0pe1")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 1, Path: stringTo256ByteArray("/dev/rngd/npu0pe0-1")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 2, CoreEnd: 2, Path: stringTo256ByteArray("/dev/rngd/npu0pe2")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 3, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe3")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 2, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe2-3")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 0, CoreEnd: 3, Path: stringTo256ByteArray("/dev/rngd/npu0pe0-3")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 4, CoreEnd: 4, Path: stringTo256ByteArray("/dev/rngd/npu0pe4")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 5, CoreEnd: 5, Path: stringTo256ByteArray("/dev/rngd/npu0pe5")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 4, CoreEnd: 5, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-5")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 6, CoreEnd: 6, Path: stringTo256ByteArray("/dev/rngd/npu0pe6")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 7, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe7")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 6, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe6-7")}),
+				newDeviceFile(binding.FuriosaSmiDeviceFile{
+					CoreStart: 4, CoreEnd: 7, Path: stringTo256ByteArray("/dev/rngd/npu0pe4-7")}),
+			},
+		},
 	}
 
 	for _, tc := range tests {
