@@ -1,75 +1,89 @@
+// Command show_topology prints two device-by-device tables: the link type
+// between every pair of NPU devices, and whether each pair is P2P
+// accessible. It is a port of the Rust crate's examples/show_topology.rs.
+// Run it on a host with Furiosa NPUs:
+//
+//	go run ./example/show_topology
 package main
 
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
-	"github.com/furiosa-ai/furiosa-smi-go/pkg/smi"
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
+
+	"github.com/furiosa-ai/furiosa-smi-go/pkg/api"
 )
 
 func main() {
-	if err := smi.Init(); err != nil {
-		fmt.Printf("%s\n", err.Error())
-		os.Exit(1)
-	}
-
-	devices, err := smi.ListDevices()
+	devices, err := api.ListDevices()
 	if err != nil {
-		fmt.Printf("%s\n", err.Error())
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
-
-	header := table.Row{"#"}
-	for _, device := range devices {
-		info, err := device.DeviceInfo()
-		if err != nil {
-			fmt.Printf("%s\n", err.Error())
-			os.Exit(1)
-		}
-
-		header = append(header, filepath.Base(info.Name()))
+	header := []string{"Device"}
+	for i := range devices {
+		header = append(header, devices[i].DeviceName())
 	}
-	t.AppendHeader(header)
 
-	for _, device1 := range devices {
-		info1, err := device1.DeviceInfo()
-		if err != nil {
-			fmt.Printf("%s\n", err.Error())
-			os.Exit(1)
-		}
-
-		row := table.Row{filepath.Base(info1.Name())}
-		for _, device2 := range devices {
-			linkType, err := device1.DeviceToDeviceLinkType(device2)
+	rows := make([][]string, 0, len(devices))
+	for i := range devices {
+		row := []string{devices[i].DeviceName()}
+		for j := range devices {
+			linkType, err := devices[i].DeviceToDeviceLinkType(&devices[j])
 			if err != nil {
-				fmt.Printf("%s\n", err.Error())
+				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
 
-			row = append(row, linkTypeToString(linkType))
+			row = append(row, linkType.String())
 		}
-		t.AppendRow(row)
+
+		rows = append(rows, row)
+	}
+
+	renderTable(header, rows)
+
+	fmt.Println()
+
+	header = []string{"P2P"}
+	for i := range devices {
+		header = append(header, devices[i].DeviceName())
+	}
+
+	rows = make([][]string, 0, len(devices))
+	for i := range devices {
+		row := []string{devices[i].DeviceName()}
+		for j := range devices {
+			row = append(row, fmt.Sprintf("%t", devices[i].P2PAccessible(&devices[j])))
+		}
+
+		rows = append(rows, row)
+	}
+
+	renderTable(header, rows)
+}
+
+func renderTable(header []string, rows [][]string) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.Style().Options.SeparateRows = true
+	t.Style().Format.Header = text.FormatDefault
+	t.AppendHeader(toRow(header))
+	for _, row := range rows {
+		t.AppendRow(toRow(row))
 	}
 
 	t.Render()
 }
 
-func linkTypeToString(linkType smi.LinkType) string {
-	switch linkType {
-	case smi.LinkTypeInterconnect:
-		return "Interconnect"
-	case smi.LinkTypeCpu:
-		return "CPU"
-	case smi.LinkTypeHostBridge:
-		return "Host Bridge"
-	case smi.LinkTypeNoc:
-		return "NoC"
-	default:
-		return "Unknown"
+func toRow(cells []string) table.Row {
+	row := make(table.Row, 0, len(cells))
+	for _, cell := range cells {
+		row = append(row, cell)
 	}
+
+	return row
 }
